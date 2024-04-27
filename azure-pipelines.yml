@@ -1,0 +1,35 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
+name: $(Date:yyyy-MM-dd)$(Rev:.r)_$(Build.BuildId)_$(Build.DefinitionName)_$(SourceBranchName)
+
+trigger:
+  branches:
+    include:
+      - master
+
+pool:
+  name: ado-agent-pool-school-links
+
+resources:
+  repositories:
+    - repository: adotemplates
+      name: SchoolLinks/ado-templates
+      type: git
+    - repository: ais-data
+      name: SchoolLinks/ais-data
+      type: git
+
+variables:
+  - template: pipeline-templates/var/schoollinks-var.yml@adotemplates
+
+stages:
+  - stage: DotNetBuild
+    condition: succeeded()
+    jobs:
+      - template: ${{variables.template_path}}/build/dotnet-build.yml@adotemplates
+        parameters:
+          gitrepo: admin-dashboard-server
+    displayName: Dot Net Build
