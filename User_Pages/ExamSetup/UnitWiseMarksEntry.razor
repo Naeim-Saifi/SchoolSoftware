@@ -1,0 +1,387 @@
+﻿@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@using Microsoft.AspNetCore.Components.Forms
+@using AIS.Data.RequestResponseModel.ExamMasterSetup;
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
+@using AIS.Data.RequestResponseModel.Syllabus;
+@page "/User_Pages/ExamSetup/UnitWiseMarksEntry"
+
+@inherits UnitWiseMarksEntryBase
+
+
+@{
+
+    var InitSearchStudentName = (new string[] { "className", "unitTitle" });
+}
+@* <SfButton Type="button" CssClass=@btncss IsToggle="false " IsPrimary="false" Content="Load Student Report" OnClick="@"></SfButton>
+ *@
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="11">
+        <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+            <DashboardLayoutPanels>
+                <DashboardLayoutPanel SizeX=7 SizeY="2">
+                    <HeaderTemplate>Student Pending Fee List</HeaderTemplate>
+                    <ContentTemplate>
+
+                        <SfGrid DataSource="@_unitWiseMarksDetailsList"
+                                EnableVirtualMaskRow="true"
+                                RowHeight="38" Height="710"
+                                Width="auto" EnableVirtualization="false"
+                                AllowResizing="true" AllowExcelExport="true"
+                                EnableAutoFill="true" AllowReordering="true"
+                                ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
+                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                        @ref="_sfUnitMarksDetailsList"
+                                Toolbar=toolBarPendingFee>
+
+                            <GridPageSettings PageCount="50" PageSizes="true"></GridPageSettings>
+                            <GridGroupSettings EnableLazyLoading="true"></GridGroupSettings>
+
+                            <GridEvents CommandClicked="EditFlowUp" OnToolbarClick="ToolBarClick" QueryCellInfo="CustomizeCell" TValue=UnitWiseMarksDetails_List_Output_Model></GridEvents>
+                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+                           
+                            <GridPageSettings PageSize="15" PageSizes="true"></GridPageSettings>
+                            
+                            
+                            <GridSearchSettings Fields=@InitSearchStudentName Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                IgnoreCase="true"></GridSearchSettings>
+
+                            <GridTemplates>
+                                <DetailTemplate>
+                                    @{
+                                        var employee = (context as UnitWiseMarksDetails_List_Output_Model);
+                                        <SfGrid DataSource="@_unitWiseMarksList" AllowExcelExport="true" AllowPdfExport="true"  AllowGrouping="true"
+                                                Query="@(new Query().Where("unitMarksID", "equal", employee.unitMarksID))">
+                                            <GridColumns>
+                                                <GridColumn Field=@nameof(UnitWiseMarks_List_Output_Model.studentName) HeaderText="Student Name" AutoFit=true> </GridColumn>
+                                                <GridColumn Field=@nameof(UnitWiseMarks_List_Output_Model.fatherName) HeaderText="Father Name" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(UnitWiseMarks_List_Output_Model.rollNo) HeaderText="Roll No" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(UnitWiseMarks_List_Output_Model.maxMarks) HeaderText="Max Marks" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(UnitWiseMarks_List_Output_Model.obtainMarks) HeaderText="Obtain Marks" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(UnitWiseMarks_List_Output_Model.percentage) HeaderText="Percentage" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(UnitWiseMarks_List_Output_Model.grade) HeaderText="Grade" AllowGrouping=true AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(UnitWiseMarks_List_Output_Model.teacherRemarks) HeaderText="Teacher Remarks" AutoFit=true></GridColumn>
+                                            </GridColumns>
+                                        </SfGrid>
+                                    }
+                                </DetailTemplate>
+                            </GridTemplates>
+                           @*  <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings> *@
+                           <GridColumns>
+                                 
+                                <GridColumn Field=@nameof(UnitWiseMarksDetails_List_Output_Model.className)
+                                            HeaderText="Class" TextAlign="TextAlign.Right"  AutoFit=true>
+                                </GridColumn>
+                                <GridColumn Field=@nameof(UnitWiseMarksDetails_List_Output_Model.sectionName)
+                                            HeaderText="Section" TextAlign="TextAlign.Right"  AutoFit=true>
+                                </GridColumn>
+                                <GridColumn Field=@nameof(UnitWiseMarksDetails_List_Output_Model.subjectName)
+                                            HeaderText="Subject Name" TextAlign="TextAlign.Right"  AutoFit=true>
+                                </GridColumn>
+                                <GridColumn Field=@nameof(UnitWiseMarksDetails_List_Output_Model.unitTitle)
+                                            HeaderText="Unit Title" TextAlign="TextAlign.Right"  AutoFit=true>
+                                </GridColumn>
+                                <GridColumn Field=@nameof(UnitWiseMarksDetails_List_Output_Model.unitMarksID)
+                                            HeaderText="Marks ID" TextAlign="TextAlign.Right"  AutoFit=true>
+                                </GridColumn>
+                                <GridColumn Field=@nameof(UnitWiseMarksDetails_List_Output_Model.monthNameDetails)
+                                            HeaderText="Month Name" TextAlign="TextAlign.Right"  AutoFit=true>
+                                </GridColumn>
+                                <GridColumn Field=@nameof(UnitWiseMarksDetails_List_Output_Model.totalStudent)
+                                            HeaderText="Total Student" TextAlign="TextAlign.Right"  AutoFit=true>
+                                </GridColumn>
+                                 
+                                <GridColumn HeaderText="Action" TextAlign="TextAlign.Center" AutoFit=true>
+                                    <GridCommandColumns>
+                                        @* <GridCommandColumn ButtonOption="@(new CommandButtonOptions() { Content = "Delete", CssClass = "e-flat" })" Title="Call"></GridCommandColumn> *@
+                                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="View", IconCss = "e-icons e-view e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                        @*<GridCommandColumn ButtonOption="@(new CommandButtonOptions() { Content = "Active", CssClass = "e-flat" })" Title="Active"></GridCommandColumn>*@
+                                    </GridCommandColumns>
+                                </GridColumn>
+                                
+                            </GridColumns>
+
+                        </SfGrid>
+                    </ContentTemplate>
+                </DashboardLayoutPanel>
+            </DashboardLayoutPanels>
+        </SfDashboardLayout>
+    </MudItem>
+</MudGrid>
+
+
+<MudGrid>
+      
+    <MudItem xs="12" sm="12" md="12">
+        <SfDialog @ref="@DialogRef" Width="1450px" AllowDragging="true" IsModal="false" ShowCloseIcon="true" @bind-Visible="@IsVisible">
+            <DialogEvents OnOpen="onOpen"></DialogEvents>
+            <DialogTemplates>
+                <Header>@DialogHeaderName </Header>
+                <Content>
+                    <MudGrid>
+                        <MudItem xs="12" md="4" sm="4">
+                            <EditForm Model="unitWiseMarksEntryViewModel" OnValidSubmit="OnValidSubmit">
+                                <DataAnnotationsValidator />
+                                <MudCardContent>
+                                    <MudGrid>
+
+                                      <MudItem xs="12" md="6" sm="6">
+                                                <SfDropDownList ID="ClassId" TValue="string" TItem="Master_CLass_List_Output_Model"
+                                                                CssClass="e-outline" Placeholder="Select a class"
+                                                            FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                                Enabled="ddEnable"
+                                            @bind-Value="@unitWiseMarksEntryViewModel.ClassID"
+                                                                DataSource="@_classList">
+                                                    <DropDownListFieldSettings Text="className" Value="classId" />
+                                                    <DropDownListEvents TItem="Master_CLass_List_Output_Model" TValue="string"
+                                                                        ValueChange="OnChangeClass" />
+                                                    <ValidationMessage For="() => unitWiseMarksEntryViewModel.ClassID" />
+                                                </SfDropDownList>
+                                       </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfDropDownList ID="monthID" TValue="string" TItem="Master_Section_List_Output_Model"
+                                                                CssClass="e-outline" Placeholder="Select a section"
+                                                            FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                                Enabled="ddEnable"
+                                                                @bind-Value="@unitWiseMarksEntryViewModel.SectionID"
+                                                                DataSource="@_sectionList">
+                                                <DropDownListEvents TItem="Master_Section_List_Output_Model" TValue="string"
+                                                                    ValueChange="OnChangeSection" />
+                                                    <DropDownListFieldSettings Text="sectionName" Value="sectionId" />
+                                                    <ValidationMessage For="() => unitWiseMarksEntryViewModel.SectionID" />
+                                                </SfDropDownList>
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfDropDownList ID="SectionId" TValue="string" TItem="Master_Map_Subject_With_Class_List_Output_Model"
+                                                                CssClass="e-outline" Placeholder="Select a subject"
+                                                            FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                                @bind-Value="@unitWiseMarksEntryViewModel.SubjectID"
+                                                                Enabled="ddEnable"
+                                                                DataSource="@_subjectList">
+                                                    <DropDownListFieldSettings Text="subjectName" Value="subjectId" />
+                                                    <DropDownListEvents TItem="Master_Map_Subject_With_Class_List_Output_Model" TValue="string"
+                                                                        ValueChange="OnChangeSubject" />
+                                                    <ValidationMessage For="() => unitWiseMarksEntryViewModel.SubjectID" />
+                                                </SfDropDownList>
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfDropDownList ID="SectionId" TValue="string" TItem="Unit_Output_Model"
+                                                                CssClass="e-outline" Placeholder="Select a unit"
+                                                            FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                                @bind-Value="@unitWiseMarksEntryViewModel.UnitID"
+                                                                Enabled="ddEnable"
+                                                                DataSource="@_unitList">
+                                                    <DropDownListFieldSettings Text="unitTitle" Value="unitId" />
+                                                <DropDownListEvents TItem="Unit_Output_Model" TValue="string"
+                                                                    ValueChange="OnChangeUnit" />
+                                                    <ValidationMessage For="() => unitWiseMarksEntryViewModel.UnitID" />
+                                                </SfDropDownList>
+                                            </MudItem>
+                                        <MudItem xs="12" md="6" sm="6">
+                                            <SfDropDownList ID="SectionId" TValue="string" TItem="MonthNameListModel"
+                                                            CssClass="e-outline" Placeholder="Select a month name"
+                                                            FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                            @bind-Value="@unitWiseMarksEntryViewModel.MonthID"
+                                                            Enabled="ddEnable"
+                                                            DataSource="@_monthNameList">
+                                                <DropDownListFieldSettings Text="MonthName" Value="MonthId" />
+                                                <DropDownListEvents TItem="MonthNameListModel" TValue="string"
+                                                                    ValueChange="OnChangeMonth" />
+                                                <ValidationMessage For="() => unitWiseMarksEntryViewModel.MonthID" />
+                                            </SfDropDownList>
+                                        </MudItem>
+                                         <MudItem xs="12" md="6" sm="6">
+                                            <SfNumericTextBox TValue="int" CssClass="e-style" Placeholder="Enter max marks" FloatLabelType="@FloatLabelType.Auto"
+                                            @bind-Value="@unitWiseMarksEntryViewModel.MaxMarks"></SfNumericTextBox>
+                                        </MudItem>
+                                            @* <MudItem xs="12" md="6" sm="6">
+                                                <SfDropDownList ID="SectionId" TValue="string" TItem="Chapter_Output_Model"
+                                                                CssClass="e-outline" Placeholder="Select a chapter"
+                                                                FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                                @bind-Value="@unitWiseMarksEntryViewModel.ChapterID"
+                                                                Enabled="ddEnable"
+                                                                DataSource="@_chapterList">
+                                                    <DropDownListFieldSettings Text="chapterTitle" Value="chapterID" />
+                                                    <DropDownListEvents TItem="Chapter_Output_Model" TValue="string"
+                                                                        ValueChange="OnChangeChapter" />
+                                                    <ValidationMessage For="() => unitWiseMarksEntryViewModel.ChapterID" />
+                                                </SfDropDownList>
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfDropDownList ID="SectionId" TValue="string" TItem="Topic_Output_Model"
+                                                                CssClass="e-outline" Placeholder="Select a topic"
+                                                                FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                                @bind-Value="@unitWiseMarksEntryViewModel.TopicID"
+                                                                Enabled="ddEnable"
+                                                                DataSource="@_topicList">
+                                                    <DropDownListFieldSettings Text="topicTitle" Value="topicID" />
+                                                    <ValidationMessage For="() => unitWiseMarksEntryViewModel.TopicID" />
+                                                </SfDropDownList>
+                                            </MudItem> *@
+                                             
+
+
+                                        <MudItem xs="12" md="6" sm="6">
+                                            @* <SfButton CssClass=@btncss type="submit" IsPrimary="true">@HeaderText</SfButton> *@
+                                            <SfButton Type="button" CssClass=@btncss IsToggle="false " IsPrimary="false" Content="Save Marks" OnClick="@SaveStudentMarksDetails"></SfButton>
+                                        <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="6">
+                                                <SfButton Type="button" CssClass=@btnFindcss IsToggle="false " IsPrimary="false" Content="Find Student Details" OnClick="@FindStudentDetails"></SfButton>
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudCardContent>
+                            </EditForm>
+                        </MudItem>
+                        <MudItem xs="12" md="8" sm="8">
+                            <SfGrid DataSource="@studentUnitMarksDetails"
+                                    AllowTextWrap="true"
+                                    EnableVirtualMaskRow="true"
+                                    RowHeight="38" Height="510"
+                                    Width="auto" EnableVirtualization="false"
+                                    AllowResizing="true" AllowExcelExport="true"
+                                    EnableAutoFill="true" AllowReordering="true"
+                                    ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
+                                    AllowFiltering="false" AllowPaging="false" ShowColumnMenu="false" 
+                            @ref="_sfStudentMarksDetails" Toolbar="@(new List<string>() { "Edit",  "Cancel", "Update" })">
+                               @*  <GridPageSettings PageCount="100" PageSizes="true"></GridPageSettings> *@
+                                <GridEditSettings AllowAdding="false" AllowEditing="true" AllowDeleting="false" ShowConfirmDialog=false Mode="EditMode.Batch">
+                                </GridEditSettings>
+                                @* <GridEvents QueryCellInfo="CustomizeCell" TValue="StudentAttendanceListModel" CellSaved="CellSavedHandler"></GridEvents> *@
+                                <GridEvents TValue="StudentUnitMarksDetails" CellSaved="CellSavedHandler"></GridEvents>
+                                <GridColumns>
+                                    <GridColumn Field="@nameof(StudentUnitMarksDetails.StudentId)" HeaderText="Student ID" IsPrimaryKey="true" TextAlign="TextAlign.Center" Width="90"></GridColumn>
+                                    <GridColumn Field="@nameof(StudentUnitMarksDetails.StudentName)" HeaderText="First Name" AllowEditing="false" TextAlign="TextAlign.Center" Width="100"></GridColumn>
+                                    <GridColumn Field="@nameof(StudentUnitMarksDetails.FatherName)" HeaderText="Father Name" AllowEditing="false" TextAlign="TextAlign.Center" Width="100"></GridColumn>
+                                    <GridColumn Field="@nameof(StudentUnitMarksDetails.RollNo)" HeaderText="Roll No" AllowEditing="false" TextAlign="TextAlign.Center" Width="100"></GridColumn>
+                                    <GridColumn Field="@nameof(StudentUnitMarksDetails.MaxMarks)" HeaderText="Max Marks" AllowEditing="false" TextAlign="TextAlign.Center" Width="100"></GridColumn>
+                                    <GridColumn Field="@nameof(StudentUnitMarksDetails.ObtainMarks)" HeaderText="Obtain Marks" AllowEditing="true" TextAlign="TextAlign.Center" Width="100"></GridColumn>
+                                    <GridColumn Field="@nameof(StudentUnitMarksDetails.Grade)" HeaderText="Grade" AllowEditing="false" TextAlign="TextAlign.Center" Width="100"></GridColumn>
+                                    <GridColumn Field="@nameof(StudentUnitMarksDetails.Percentage)" HeaderText="Percentage" AllowEditing="false" TextAlign="TextAlign.Center" Width="100"></GridColumn>
+                                    <GridColumn Field="@nameof(StudentUnitMarksDetails.TeacherRemarks)" HeaderText="Teacher Remarks" AllowEditing="false" TextAlign="TextAlign.Center" Width="100"></GridColumn>
+                                    
+                                </GridColumns>
+                            </SfGrid>
+                        </MudItem>
+                    </MudGrid>
+                </Content>
+            </DialogTemplates>
+            <DialogAnimationSettings Delay="400" Effect="DialogEffect.Zoom">
+            </DialogAnimationSettings>
+            <DialogPositionData X="center" Y="center"></DialogPositionData>
+        </SfDialog>
+
+    </MudItem>
+    
+
+</MudGrid>
+@code {
+    private string Xvalue = "FlipXUp";
+    private string Yvalue = "FlipXUp";
+
+    /*
+    * Gets or sets the name of the animation that should be used when opening and closing the SfDialog.
+    * The following are the list of animation effects available to configure to the dialog:
+
+       Fade
+       FadeZoom
+       FlipLeftDown
+       FlipLeftUp
+       FlipRightDown
+       FlipRightUp
+       FlipXDown
+       FlipXUp
+       FlipYLeft
+       FlipYRight
+       SlideBottom
+       SlideLeft
+    SlideRight
+    SlideTop
+        Zoom
+       None.
+    */
+
+}
+
+
+
+
+<style>
+
+    .e-numeric.e-style .e-control.e-numerictextbox {
+        color: royalblue;
+        font-size: xx-large;
+        border: 0px;
+    }
+    .below-No {
+        background-color: orangered;
+    }
+
+    .below-3 {
+        background-color: yellow;
+    }
+
+    .below-0 {
+        background-color: orange;
+    }
+
+    .below-1 {
+        background-color: cornflowerblue;
+    }
+
+    .above-Yes {
+        background-color: greenyellow
+    }
+
+    
+
+    .e-toolbar-item .e-tbar-btn {
+        background-color: orange;
+    }
+    .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+
+    .e-dialog .e-dlg-header {
+        color: cornflowerblue;
+        font-size: 20px;
+        font-weight: normal;
+    }
+
+ 
+    /*  .e-rowcell.e-attr {
+                            background-color: lightgrey;
+                        }*/
+
+    /* .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+                            position: fixed;
+                        }*/
+
+    /*
+
+                        .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
+                            transition: none;
+                        }*/
+    /*.e-content .e-item {
+                            font-size: 12px;
+                            padding: 10px;
+                            text-align: justify;
+                        }*/
+</style>

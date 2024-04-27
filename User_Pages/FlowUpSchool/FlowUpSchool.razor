@@ -1,0 +1,360 @@
+﻿@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using AIS.Data.RequestResponseModel.ExamMasterSetup;
+@using AIS.Data.RequestResponseModel.FlowUpSchool;
+ 
+
+@page "/User_Pages/FlowUpSchool/FlowUpSchool"
+
+@inherits FlowUpSchoolBase
+
+@{
+
+    var InitSearch2 = (new string[] { "schoolName", "directorName", "directoreMobileNo" });
+    var Tool = (new List<string>() { "Search" });
+    var InitialGroupuser = (new string[] { "createdByUser" });
+}
+<MudGrid>
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>School Details</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@_flowupSchoolList"
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="750"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            ContextMenuItems="MenuItems"
+                            @ref="sfFlowupSchoolList"
+                            Toolbar="toolBarItems">
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        <GridPageSettings PageCount="120" PageSizes="true"></GridPageSettings>
+                        @* <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>*@
+                        <GridGroupSettings Columns=@InitialGroupuser>
+                            <CaptionTemplate>
+                                @{
+                                    var UnitDetails = (context as CaptionTemplateContext);
+                                    <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                }
+                            </CaptionTemplate>
+                        </GridGroupSettings>
+
+                        <GridEvents CommandClicked="EditSchoolFlowUpDetails" OnToolbarClick="ToolbarClickHandler" TValue=FlowUpSchoolOutPutModel></GridEvents>
+                        <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+                        <GridColumns>
+                            <GridColumn Field=@nameof(FlowUpSchoolOutPutModel.schoolID) HeaderText="School ID" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(FlowUpSchoolOutPutModel.schoolName) HeaderText="School Name" AutoFit=true></GridColumn>                            
+                            <GridColumn Field=@nameof(FlowUpSchoolOutPutModel.directorName) HeaderText="Director Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(FlowUpSchoolOutPutModel.directoreMobileNo) HeaderText="Directore MobileNo" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(FlowUpSchoolOutPutModel.principalName) HeaderText="Principal Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(FlowUpSchoolOutPutModel.principalMobileNo) HeaderText="Principal MobileNo" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(FlowUpSchoolOutPutModel.visitingStatus) HeaderText="Visiting Status" TextAlign="TextAlign.Right" Visible=false AutoFit=true></GridColumn>
+
+                            <GridColumn Field=@nameof(FlowUpSchoolOutPutModel.visitingRemarks) HeaderText="Visiting Remarks" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(FlowUpSchoolOutPutModel.emailID) HeaderText="Email ID" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                          @*   <GridColumn Field=@nameof(FlowUpSchoolOutPutModel.byRefrenceName) HeaderText="Refrence Name" TextAlign="TextAlign.Right" Visible=false AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(FlowUpSchoolOutPutModel.byRefrenceMobileNo) HeaderText="Refrence MobileNo" TextAlign="TextAlign.Right" Visible=false AutoFit=true></GridColumn> *@
+                            <GridColumn Field=@nameof(FlowUpSchoolOutPutModel.flowUpStatusCount) HeaderText="No of flowUp" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(FlowUpSchoolOutPutModel.address) HeaderText="Address" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(FlowUpSchoolOutPutModel.stateName) HeaderText="State Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(FlowUpSchoolOutPutModel.cityName) HeaderText="City Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+
+                            
+
+
+                            <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                <GridCommandColumns>
+                                    <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                    <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                    <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Follow Up",IconCss = "e-icons e-add e-primary e-outline", CssClass = "e-flat e-success e-outline"  })"></GridCommandColumn>
+                                </GridCommandColumns>
+                                 
+                            </GridColumn>
+                            <GridColumn Field=@nameof(FlowUpSchoolOutPutModel.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" Visible=false AutoFit=true AllowGrouping=true></GridColumn>
+                            <GridColumn Field=@nameof(FlowUpSchoolOutPutModel.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" Visible=false AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(FlowUpSchoolOutPutModel.createdByUser) HeaderText="CreatedBy User" TextAlign="TextAlign.Right" Visible=false AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(FlowUpSchoolOutPutModel.updatedByUser) HeaderText="UpdateBy User" TextAlign="TextAlign.Right" Visible=false AutoFit=true></GridColumn>
+                        </GridColumns>
+                    </SfGrid>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+</MudGrid>
+
+
+<MudGrid>
+    <MudItem xs="12" sm="3" md="12">
+        <MudItem xs="12" sm="3" md="12">
+            <SfDialog @ref="@DialogRef" Width="750px" AllowDragging="true" IsModal="false" ShowCloseIcon="true" @bind-Visible="@IsVisible">
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>
+                    <Header>@DialogHeaderName </Header>
+                    <Content>
+                        <MudGrid>
+                            <MudItem xs="12" md="12" sm="3">
+                                <EditForm Model="flowUpSchoolViewModel" OnValidSubmit="OnValidSubmit">
+                                    <DataAnnotationsValidator />
+                                    <MudCardContent>
+                                        <MudGrid> 
+                                            <MudItem xs="12" md="12" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="School Name" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@flowUpSchoolViewModel.School_Name"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => flowUpSchoolViewModel.School_Name" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Director Name" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@flowUpSchoolViewModel.Director_Name"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => flowUpSchoolViewModel.Director_Name" />
+                                            </MudItem>
+                                            @* <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Directore MobileNo" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@flowUpSchoolViewModel.Directore_MobileNo"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => flowUpSchoolViewModel.Directore_MobileNo" />
+                                            </MudItem> *@
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfMaskedTextBox Mask="(000)-000-0000" Placeholder="Directore MobileNo" @bind-Value="@flowUpSchoolViewModel.Directore_MobileNo"></SfMaskedTextBox>
+                                                <ValidationMessage For="() => flowUpSchoolViewModel.Directore_MobileNo" />
+
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Principal Name" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@flowUpSchoolViewModel.Principal_Name"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => flowUpSchoolViewModel.Principal_Name" />
+                                            </MudItem>
+                                           @*  <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Principal_MobileNo" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@flowUpSchoolViewModel.Principal_MobileNo"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => flowUpSchoolViewModel.Principal_MobileNo" />
+                                            </MudItem> *@
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfMaskedTextBox Mask="(000)-000-0000" Placeholder="Principal MobileNo" @bind-Value="@flowUpSchoolViewModel.Principal_MobileNo"></SfMaskedTextBox>
+                                                <ValidationMessage For="() => flowUpSchoolViewModel.Principal_MobileNo" />
+
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfDropDownList ID="ClassId" TValue="string" TItem="VisitingType"
+                                                                CssClass="e-outline" Placeholder="Select Visiting Type"
+                                                                FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                                Enabled="ddEnable"
+                                                @bind-Value="@flowUpSchoolViewModel.Visiting_Status"
+                                                                DataSource="@visitingTypes">
+                                                    <DropDownListFieldSettings Text="Value" Value="Id" />
+                                                    <ValidationMessage For="() => flowUpSchoolViewModel.Visiting_Status" />
+                                                </SfDropDownList>
+
+                                            </MudItem>
+
+
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="visitingRemarks" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@flowUpSchoolViewModel.visitingRemarks"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => flowUpSchoolViewModel.visitingRemarks" />
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="EmailID" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@flowUpSchoolViewModel.EmailID"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => flowUpSchoolViewModel.EmailID" />
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Refrence Name" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@flowUpSchoolViewModel.ByRefrenceName"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => flowUpSchoolViewModel.ByRefrenceName" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Refrence MobileNo" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@flowUpSchoolViewModel.ByRefrenceMobileNo"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => flowUpSchoolViewModel.ByRefrenceMobileNo" />
+                                            </MudItem>
+                                           
+
+
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfDropDownList ID="ClassId" TValue="string" TItem="StateName"
+                                                                CssClass="e-outline" Placeholder="Select state name"
+                                                                FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                                Enabled="ddEnable"
+                                                @bind-Value="@flowUpSchoolViewModel.StateName"
+                                                                DataSource="@stateName">
+                                                    <DropDownListFieldSettings Text="Value" Value="Id" />
+                                                    <ValidationMessage For="() => flowUpSchoolViewModel.StateName" />
+                                                </SfDropDownList>
+
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="CityName" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@flowUpSchoolViewModel.CityName"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => flowUpSchoolViewModel.CityName" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Multiline=true Placeholder="Address" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@flowUpSchoolViewModel.Address"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => flowUpSchoolViewModel.Address" />
+                                            </MudItem>
+
+
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfButton CssClass=@btncss type="submit" IsPrimary="true">@HeaderText</SfButton>
+                                                @*  <SfButton CssClass="e-outline" OnClick="@CloseDialog">Cancel</SfButton>*@
+                                                <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>
+                                            </MudItem>
+                                        </MudGrid>
+                                    </MudCardContent>
+                                </EditForm>
+                            </MudItem>
+                        </MudGrid>
+                    </Content>
+                </DialogTemplates>
+                <DialogAnimationSettings Effect="@AnimationEffect" Duration=400 />
+            </SfDialog>
+        </MudItem>
+    </MudItem>
+</MudGrid>
+
+ @* Follow Up Screen Designe  *@
+
+<MudGrid>
+    <MudItem xs="12" sm="3" md="12">
+        <MudItem xs="12" sm="3" md="12">
+            <SfDialog @ref="@DialogRef" Width="750px" AllowDragging="true" IsModal="false" ShowCloseIcon="true" @bind-Visible="@IsVisibleFollowUpScreen">
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>
+                    <Header>@DialogHeaderName </Header>
+                    <Content>
+                        <MudGrid>
+                            <MudItem xs="12" md="12" sm="3">
+                                <EditForm Model="followUpSchoolViewModel" OnValidSubmit="OnValidSubmit">
+                                    <DataAnnotationsValidator />
+                                    <MudCardContent>
+                                        <MudGrid> 
+                                            <MudItem xs="12" md="12" sm="12">
+                                            <b><label CssClass="e-outline">@followUpSchoolViewModel.School_Name</label><br /></b>
+                                         </MudItem>
+                                        <MudItem xs="12" sm="12" md="6">
+                                                    <SfDatePicker TValue="DateTime?" Format="yyyy-MM-dd" Placeholder="Folow Up Date" @bind-Value="@followUpSchoolViewModel.FollowupDate"></SfDatePicker>
+                                        </MudItem>
+
+                                        <MudItem xs="12" md="6" sm="12">
+                                                    <SfDropDownList ID="ClassId" TValue="string" TItem="CallResponseType"
+                                                            CssClass="e-outline" Placeholder="Select a call response type"
+                                                            FloatLabelType="@FloatLabelType.Never"
+                                                            AllowFiltering="true"
+                                                            Enabled="ddEnable"
+                                                            @bind-Value="@followUpSchoolViewModel.FollowupStatus"
+                                                            DataSource="@callResponseType">
+                                                        <DropDownListFieldSettings Text="Value" Value="Id" />
+                                                        <ValidationMessage For="() => followUpSchoolViewModel.FollowupStatus" />
+                                            </SfDropDownList>
+
+                                        </MudItem>
+                                        <MudItem xs="12" sm="6" md="12">
+                                            <SfTextBox ID="address" @bind-Value="@(followUpSchoolViewModel.Remarks)"
+                                                       Multiline="true" FloatLabelType="FloatLabelType.Never" Placeholder="Follow up remarks"></SfTextBox>
+                                        </MudItem>
+
+                                        <MudItem xs="12" md="6" sm="6">
+                                            @* <SfButton CssClass=@btncss type="submit" IsPrimary="true">@HeaderText</SfButton> *@
+                                                <SfButton Type="button" CssClass=@btncss IsToggle="false " IsPrimary="true" Content="Save Details" OnClick="@SaveFollowUpDetails"></SfButton>
+                                            @*  <SfButton CssClass="e-outline" OnClick="@CloseDialog">Cancel</SfButton>*@
+                                                <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>
+                                                 
+                                        </MudItem>
+                                        </MudGrid>
+                                    </MudCardContent>
+                                </EditForm>
+                            </MudItem>
+                             </MudGrid>
+                                   
+                    </Content>
+                </DialogTemplates>
+                <DialogAnimationSettings Effect="@AnimationEffect" Duration=400 />
+            </SfDialog>
+        </MudItem>
+    </MudItem>
+</MudGrid>
+
+<style>
+    .e-toolbar-item .e-tbar-btn {
+        background-color: orange;
+    }
+
+    .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+
+    .e-dialog .e-dlg-header {
+        color: cornflowerblue;
+        font-size: 20px;
+        font-weight: normal;
+    }
+
+    .e-custom {
+        border-radius: 1;
+        height: 30px;
+        width: 80px;
+    }
+
+        .e-custom, .e-custom:hover, .e-custom:focus, .e-custom:active {
+            background-color: orange;
+            color: #fff;
+        }
+
+    /*  .e-rowcell.e-attr {
+                            background-color: lightgrey;
+                        }*/
+
+    /* .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+                            position: fixed;
+                        }*/
+
+    /*
+
+                        .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
+                            transition: none;
+                        }*/
+    /*.e-content .e-item {
+                            font-size: 12px;
+                            padding: 10px;
+                            text-align: justify;
+                        }*/
+</style>

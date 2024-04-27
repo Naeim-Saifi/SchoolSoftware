@@ -1,0 +1,242 @@
+﻿@using Syncfusion.Blazor.Grids
+@using AIS.Data.RequestResponseModel.StudentSetUp;
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Charts
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
+@using AIS.Data.RequestResponseModel.ExamMasterSetup;
+@page "/User_Pages/ExamSetup/StudentUnitList"
+
+@inherits StudentUnitListBase
+
+@{
+
+    var InitSearch2 = (new string[] { "firstName", "middleName", "lastName", "fatherName" });
+    var Tool = (new List<string>() { "Search" });
+    var InitialGroupColumn = (new string[] { "monthNameDetails" });
+}
+<MudGrid>
+    <MudItem xs="12" sm="12" md="4">
+        <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+            <DashboardLayoutPanels>
+                <DashboardLayoutPanel SizeX=7 SizeY="15">
+                <HeaderTemplate>Student List</HeaderTemplate>
+                
+                <ContentTemplate>
+                     <MudItem xs="12" sm="12" md="12">
+                        
+                         <MudItem xs="12" sm="12" md="2">
+                            <SfToolbar OverflowMode="OverflowMode.Popup" Width="300px">
+                                <ToolbarItems>
+                                    <ToolbarItem Type="ItemType.Input">
+                                        <Template>
+                                            <EditForm Model="studentUnitListViewModel" OnValidSubmit="OnValidSubmit">
+                                                <DataAnnotationsValidator />
+                                                <MudCardContent>
+                                                    <SfDropDownList ID="ClassId" TValue="string" TItem="Master_CLass_List_Output_Model"
+                                                                    CssClass="e-outline" Placeholder="Select a class" Width="200"
+                                                                    FloatLabelType="@FloatLabelType.Never"
+                                                                    AllowFiltering="true"
+                                                                    Enabled="ddEnable"
+                                                    @bind-Value="@studentUnitListViewModel.classId"
+                                                                    DataSource="@_classList">
+                                                        <DropDownListFieldSettings Text="className" Value="classId" />
+                                                        <DropDownListEvents TItem="Master_CLass_List_Output_Model" TValue="string"
+                                                                            ValueChange="OnChangeClass" />
+                                                        <ValidationMessage For="() => studentUnitListViewModel.classId" />
+                                                    </SfDropDownList>
+                                                    <SfDropDownList ID="monthID" TValue="string" TItem="Master_Section_List_Output_Model" Width="200"
+                                                                    CssClass="e-outline" Placeholder="Select a section"
+                                                                    FloatLabelType="@FloatLabelType.Never"
+                                                                    AllowFiltering="true"
+                                                                    Enabled="ddEnable"
+                                                    @bind-Value="@studentUnitListViewModel.sectionID"
+                                                                    DataSource="@_sectionList">
+                                                        <DropDownListEvents TItem="Master_Section_List_Output_Model" TValue="string"
+                                                                            ValueChange="OnChangeSection" />
+                                                        <DropDownListFieldSettings Text="sectionName" Value="sectionId" />
+                                                        <ValidationMessage For="() => studentUnitListViewModel.sectionID" />
+                                                    </SfDropDownList>
+                                                </MudCardContent>
+                                            </EditForm>
+                                        </Template>
+                                    </ToolbarItem>
+                                </ToolbarItems>
+                            </SfToolbar>
+                        </MudItem>
+                         
+                        <MudItem xs="12" sm="12" md="10">
+                                    <SfGrid DataSource="@_studentList"
+                                    @ref="_sfgridstudent"
+                                            EnableVirtualMaskRow="true"
+                                            RowHeight="38" Height="710"
+                                            Width="auto" EnableVirtualization="false"
+                                            AllowResizing="true" AllowExcelExport="true"
+                                            EnableAutoFill="true" AllowReordering="true"
+                                            ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
+                                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                            ContextMenuItems="MenuItems"
+                                            Toolbar="toolBarItems">
+                                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                        <GridPageSettings PageSizes="@(new string[] { "25", "50","100", "150", "200",  "All" })" PageSize="@pageSize"></GridPageSettings>
+                                        <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                            IgnoreCase="true"></GridSearchSettings>
+                                        <GridEvents CommandClicked="ViewUnitMarksDetails" TValue=Student_List_Output_Model></GridEvents>
+                                        <GridColumns>
+                                            <GridColumn Field=@nameof(Student_List_Output_Model.firstName) HeaderText="First Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                            <GridColumn Field=@nameof(Student_List_Output_Model.middleName) HeaderText="Middle Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                            <GridColumn Field=@nameof(Student_List_Output_Model.fatherName) HeaderText="Father Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                            <GridColumn Field=@nameof(Student_List_Output_Model.rollNo) HeaderText="Roll No" AutoFit=true></GridColumn>
+                                            <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                                <GridCommandColumns>
+                                                    <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions()
+                                            { Content="View", IconCss = "e-icons e-eye e-primary e-outline", CssClass = "e-flat e-info e-outline" })">
+                                                    </GridCommandColumn>
+                                                    <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions()
+                                            { Content="Print", IconCss = "e-icons e-print e-primary e-outline", CssClass = "e-flat e-info e-outline" })">
+                                                    </GridCommandColumn>
+                                                </GridCommandColumns>
+                                            </GridColumn>
+                                        </GridColumns>
+                                    </SfGrid>
+                        </MudItem>
+
+                     </MudItem>
+                    
+               </ContentTemplate>
+            </DashboardLayoutPanel>
+         </DashboardLayoutPanels>
+    </SfDashboardLayout>
+        </MudItem>
+        <MudItem xs="12" sm="12"md="6">
+           <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+                                <DashboardLayoutPanels>
+                                    <DashboardLayoutPanel SizeX=7 SizeY="15">
+                                        <HeaderTemplate>Unit Marks List</HeaderTemplate>
+                                        <ContentTemplate>
+                                          <SfGrid DataSource="@_unitWiseMarksList"
+                                @ref="_sfstudentMarksList"
+                                        EnableVirtualMaskRow="true"
+                                        RowHeight="38" Height="710"
+                                        Width="auto" EnableVirtualization="false"
+                                        AllowResizing="true" AllowExcelExport="true"
+                                        EnableAutoFill="true" AllowReordering="true"
+                                        ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                        AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                        ContextMenuItems="MenuItems"
+                                        Toolbar="toolBarItems">
+                                    <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                    <GridPageSettings PageSizes="@(new string[] { "25", "50","100", "150", "200",  "All" })" PageSize="@pageSize"></GridPageSettings>
+                                    <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                        IgnoreCase="true"></GridSearchSettings>
+                                    <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
+                                    <GridGroupSettings Columns=@InitialGroupColumn>
+                                        <CaptionTemplate>
+                                            @{
+                                                var UnitDetails = (context as CaptionTemplateContext);
+                                                <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                            }
+                                        </CaptionTemplate>
+                                    </GridGroupSettings>
+                                    @* <GridEvents CommandClicked="ViewUnitMarksDetails" TValue=Student_List_Output_Model></GridEvents> *@
+                                    <GridColumns>
+                                        <GridColumn Field=@nameof(StudentUnitWiseMarks_List_Output.subjectName) HeaderText="Subject Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(StudentUnitWiseMarks_List_Output.unitTitle) HeaderText="Unit Title" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(StudentUnitWiseMarks_List_Output.maxMarks) HeaderText="Max Marks" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(StudentUnitWiseMarks_List_Output.obtainMarks) HeaderText="Obtain Marks" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(StudentUnitWiseMarks_List_Output.percentage) HeaderText="Percentage" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(StudentUnitWiseMarks_List_Output.grade) HeaderText="Grade" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(StudentUnitWiseMarks_List_Output.teacherRemarks) HeaderText="Teacher Remarks" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(StudentUnitWiseMarks_List_Output.monthNameDetails) HeaderText="Month Name" AllowGrouping=true AutoFit=true></GridColumn>
+                                    </GridColumns>
+                                </SfGrid>
+                                        </ContentTemplate>
+                                    </DashboardLayoutPanel>
+                                </DashboardLayoutPanels>
+                            </SfDashboardLayout>
+         </MudItem>          
+  
+</MudGrid>
+
+<style>
+    .e-toolbar-item .e-tbar-btn {
+        background-color: orange;
+    }
+
+    .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+
+    .e-dialog .e-dlg-header {
+        color: cornflowerblue;
+        font-size: 20px;
+        font-weight: normal;
+    }
+
+
+
+    /* html,
+    body,
+    #container {
+        height: 100%;
+        overflow: hidden;
+        width: 100%;
+        position: relative;
+        min-height: 400px;
+    }
+
+    .text {
+        text-transform: capitalize;
+    }
+
+    #customization {
+        display: table;
+        margin: 0 auto;
+    }
+
+    .animate {
+        display: table-cell;
+        padding-left: 20px;
+    }
+
+    @@media only screen and (max-width: 360px) {
+        #customization {
+            display: inline-block;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .animate {
+            display: inline-block;
+            padding: 10px;
+        }
+    } */
+    /*  .e-rowcell.e-attr {
+                        background-color: lightgrey;
+                    }*/
+
+    /* .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+                        position: fixed;
+                    }*/
+
+    /*
+
+                    .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
+                        transition: none;
+                    }*/
+    /*.e-content .e-item {
+                        font-size: 12px;
+                        padding: 10px;
+                        text-align: justify;
+                    }*/
+</style>

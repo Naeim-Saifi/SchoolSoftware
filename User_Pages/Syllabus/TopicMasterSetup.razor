@@ -1,0 +1,339 @@
+﻿@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using AIS.Data.RequestResponseModel.Syllabus;
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
+@page "/User_Pages/Syllabus/TopicMasterSetup"
+@inherits TopicMasterSetupBase
+
+@{
+
+    var InitSearch2 = (new string[] { "unitTitle", "subjectName", "unitDescription", "chapterTitle", "chapterDescription", "topicTitle", "topicDescription" });
+    var Tool = (new List<string>() { "Search" });
+    var InitialGroupColumn = (new string[] { "className" });
+}
+<MudGrid>
+    <MudItem xs="12" sm="12" md="6">
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Topic Master Details</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@topicMasterList"
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="810"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                ContextMenuItems="MenuItems" 
+                            @ref="sfTopicGrid"
+                                Toolbar="toolAllTopictoolBarItems">
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+                        @* <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>*@
+                        <GridGroupSettings Columns=@InitialGroupColumn>
+                            <CaptionTemplate>
+                                @{
+                                    var UnitDetails = (context as CaptionTemplateContext);
+                                    <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                }
+                            </CaptionTemplate>
+                        </GridGroupSettings>
+
+                        <GridEvents  OnToolbarClick="AllTopicToolBar" TValue=Topic_Output_Model></GridEvents>
+                        <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+                        <GridColumns>
+                            <GridColumn Field=@nameof(Topic_Output_Model.className) HeaderText="Class" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Topic_Output_Model.subjectName) HeaderText="Subject" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Topic_Output_Model.unitTitle) HeaderText="Unit Title" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Topic_Output_Model.unitDescription) HeaderText="Unit Description" Visible="false" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Topic_Output_Model.chapterTitle) HeaderText="Chapter Title" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Topic_Output_Model.chapterDescription) HeaderText="Chapter Description" Visible="false" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Topic_Output_Model.topicTitle) HeaderText="Topic Title" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Topic_Output_Model.topicDescription) HeaderText="Topic Description" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Topic_Output_Model.createdDate) HeaderText="Created Date"   TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Topic_Output_Model.updatedDate) HeaderText="Updated Date"   TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Topic_Output_Model.createdByUser) HeaderText="CreatedBy User"    TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                             <GridColumn Field=@nameof(Topic_Output_Model.updatedByUser) HeaderText="UpdateBy User"    TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                        </GridColumns>
+                    </SfGrid>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+</MudItem>
+</MudGrid>
+
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        
+            <SfDialog @ref="@DialogRef" Width="1450px" AllowDragging="true" IsModal="false" ShowCloseIcon="true" @bind-Visible="@IsVisible">
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>
+                    <Header>@DialogHeaderName </Header>
+                    <Content>
+                        <MudGrid>
+                            <MudItem xs="12" md="6" sm="12">
+                                <EditForm Model="topicMasterViewModel" OnValidSubmit="OnValidSubmit">
+                                    <DataAnnotationsValidator />
+                                    <MudCardContent>
+                                        <MudGrid>
+                                            <MudItem xs="12" md="6" sm="6">
+
+                                                <SfDropDownList ID="ClassId" TValue="string" TItem="Master_CLass_List_Output_Model"
+                                                                CssClass="e-outline" Placeholder="Select a Class"
+                                                            FloatLabelType="@FloatLabelType.Never" FilterType="Syncfusion.Blazor.DropDowns.FilterType.Contains"
+                                                                AllowFiltering="true"
+                                                                Enabled="ddEnable"
+                                                                @bind-Value="@topicMasterViewModel.classId"
+                                                                DataSource="@master_CLass_List">
+
+                                                    <DropDownListFieldSettings Text="className" Value="classId" />
+                                                    <DropDownListEvents TItem="Master_CLass_List_Output_Model" TValue="string"
+                                                                        ValueChange="OnChangeClass" />
+                                                    <ValidationMessage For="() => topicMasterViewModel.classId" />
+                                                </SfDropDownList>
+
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfDropDownList ID="SectionId" TValue="string" TItem="Master_Map_Subject_With_Class_List_Output_Model"
+                                                            CssClass="e-outline" Placeholder="Select a Subject" FilterType="Syncfusion.Blazor.DropDowns.FilterType.Contains"
+                                                                FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                                @bind-Value="@topicMasterViewModel.subjectId"
+                                                                Enabled="ddEnable"
+                                                                DataSource="@map_classwithsubject_List">
+                                                    <DropDownListFieldSettings Text="subjectName" Value="subjectId" />
+                                                    <DropDownListEvents TItem="Master_Map_Subject_With_Class_List_Output_Model" TValue="string"
+                                                                        ValueChange="OnChangeSubject" />
+                                                    <ValidationMessage For="() => topicMasterViewModel.subjectId" />
+                                                </SfDropDownList>
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfDropDownList ID="SectionId" TValue="string" TItem="Unit_Output_Model"
+                                                            CssClass="e-outline" Placeholder="Select a Unit" FilterType="Syncfusion.Blazor.DropDowns.FilterType.Contains"
+                                                                FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                                @bind-Value="@topicMasterViewModel.unitId"
+                                                                Enabled="ddEnable"
+                                                                DataSource="@unitMasterList">
+                                                    <DropDownListFieldSettings Text="unitTitle" Value="unitId" />                                                   
+                                                    <DropDownListEvents TItem="Unit_Output_Model" TValue="string"
+                                                                        ValueChange="OnChangeUnit" />
+                                                    <ValidationMessage For="() => topicMasterViewModel.unitId" />
+                                                </SfDropDownList>
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfDropDownList ID="SectionId" TValue="string" TItem="Chapter_Output_Model"
+                                                            CssClass="e-outline" Placeholder="Select a Chapter" FilterType="Syncfusion.Blazor.DropDowns.FilterType.Contains"
+                                                                FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                                @bind-Value="@topicMasterViewModel.chapterId"
+                                                                Enabled="ddEnable"
+                                                                DataSource="@chapterMasterList">
+                                                <DropDownListEvents TItem="Chapter_Output_Model" TValue="string"
+                                                                    ValueChange="OnChangeChapter" />
+                                                    <DropDownListFieldSettings Text="chapterTitle" Value="chapterID" />
+                                                    <ValidationMessage For="() => topicMasterViewModel.chapterId" />
+                                                </SfDropDownList>
+                                            </MudItem>
+
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Topic Title" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@topicMasterViewModel.topicTitle"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => topicMasterViewModel.topicTitle" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Topic Description" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@topicMasterViewModel.topicDescription"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => topicMasterViewModel.topicDescription" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfButton CssClass=@btncss type="submit" IsPrimary="true">@HeaderText</SfButton>
+                                                @*  <SfButton CssClass="e-outline" OnClick="@CloseDialog">Cancel</SfButton>*@
+                                                <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>
+                                            </MudItem>
+                                        </MudGrid>
+                                    </MudCardContent>
+                                </EditForm>
+                            </MudItem>
+                            <MudItem xs="12" md="6" sm="12">
+
+                            <SfGrid DataSource="@_topicMasterList"
+                                    EnableVirtualMaskRow="true"
+                                    RowHeight="38" Height="410"
+                                    Width="auto" EnableVirtualization="false"
+                                    AllowResizing="true" AllowExcelExport="true"
+                                    EnableAutoFill="true" AllowReordering="true"
+                                    ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                    AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                    ContextMenuItems="MenuItems"
+                            @ref="sfeditTopicGrid"
+                                    Toolbar="editTopicToolBar">
+                                <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+                                @* <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>*@
+                                <GridGroupSettings Columns=@InitialGroupColumn>
+                                    <CaptionTemplate>
+                                        @{
+                                            var UnitDetails = (context as CaptionTemplateContext);
+                                            <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                        }
+                                    </CaptionTemplate>
+                                </GridGroupSettings>
+
+                                <GridEvents CommandClicked="EditTopicMaster" OnToolbarClick="EditTopicToolBar" TValue=Topic_Output_Model></GridEvents>
+                                <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                    IgnoreCase="true"></GridSearchSettings>
+                                <GridColumns>
+                                    <GridColumn Field=@nameof(Topic_Output_Model.className) HeaderText="Class" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                    <GridColumn Field=@nameof(Topic_Output_Model.subjectName) HeaderText="Subject" AutoFit=true></GridColumn>
+                                    @* <GridColumn Field=@nameof(Topic_Output_Model.unitTitle) HeaderText="Unit Title" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                    <GridColumn Field=@nameof(Topic_Output_Model.unitDescription) HeaderText="Unit Description" Visible="false" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                    <GridColumn Field=@nameof(Topic_Output_Model.chapterTitle) HeaderText="Chapter Title" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                    <GridColumn Field=@nameof(Topic_Output_Model.chapterDescription) HeaderText="Chapter Description" Visible="false" TextAlign="TextAlign.Right" AutoFit=true></GridColumn> *@
+                                    <GridColumn Field=@nameof(Topic_Output_Model.topicTitle) HeaderText="Topic Title" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                    <GridColumn Field=@nameof(Topic_Output_Model.topicDescription) HeaderText="Topic Description" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                    <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                        <GridCommandColumns>
+                                            <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                            <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                        </GridCommandColumns>
+                                    </GridColumn>                                   
+                                </GridColumns>
+                            </SfGrid>
+                            </MudItem>
+                        </MudGrid>
+                    </Content>
+                </DialogTemplates>
+            <DialogAnimationSettings Delay="400" Effect="DialogEffect.FlipLeftUp">
+            </DialogAnimationSettings>
+            <DialogPositionData X="@Xvalue" Y="@Yvalue"></DialogPositionData>
+            </SfDialog>
+         
+    </MudItem>
+</MudGrid>
+ 
+
+
+@code {
+    private string Xvalue = "center";
+    private string Yvalue = "center";
+
+     /*
+     * Gets or sets the name of the animation that should be used when opening and closing the SfDialog.
+     * The following are the list of animation effects available to configure to the dialog:
+
+    Fade
+    FadeZoom
+    FlipLeftDown
+    FlipLeftUp
+    FlipRightDown
+    FlipRightUp
+    FlipXDown
+    FlipXUp
+    FlipYLeft
+    FlipYRight
+    SlideBottom
+    SlideLeft
+    SlideRight
+     SlideTop
+     Zoom
+    None.
+    */
+
+}
+
+
+
+
+<style>
+    .e-toolbar-item .e-tbar-btn {
+        background-color: orange;
+    }
+
+    .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+
+    .e-dialog .e-dlg-header {
+        color: cornflowerblue;
+        font-size: 20px;
+        font-weight: normal;
+    }
+
+
+
+    html,
+    body,
+    #container {
+        height: 100%;
+        overflow: hidden;
+        width: 100%;
+        position: relative;
+        min-height: 400px;
+    }
+
+    .text {
+        text-transform: capitalize;
+    }
+
+    #customization {
+        display: table;
+        margin: 0 auto;
+    }
+
+    .animate {
+        display: table-cell;
+        padding-left: 20px;
+    }
+
+    @@media only screen and (max-width: 360px) {
+        #customization {
+            display: inline-block;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .animate {
+            display: inline-block;
+            padding: 10px;
+        }
+    }
+    /*  .e-rowcell.e-attr {
+                        background-color: lightgrey;
+                    }*/
+
+    /* .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+                        position: fixed;
+                    }*/
+
+    /*
+
+                    .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
+                        transition: none;
+                    }*/
+    /*.e-content .e-item {
+                        font-size: 12px;
+                        padding: 10px;
+                        text-align: justify;
+                    }*/
+</style>

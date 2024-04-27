@@ -1,0 +1,81 @@
+﻿@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts 
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@using AIS.Data.RequestResponseModel.StudentSetUp;
+@using Syncfusion.Blazor.Grids
+@using AIS.Data.RequestResponseModel.RemarksTypeMaster;
+@page "/HomeWork/AddHomeWorkRemarks/{_homeWorkID}/{classID}/{sectionID}"
+
+@inherits AddHomeWorkRemasrksBase
+
+@* 
+HomeWork ID-@_homeWorkID
+ClassID=@classID
+section Id-@sectionID
+*@
+@{ 
+
+
+    var InitSearch2 = (new string[] { "holidayType" });
+    var Tool = (new List<string>() { "Search" });
+    var InitialGroupColumn = (new string[] { "className" });
+}
+<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Add Student Remarks</MudText>
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="6">
+    <MudItem xs="12" sm="12" md="3">
+        <MudText Typo="Typo.h6" Color="Color.Info" Class="mb-2">Class-@_className</MudText>
+</MudItem>        
+<MudItem xs="12" sm="12" md="3">
+        <MudText Typo="Typo.h6" Color="Color.Info" Class="mb-2">Section-@_sectionName</MudText>
+</MudItem>
+</MudItem>
+
+</MudGrid>
+
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="6">
+        
+        <SfGrid DataSource="@_studentremarksList"
+                                        AllowTextWrap="true"
+                                        EnableVirtualMaskRow="true"
+                                        RowHeight="38" Height="510"
+                                        Width="auto" EnableVirtualization="false"
+                                        AllowResizing="true" AllowExcelExport="true"
+                                        EnableAutoFill="true" AllowReordering="true"
+                                        ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
+                                        AllowFiltering="false" AllowPaging="true" ShowColumnMenu="false"
+                                        @ref="sfstudentRemarksList" Toolbar="@(new List<string>() { "Edit",  "Cancel", "Update" })">
+                                    <GridPageSettings PageCount="100" PageSizes="true"></GridPageSettings>
+                                     <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true" Mode="EditMode.Normal">                                   
+                                    </GridEditSettings>
+                                   @*  <GridEvents QueryCellInfo="CustomizeCell" TValue="StudentAttendanceListModel"></GridEvents> *@
+                                    <GridColumns>
+                                    <GridColumn Field="@nameof(StudentRemarksList.userID)" HeaderText="Student ID" IsPrimaryKey="true" TextAlign="TextAlign.Center" Width="90"></GridColumn>
+                                    <GridColumn Field="@nameof(StudentRemarksList.firstName)" HeaderText="First Name" AllowEditing="false" TextAlign="TextAlign.Center" Width="100"></GridColumn>
+                                    <GridColumn Field="@nameof(StudentRemarksList.fatherName)" HeaderText="Father Name" AllowEditing="false" TextAlign="TextAlign.Center" Width="100"></GridColumn>
+                                    <GridColumn Field="@nameof(StudentRemarksList.rollNo)" HeaderText="Roll No" AllowEditing="false" TextAlign="TextAlign.Center" Width="100"></GridColumn>
+                                                        @* <GridColumn Field="@nameof(StudentRemarksList.status)" HeaderText="Status" Type="ColumnType.Number">
+                                        <EditTemplate>
+                                        @{
+                                        var Order = (context as StudentAttendanceListModel);
+                                       <SfDropDownList @ref="DropDownList" ID="Edge" DataSource="@DropDownEnumValue" @bind-Value="@((context as StudentAttendanceListModel).status)"
+                                       TValue="AttendanceStatus" TItem="string" Placeholder="Feedback Detail" FloatLabelType="FloatLabelType.Always">
+                                       </SfDropDownList>
+                                       }
+                                      </EditTemplate>  
+                                     </GridColumn>*@
+                                    </GridColumns>
+                                </SfGrid>
+    </MudItem>
+</MudGrid>

@@ -1,0 +1,98 @@
+﻿<h3>ViewResult</h3>
+@page "/OnlineExam/ViewResult/{Value}"
+
+@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+
+@inherits ViewResultBase
+@{
+
+    var InitSearch1 = (new string[] { "subjectName" });
+    var Tool = (new List<string>() { "Search" });
+}
+
+<p>@Value</p>
+<MudGrid>
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="9" CellAspectRatio="2" AllowResizing="false">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Online Test Result</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@viewResultDetailsLists"
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="410"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            ContextMenuItems="MenuItems"
+                            @ref="sfViewResult"
+                            Toolbar="ToolBarItems">
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        @*<GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>*@
+                        <GridEvents OnToolbarClick="ToolbarClickHandler"  TValue="ViewResultDetailsList"></GridEvents>
+                        <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+                        <GridSearchSettings Fields=@InitSearch1 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+                        <GridColumns>
+                            <GridColumn Field="@nameof(ViewResultDetailsList.QuestionId)" Visible="true" IsPrimaryKey="true" HeaderText="ID" Width="5" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(ViewResultDetailsList.QuestionDetails)" HeaderText="Question Details" Width="25" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(ViewResultDetailsList.CorrectAnsweer)" HeaderText="Correct Answeer" Width="10" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(ViewResultDetailsList.SelectedAnsweer)" HeaderText="Selected Answeer" Width="10" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(ViewResultDetailsList.AnsweerStatus)" HeaderText="Answeer Status" Width="10" TextAlign="TextAlign.Left"></GridColumn>
+
+                        </GridColumns>
+                        <SfToolbar>
+                            <ToolbarItems>
+                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>
+                                @*<ToolbarItem Text="Map Subject & Class Section" Align="ItemAlign.Center"
+                SuffixIcon="e-outline e-icons e-plus-icon"
+                OnClick="@OpenDialog"></ToolbarItem>*@
+                                @*<ToolbarItem Text="Add Time Table" OnClick="@ShowDialog" CssClass="e-flat" Align="ItemAlign.Right"></ToolbarItem>
+                <ToolbarItem Text="Settings" Align="ItemAlign.Right"></ToolbarItem>*@
+                            </ToolbarItems>
+                        </SfToolbar>
+                    </SfGrid>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+</MudGrid>
+
+
+<style>
+    .e-toolbar-item .e-tbar-btn {
+        background-color: powderblue;
+    }
+
+    /*  .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }*/
+
+    /* .e-rowcell.e-attr {
+        background-color: lightgrey;
+    }*/
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        position: fixed;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+
+    .disablerow {
+        background-color: red;
+    }
+</style>

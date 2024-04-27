@@ -1,0 +1,222 @@
+﻿@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Buttons;
+@using AIS.Model.Employee
+@using AdminDashboard.Server.Models.TimeTable
+@using AIS.Model.MasterData;
+@using AIS.Model.Mapping;
+@using System.ComponentModel.DataAnnotations;
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Layouts
+@using AdminDashboard.Server.Models.MasterConfiguration.SubjectMaster;
+
+
+@*@page "/TimeTable/TimeTableSetup"*@
+@inherits TimetableSetupBase
+@*Show dialog prompt delete confirmation*@
+
+<SfDialog @ref="Dialog" Width="350px" Visible="false" ShowCloseIcon="true" IsModal="true">
+    <DialogEvents Closed="Closed"></DialogEvents>
+    <DialogTemplates>
+        @*Here you can customize the Header and Content of delete confirmation dialog*@
+        <Header> Delete Record</Header>
+        <Content> You are about to Delete a Record @SelectedData ?</Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton OnClick="@OkClick" Content="OK" IsPrimary="true"></DialogButton>
+        <DialogButton OnClick="@CancelClick" Content="Cancel"></DialogButton>
+    </DialogButtons>
+</SfDialog>
+
+@* View Time table ----Start*@
+
+
+@*@inherits ViewTimeTableSetupBase*@
+@{
+
+    var InitSearch1 = (new string[] { "teacherName", "subjectName", "classname", "sectionName" });
+    var Tool = (new List<string>() { "Search" });
+}
+<MudGrid>
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="9" CellAspectRatio="2" AllowResizing="false">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Class and Section Time Table Details</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@timeTableListModels"
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="410"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            @ref="viewTimeTable_Grid"
+                            Toolbar="@(new string[] {"Add", "Edit","Delete","Search","Print","ColumnChooser" })"
+                           >
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        @*<GridEvents OnActionBegin="ActionBeginHandler" TValue="UnitMasterListModel"></GridEvents>*@
+                        <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+                        <GridPageSettings PageSize="12"></GridPageSettings>
+                        <GridEvents OnActionBegin="OnActionBegin" RowSelected="RowSelectHandler" OnToolbarClick="ToolClick" TValue="TimeTableListModel"></GridEvents>
+                        <GridEditSettings AllowEditing="true" AllowAdding="true" AllowEditOnDblClick="false" AllowDeleting="true"></GridEditSettings>
+                        @*<GridEvents OnToolbarClick="ToolbarClick" TValue="EmployeeViewModel"></GridEvents>*@
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        @*<GridGroupSettings ShowGroupedColumn="true"></GridGroupSettings>*@
+
+                        <GridSearchSettings Fields=@InitSearch1 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+                        @*<GridEvents CommandClicked="OnCommandClicked" TValue="TimeTableListModel"> </GridEvents>*@
+                        @*<GridEvents OnActionBegin="OnActionBegin" RowSelected="RowSelectHandler" TValue="MapSubjectWithTeacherList"></GridEvents>*@
+                        @*<GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>*@
+
+                        <GridColumns>
+                            <GridColumn Field="@nameof(TimeTableListModel.timeTableID)" IsPrimaryKey="true" HeaderText="ID" Width="40" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(TimeTableListModel.className)" HeaderText="Class" Width="40" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(TimeTableListModel.sectionName)" HeaderText="Section" Width="80" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(TimeTableListModel.dayDetails)" HeaderText="Day" Width="50" AllowGrouping="true" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(TimeTableListModel.periodName)" HeaderText="Period" Width="50" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(TimeTableListModel.startTime)" HeaderText="Start Time" Width="80" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(TimeTableListModel.endTime)" HeaderText="End Time" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(TimeTableListModel.subjectName)" HeaderText="Subject" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(TimeTableListModel.teacherName)" HeaderText="Teacher Name" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(TimeTableListModel.createdDate)" HeaderText="Created On" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+
+                            <!--<GridColumn HeaderText="Action" TextAlign="TextAlign.Center" Width="80">-->
+                            @*<GridCommandColumns>
+                                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions() { Content = "Delete", CssClass = "e-flat" })" Title="Delete"></GridCommandColumn>
+                                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions() { Content = "Active", CssClass = "e-flat" })" Title="Active"></GridCommandColumn>
+                                </GridCommandColumns>*@
+                            <!--<GridCommandColumns>-->
+                            <!--@*<GridCommandColumn ButtonOption="@(new CommandButtonOptions() { Content = "Delete", CssClass = "e-flat" })"></GridCommandColumn>*@-->
+                            <!--<GridCommandColumn ButtonOption="@(new CommandButtonOptions() {IconCss="e-icons e-delete", CssClass="e-flat" })"></GridCommandColumn>
+                            </GridCommandColumns>-->
+                            <!--</GridColumn>-->
+                        </GridColumns>
+
+                        <SfToolbar>
+                            <ToolbarItems>
+                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>
+                                @*<ToolbarItem Text="Map Subject & Class Section" Align="ItemAlign.Center"
+                                    SuffixIcon="e-outline e-icons e-plus-icon"
+                                    OnClick="@OpenDialog"></ToolbarItem>*@
+                                <ToolbarItem Text="Add Time Table" OnClick="@ShowDialog" CssClass="e-flat" Align="ItemAlign.Right"></ToolbarItem>
+                                <ToolbarItem Text="Settings" Align="ItemAlign.Right"></ToolbarItem>
+                            </ToolbarItems>
+                        </SfToolbar>
+                    </SfGrid>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+
+</MudGrid>
+
+
+
+@* End TimeTable View*@
+
+@* Setup time table dialog details*@
+
+<MudGrid>
+    <MudItem xs="12" sm="3" md="12">
+        <MudItem xs="12" sm="3" md="12">
+            <SfDialog @ref="DialogRef" Width="650px" AllowDragging="true" IsModal="false" ShowCloseIcon="true" @bind-Visible="@IsVisible">
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>
+                    <Header>Time Table Setup </Header>
+                    <Content>
+                        <MudItem xs="12" md="12" sm="3">
+                            <EditForm Model="@dropdownModel" OnValidSubmit="OnValidSubmit">
+                                <DataAnnotationsValidator />
+                                <MudCardContent>
+                                    <MudGrid>
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList ID="ClassId" TValue="string" TItem="MasterClassListModel"
+                                                            CssClass="e-outline" Placeholder="Select a Class"
+                                                            FloatLabelType="@FloatLabelType.Never"
+                                                            AllowFiltering="false"
+                                                            @bind-Value="@dropdownModel.ClassName"
+                                                            DataSource="@masterClassListModels">
+                                                <DropDownListFieldSettings Text="name" Value="masterClassId" />
+                                                <DropDownListEvents TItem="MasterClassListModel" TValue="string"
+                                                                    ValueChange="OnChangeClass" />
+                                                <ValidationMessage For="() => dropdownModel.ClassName" />
+                                            </SfDropDownList>
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList ID="SectionId" TValue="string" TItem="MasterSectionListModel"
+                                                            CssClass="e-outline" Placeholder="Select a Section"
+                                                            FloatLabelType="@FloatLabelType.Never" AllowFiltering="false"
+                                                            @bind-Value="@dropdownModel.SectionName"
+                                                            DataSource="@masterSectionListModel">
+                                                <DropDownListFieldSettings Text="name" Value="masterSectionId" />
+                                              
+                                                <ValidationMessage For="() => dropdownModel.SectionName" />
+                                            </SfDropDownList>
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList ID="Sname" @bind-Value="@dropdownModel.SubjectName"
+                                                            TItem="MapsubjectwithClassModel"
+                                                            CssClass="e-outline" Placeholder="Select a Subject" FloatLabelType="@FloatLabelType.Never"
+                                                            TValue="string" DataSource="@subjectList" AllowFiltering="true">
+                                                <DropDownListFieldSettings Value="masterSubjectId" Text="subjectName"></DropDownListFieldSettings>
+                                                @*<DropDownListEvents TItem="MapsubjectwithClassModel" TValue="string" Opened="OnOpenPopup"></DropDownListEvents>*@
+                                                <ValidationMessage For="() => dropdownModel.SubjectName" />
+                                            </SfDropDownList>
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList TValue="string" TItem="EmployeeDetailsModel" CssClass="e-outline"
+                                                            Placeholder="Select a Teacher" FloatLabelType="@FloatLabelType.Never" AllowFiltering="false"
+                                                            @bind-Value="@dropdownModel.TeacherName"
+                                                            DataSource="@employeeDetailsModels">
+                                                <DropDownListFieldSettings Text="employeeName" Value="userId" />
+                                              
+                                                <ValidationMessage For="() => dropdownModel.TeacherName" />
+                                            </SfDropDownList>
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList TValue="string" TItem="PeriodListModel" CssClass="e-outline"
+                                                            Placeholder="Select a Period" FloatLabelType="@FloatLabelType.Never" AllowFiltering="false"
+                                                            @bind-Value="@dropdownModel.PeriodName"
+                                                            DataSource="@periodListModels">
+                                                <DropDownListFieldSettings Text="periodName" Value="periodId" />
+                                              
+                                                <ValidationMessage For="() => dropdownModel.PeriodName" />
+                                            </SfDropDownList>
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList TValue="string" TItem="DayModelList" CssClass="e-outline"
+                                                            Placeholder="Select a Day Name" FloatLabelType="@FloatLabelType.Never" AllowFiltering="false"
+                                                            @bind-Value="@dropdownModel.DayName"
+                                                            DataSource="@dayModelLists">
+                                                <DropDownListFieldSettings Text="DayName" Value="DayId" />
+                                             
+                                                <ValidationMessage For="() => dropdownModel.DayName" />
+                                            </SfDropDownList>
+                                        </MudItem>
+                                        <MudItem xs="12" md="4" sm="3">
+                                            <SfButton CssClass="e-outline" type="submit" IsPrimary="true">Save</SfButton>
+                                            <SfButton CssClass="e-outline" OnClick="@CloseDialog">Cancel</SfButton>
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudCardContent>
+                            </EditForm>
+                        </MudItem>
+
+                    </Content>
+                </DialogTemplates>
+                <DialogAnimationSettings Effect="@AnimationEffect" Duration=400 />
+            </SfDialog>
+        </MudItem>
+    </MudItem>
+</MudGrid>
+<style>
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        position: fixed;
+    }
+</style>
+

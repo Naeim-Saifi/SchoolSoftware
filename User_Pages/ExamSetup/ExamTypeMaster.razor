@@ -1,0 +1,180 @@
+﻿@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using AIS.Data.RequestResponseModel.ExamMasterSetup;
+
+
+@page "/User_Pages/ExamSetup/ExamTypeMaster"
+ 
+
+@inherits ExamTypeMasterBase
+
+@{
+
+    var InitSearch2 = (new string[] { "examType", "examTypeCode", "examTypeDescription" });
+    var Tool = (new List<string>() { "Search" });
+    //var InitialGroupColumn = (new string[] { "className" });
+}
+<MudGrid>
+    <MudItem xs="12" sm="12" md="8">
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Exam Type Master</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@_examTypeList"
+                                EnableVirtualMaskRow="true"
+                                RowHeight="38" Height="710"
+                                Width="auto" EnableVirtualization="false"
+                                AllowResizing="true" AllowExcelExport="true"
+                                EnableAutoFill="true" AllowReordering="true"
+                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            ContextMenuItems="MenuItems"
+                            @ref="sfExamListGrid"
+                            Toolbar="toolBarItems">
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+                        @* <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>*@
+                       @* <GridGroupSettings Columns=@InitialGroupColumn>
+                            <CaptionTemplate>
+                                @{
+                                    var UnitDetails = (context as CaptionTemplateContext);
+                                    <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                }
+                            </CaptionTemplate>
+                        </GridGroupSettings>*@
+
+                        <GridEvents CommandClicked="EditExamTypeMaster" OnToolbarClick="ToolbarClickHandler" TValue=Exam_Type_List_Output_Model></GridEvents>
+                        <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+                        <GridColumns>
+                            <GridColumn Field=@nameof(Exam_Type_List_Output_Model.examTypeId) HeaderText="Class" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Type_List_Output_Model.examType) HeaderText="Exam Type" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Type_List_Output_Model.examTypeCode) HeaderText="ExamType Code" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Type_List_Output_Model.examTypeDescription) HeaderText="ExamType Description" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Type_List_Output_Model.displayOrder) HeaderText="Display Order" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            
+                            <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                <GridCommandColumns>
+                                    <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                    <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                </GridCommandColumns>
+                            </GridColumn>
+                            <GridColumn Field=@nameof(Exam_Type_List_Output_Model.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Type_List_Output_Model.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Type_List_Output_Model.createdByUser) HeaderText="CreatedBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Type_List_Output_Model.updatedByUser) HeaderText="UpdateBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                        </GridColumns>
+                    </SfGrid>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+    </MudItem>
+</MudGrid>
+
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        <MudItem xs="12" sm="12" md="12">
+            <SfDialog @ref="@DialogRef" Width="750px" AllowDragging="true" IsModal="false" ShowCloseIcon="true" @bind-Visible="@IsVisible">
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>
+                    <Header>@DialogHeaderName </Header>
+                    <Content>
+                        <MudGrid>
+                            <MudItem xs="12" md="12" sm="12">
+                                <EditForm Model="examViewModel" OnValidSubmit="OnValidSubmit">
+                                    <DataAnnotationsValidator />
+                                    <MudCardContent>
+                                        <MudGrid>
+                                            
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Exam Type" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@examViewModel.examType"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => examViewModel.examType"   />
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Description" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@examViewModel.examTypeDescription"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => examViewModel.examTypeDescription" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="ExamType Code" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@examViewModel.examTypeCode"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => examViewModel.examTypeCode" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Display Order" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@examViewModel.displayOrder"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => examViewModel.displayOrder" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfButton CssClass=@btncss type="submit" IsPrimary="true">@HeaderText</SfButton>
+                                                @*  <SfButton CssClass="e-outline" OnClick="@CloseDialog">Cancel</SfButton>*@
+                                                <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>
+                                            </MudItem>
+                                        </MudGrid>
+                                    </MudCardContent>
+                                </EditForm>
+                            </MudItem>
+                        </MudGrid>
+                    </Content>
+                </DialogTemplates>
+                <DialogAnimationSettings Delay="400" Effect="DialogEffect.SlideBottom">
+                </DialogAnimationSettings>
+                <DialogPositionData X="@Xvalue" Y="@Yvalue"></DialogPositionData>
+            </SfDialog>
+        </MudItem>
+    </MudItem>
+</MudGrid>
+@code {
+
+    private string Xvalue = "center";
+    private string Yvalue = "center";
+}
+<style>
+    .e-toolbar-item .e-tbar-btn {
+        background-color: orange;
+    }
+
+    .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+    /*  .e-rowcell.e-attr {
+                        background-color: lightgrey;
+                    }*/
+
+    /* .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+                        position: fixed;
+                    }*/
+
+    /*
+
+                    .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
+                        transition: none;
+                    }*/
+    /*.e-content .e-item {
+                        font-size: 12px;
+                        padding: 10px;
+                        text-align: justify;
+                    }*/
+</style>

@@ -1,0 +1,94 @@
+﻿@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Buttons;
+@using AIS.Model.Employee
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Notifications
+@using AdminDashboard.Server.Models.TimeTable;
+@using AIS.Model.MasterData;
+@using AIS.Model.Mapping;
+@using System.ComponentModel.DataAnnotations;
+@using Syncfusion.Blazor.Popups;
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Navigations
+
+@page "/TeacherModule/TimeTable/ViewTimeTable"
+
+@inherits ViewTimeTableBase
+
+@{
+
+    var InitSearch1 = (new string[] { "teacherName", "subjectName", "classname", "sectionName" });
+    var Tool = (new List<string>() { "Search" });
+}
+<MudGrid>
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="9" CellAspectRatio="2" AllowResizing="true">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Time Table Details</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@timeTableListModels"
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="410"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            @ref="Grid"
+                            Toolbar="@(new string[] {"PdfExport","Search","Print","ColumnChooser" })">
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        @*<GridEvents OnActionBegin="ActionBeginHandler" TValue="UnitMasterListModel"></GridEvents>*@
+                        <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+                        <GridPageSettings PageSize="12"></GridPageSettings>
+                        <GridEvents OnToolbarClick="ToolbarClickHandler" TValue="TimeTableListModel"></GridEvents>
+
+                        @*<GridEvents OnToolbarClick="ToolbarClick" TValue="EmployeeViewModel"></GridEvents>*@
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        @*<GridGroupSettings ShowGroupedColumn="true"></GridGroupSettings>*@
+
+                        <GridPageSettings PageSize="12"></GridPageSettings>
+                        <GridSearchSettings Fields=@InitSearch1 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+                        @*<GridEvents CommandClicked="OnCommandClicked" TValue="MapSubjectWithTeacherList"> </GridEvents>*@
+                        @*<GridEvents OnActionBegin="OnActionBegin" RowSelected="RowSelectHandler" TValue="MapSubjectWithTeacherList"></GridEvents>*@
+                        @*<GridEditSettings AllowDeleting="true" Mode="EditMode.Normal"></GridEditSettings>*@
+                        <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+
+                        <GridColumns>
+                            <GridColumn Field="@nameof(TimeTableListModel.className)" HeaderText="Class" Width="40" TextAlign="TextAlign.Left"></GridColumn>
+                                <GridColumn Field="@nameof(TimeTableListModel.sectionName)" HeaderText="Section" Width="80" TextAlign="TextAlign.Left"></GridColumn>
+                          
+                            <GridColumn Field="@nameof(TimeTableListModel.dayDetails)" HeaderText="Day" Width="50" AllowGrouping="true" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(TimeTableListModel.periodName)" HeaderText="Period" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(TimeTableListModel.startTime)" HeaderText="Start Time" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(TimeTableListModel.endTime)" HeaderText="End Time" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(TimeTableListModel.subjectName)" HeaderText="Subject" Width="80" TextAlign="TextAlign.Center"></GridColumn>
+                            @*<GridColumn Field="@nameof(TimeTableListModel.teacherName)" HeaderText="Teacher Name" Width="80" TextAlign="TextAlign.Center"></GridColumn>*@
+                            <GridColumn Field="@nameof(TimeTableListModel.createdDate)" HeaderText="Created Date" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(TimeTableListModel.updatedDate)" HeaderText="Update Date" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn HeaderText="Action" TextAlign="TextAlign.Center" Width="80">
+                                @*<GridCommandColumns>
+                                        <GridCommandColumn ButtonOption="@(new CommandButtonOptions() { Content = "Delete", CssClass = "e-flat" })" Title="Delete"></GridCommandColumn>
+                                        <GridCommandColumn ButtonOption="@(new CommandButtonOptions() { Content = "Active", CssClass = "e-flat" })" Title="Active"></GridCommandColumn>
+                                    </GridCommandColumns>*@
+                            </GridColumn>
+                        </GridColumns>
+
+                        <SfToolbar>
+                            <ToolbarItems>
+                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>
+                                @*<ToolbarItem Text="Map Subject & Class Section" Align="ItemAlign.Center"
+                                    SuffixIcon="e-outline e-icons e-plus-icon"
+                                    OnClick="@OpenDialog"></ToolbarItem>*@
+                                <ToolbarItem Text="Search" Align="ItemAlign.Right"></ToolbarItem>
+                                <ToolbarItem Text="Settings" Align="ItemAlign.Right"></ToolbarItem>
+                            </ToolbarItems>
+                        </SfToolbar>
+                    </SfGrid>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+
+</MudGrid>

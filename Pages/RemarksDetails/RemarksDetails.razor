@@ -1,0 +1,175 @@
+﻿@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using AdminDashboard.Server.Models.MasterConfiguration.UnitMaster;
+@using AdminDashboard.Server.Models.MasterConfiguration.SubjectMaster;
+@using AIS.Model.MasterData;
+
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+
+@using Syncfusion.Blazor.Popups;
+@using System.ComponentModel.DataAnnotations;
+@using Syncfusion.Blazor.Layouts
+@using AIS.Model.Student;
+@page "/RemarksDetails/RemarksDetails"
+
+@inherits RemarksDetailsBase
+
+@{
+
+    var InitSearch1 = (new string[] { "periodName" });
+ //var Tool = (new List<string>() { "Search" });
+}
+
+
+<MudGrid>
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="9" CellAspectRatio="2" AllowResizing="true">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Teacher Remark's</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@studentListModel" AllowPaging="true" Height="315">
+                        <GridEvents CommandClicked="OnCommandClicked" TValue="StudentListModel"></GridEvents>
+                        <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true"></GridEditSettings>
+                        <GridColumns>
+                            @*<GridColumn Field=@nameof(StudentListModel.studentID) HeaderText="Student ID" IsPrimaryKey="true" TextAlign="TextAlign.Right" Width="120"></GridColumn>*@
+                            <GridColumn Field=@nameof(StudentListModel.studentName) HeaderText="Student Name" IsPrimaryKey="true" TextAlign="TextAlign.Right" Width="120"></GridColumn>
+                            <GridColumn Field=@nameof(StudentListModel.fatherFullName) HeaderText="Father Name" IsPrimaryKey="true" Width="120"></GridColumn>
+                            <GridColumn Field=@nameof(StudentListModel.rollNumber) HeaderText=" Roll No" TextAlign="TextAlign.Right" Width="130"></GridColumn>
+                            @*<GridColumn Field=@nameof(RemarksDescriptionListModel.Text) HeaderText="Remarks" Width="140px">
+                                <EditTemplate>
+                                    <SfDropDownList TItem="RemarksDescriptionListModel" TValue="string" DataSource="@remarksDescriptionListModels"
+                                                    @bind-Value="@((context as StudentListModel).RemarksDescription)">
+                                        <DropDownListFieldSettings Text="Text" Value="ID">
+                                        </DropDownListFieldSettings>
+                                    </SfDropDownList>
+                                </EditTemplate>
+                            </GridColumn>*@
+                            <GridColumn HeaderText="Actions" Width="110">
+                                <GridCommandColumns>
+                                    <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions()
+                                            { IconCss = "e-icons e-edit", CssClass = "e-flat" })"></GridCommandColumn>
+                                    @*<GridCommandColumn Type="CommandButtonType.Delete" ButtonOption="@(new CommandButtonOptions()
+                { IconCss = "e-icons e-delete", CssClass = "e-flat" })"></GridCommandColumn>*@
+                                    <GridCommandColumn Type="CommandButtonType.Save" ButtonOption="@(new CommandButtonOptions()
+                                            { IconCss = "e-icons e-update", CssClass = "e-flat" })"></GridCommandColumn>
+                                    <GridCommandColumn Type="CommandButtonType.Cancel" ButtonOption="@(new CommandButtonOptions()
+                                            { IconCss = "e-icons e-cancel-icon", CssClass = "e-flat" })"></GridCommandColumn>
+                                </GridCommandColumns>
+                            </GridColumn>
+                        </GridColumns>
+                        <SfToolbar>
+                            <ToolbarItems>
+                                @*<Toolba*@<!--rItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>-->
+                                <ToolbarItem Text="Select Class & Section" CssClass="e-outline" OnClick="@getClassDetails" Align="ItemAlign.Center"></ToolbarItem>
+                                <ToolbarItem Text="Search" Align="ItemAlign.Right"></ToolbarItem>
+                                <ToolbarItem Text="Settings" Align="ItemAlign.Right"></ToolbarItem>
+                            </ToolbarItems>
+                        </SfToolbar>
+                    </SfGrid>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+
+</MudGrid>
+<style>
+    /*to remove the edit button alone*/
+    .e-removeEditcommand .e-unboundcell .e-unboundcelldiv button.e-Editbutton {
+        display: none;
+    }
+
+    /*to remove the delete button alone*/
+    .e-removeDeletecommand .e-unboundcell .e-unboundcelldiv button.e-Deletebutton {
+        display: none;
+    }
+</style>
+@* Setup time table dialog details*@
+
+<MudGrid>
+    <MudItem xs="12" sm="3" md="12">
+        <MudItem xs="12" sm="3" md="12">
+            <SfDialog @ref="DialogRef" Width="650px" AllowDragging="true" IsModal="false" ShowCloseIcon="true" @bind-Visible="@IsVisible">
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>
+                    <Header>Send Home Work </Header>
+                    <Content>
+                        <MudItem xs="12" md="12" sm="3">
+                            <EditForm Model="@_userInputRemarksModel" OnValidSubmit="OnValidSubmit">
+                                <DataAnnotationsValidator />
+                                <MudCardContent>
+                                    <MudGrid>
+                                        <MudItem xs="12" md="6" sm="12">
+                                            <SfDropDownList ID="ClassID" TItem="MasterClassListModel"
+                                                            CssClass="e-outline" Placeholder="Select a Class"
+                                                            FloatLabelType="@FloatLabelType.Never"
+                                                            AllowFiltering="false"
+                                                            @bind-Value="@_userInputRemarksModel.ClassName"
+                                                            TValue="string" DataSource="@masterClassListModels">
+                                                <DropDownListEvents TItem="MasterClassListModel" TValue="string" ValueChange="OnChangeClass" />
+                                                <DropDownListFieldSettings Value="masterClassId" Text="name"></DropDownListFieldSettings>
+                                                <ValidationMessage For="() => _userInputRemarksModel.ClassName" />
+                                            </SfDropDownList>
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="12">
+                                            <SfDropDownList ID="Cname"
+                                                            FloatLabelType="@FloatLabelType.Never"
+                                                            AllowFiltering="false"
+                                                            @bind-Value="@_userInputRemarksModel.SectionName"
+                                                            TItem="MasterSectionListModel"
+                                                            CssClass="e-outline" Placeholder="Select a Section"
+                                                            TValue="string" DataSource="@masterSectionListModels">
+                                                <DropDownListFieldSettings Value="masterSectionId" Text="name"></DropDownListFieldSettings>
+                                                <ValidationMessage For="() => _userInputRemarksModel.SectionName" />
+                                            </SfDropDownList>
+                                        </MudItem>
+
+                                        <MudItem xs="12" md="6" sm="12">
+                                            <SfDropDownList ID="Sname"
+                                                            @bind-Value="@_userInputRemarksModel.SubjectName"
+                                                            TItem="MapsubjectwithClassModel"
+                                                            CssClass="e-outline" Placeholder="Select a Subject"
+                                                            FloatLabelType="@FloatLabelType.Never"
+                                                            TValue="string"
+                                                            DataSource="@subj"
+                                                            AllowFiltering="false">
+                                                <DropDownListFieldSettings Value="masterSubjectId" Text="subjectName"></DropDownListFieldSettings>
+                                                <ValidationMessage For="() => _userInputRemarksModel.SubjectName" />
+                                            </SfDropDownList>
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="12">
+                                            <SfDropDownList ID="Uname" @bind-Value="@_userInputRemarksModel.RemarksType" TItem="RemarksList"
+                                                            CssClass="e-outline" Placeholder="Select a Remarks"
+                                                            FloatLabelType="@FloatLabelType.Never"
+                                                            TValue="string" DataSource="@_remarksLists" AllowFiltering="false">
+
+                                                @*<DropDownListEvents TItem="RemarksList" TValue="string"  />*@
+                                                <DropDownListFieldSettings Value="ID" Text="Text"></DropDownListFieldSettings>
+                                                <ValidationMessage For="() => _userInputRemarksModel.RemarksType" />
+                                            </SfDropDownList>
+                                        </MudItem>
+                                        <MudItem xs="12" md="4" sm="3">
+                                            <SfButton CssClass="e-outline" type="submit" IsPrimary="true">Find</SfButton>
+                                            <SfButton CssClass="e-outline" OnClick="@CloseDialog">Cancel</SfButton>
+                                        </MudItem>
+
+                                    </MudGrid>
+                                </MudCardContent>
+                            </EditForm>
+                        </MudItem>
+                    </Content>
+                </DialogTemplates>
+                <DialogAnimationSettings Effect="@AnimationEffect" Duration=400 />
+            </SfDialog>
+        </MudItem>
+    </MudItem>
+</MudGrid>
+<style>
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        position: fixed;
+    }
+</style>

@@ -1,0 +1,154 @@
+﻿@page "/Dashboard/Student/StudentDashboard"
+
+@inherits StudentDashboardBase
+@using Syncfusion.Blazor.Grids
+@using AdminDashboard.Server.Models.Dashboard.Student;
+@using Syncfusion.Blazor.Layouts
+
+@using AdminDashboard.Server.Models.Dashboard.Management;
+@using Syncfusion.Blazor.Charts
+@using AdminDashboard.Server.Models.Transaction;
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using AdminDashboard.Server.Models.TimeTable;
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Buttons
+
+
+
+<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Dashboard</MudText>
+<MudGrid>
+
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.Euro" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle2" Class="mud-text-secondary mb-n2">Pending Fee Amount</MudText>
+                <MudText Typo="Typo.h6">@_pendingAmount</MudText>
+                <MudText Typo="Typo.h6">@_pendingMonth</MudText>
+                @*<MudNavLink Href="/Razorpay/RazorpayDetail" Icon="@Icons.Material.Outlined.Payment">Paynow</MudNavLink>*@
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.Layers" Color="Color.Secondary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Stock</MudText>
+                <MudText Typo="Typo.h5">150,000</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.Public" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Global Sales</MudText>
+                <MudText Typo="Typo.h5">46,000</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Custom.Uncategorized.Radioactive" Color="Color.Warning" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Roentgen</MudText>
+                <MudText Typo="Typo.h5">3,6</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+
+</MudGrid>
+<br />
+
+@{
+ var InitSearchtimetable = (new string[] { "className", "subjectName", "teacherName", "dayDetails" });
+}
+<SfDashboardLayout CellSpacing="@(new double[]{10 ,10 })" Columns="5">
+    <DashboardLayoutPanels>
+        <DashboardLayoutPanel>
+            <HeaderTemplate><div>Panel 0</div></HeaderTemplate>
+            <ContentTemplate><div>Panel Content</div></ContentTemplate>
+        </DashboardLayoutPanel>
+        <DashboardLayoutPanel SizeX=2 SizeY=2 Column=1>
+            <HeaderTemplate><div>Panel 1</div></HeaderTemplate>
+            <HeaderTemplate>Class Time Table </HeaderTemplate>
+            <ContentTemplate>
+                <MudGrid>
+                    <MudItem xs="12" sm="12" md="12">
+                        <SfGrid DataSource="@timeTableListModels"
+                                EnableVirtualMaskRow="true"
+                                RowHeight="38" Height="410"
+                                Width="auto" EnableVirtualization="false"
+                                AllowResizing="true" AllowExcelExport="true"
+                                EnableAutoFill="true" AllowReordering="true"
+                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                @ref="Timetable_Grid"
+                                Toolbar="@(new string[] {"Search","Print"})">
+                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                            @*<GridEvents OnActionBegin="ActionBeginHandler" TValue="UnitMasterListModel"></GridEvents>*@
+                            <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+                            <GridPageSettings PageSize="12"></GridPageSettings>
+
+
+                            @*<GridEvents OnToolbarClick="ToolbarClick" TValue="EmployeeViewModel"></GridEvents>*@
+                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                            @*<GridGroupSettings ShowGroupedColumn="true"></GridGroupSettings>*@
+
+                            <GridPageSettings PageSize="12"></GridPageSettings>
+                            <GridSearchSettings Fields=@InitSearchtimetable Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                IgnoreCase="true"></GridSearchSettings>
+                            @*<GridEvents CommandClicked="OnCommandClicked" TValue="MapSubjectWithTeacherList"> </GridEvents>*@
+                            @*<GridEvents OnActionBegin="OnActionBegin" RowSelected="RowSelectHandler" TValue="MapSubjectWithTeacherList"></GridEvents>*@
+                            <GridEditSettings AllowDeleting="true" Mode="EditMode.Normal"></GridEditSettings>
+                            <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+
+                            <GridColumns>
+                                @*<GridColumn Field="@nameof(TimeTableListModel.className)" HeaderText="Class" Width="15" TextAlign="TextAlign.Left"></GridColumn>
+                                <GridColumn Field="@nameof(TimeTableListModel.sectionName)" HeaderText="Section" Width="15" TextAlign="TextAlign.Left"></GridColumn>*@
+                                <GridColumn Field="@nameof(TimeTableListModel.dayDetails)" HeaderText="Day" Width="30" AllowGrouping="true" TextAlign="TextAlign.Left"></GridColumn>
+                                <GridColumn Field="@nameof(TimeTableListModel.periodName)" HeaderText="Period" Width="30" TextAlign="TextAlign.Left"></GridColumn>
+                                <GridColumn Field="@nameof(TimeTableListModel.startTime)" HeaderText="Start Time" Width="20" TextAlign="TextAlign.Left"></GridColumn>
+                                <GridColumn Field="@nameof(TimeTableListModel.endTime)" HeaderText="End Time" Width="20" TextAlign="TextAlign.Center"></GridColumn>
+                                <GridColumn Field="@nameof(TimeTableListModel.subjectName)" HeaderText="Subject" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                                <GridColumn Field="@nameof(TimeTableListModel.teacherName)" HeaderText="Teacher Name" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                                <GridColumn Field="@nameof(TimeTableListModel.createdDate)" HeaderText="Created On" Width="40" Visible="false" TextAlign="TextAlign.Center"></GridColumn>
+                            </GridColumns>
+
+                            <SfToolbar>
+                                <ToolbarItems>
+                                    <ToolbarItem Text="Export to Excel" OnClick="@TimeTable_ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>
+                                </ToolbarItems>
+                            </SfToolbar>
+                        </SfGrid>
+
+                    </MudItem>
+                </MudGrid>
+            </ContentTemplate>
+
+        </DashboardLayoutPanel>
+        <DashboardLayoutPanel SizeX=2 SizeY=2 Column=1>
+            @*<DashboardLayoutPanel SizeY=2 Column=3>*@
+            <HeaderTemplate><div>Panel 2</div></HeaderTemplate>
+            <ContentTemplate><div>Panel Content</div></ContentTemplate>
+        </DashboardLayoutPanel>
+        <DashboardLayoutPanel Row=1>
+            <HeaderTemplate><div>Panel 3</div></HeaderTemplate>
+            <ContentTemplate><div>Panel Content</div></ContentTemplate>
+        </DashboardLayoutPanel>
+    </DashboardLayoutPanels>
+</SfDashboardLayout>
+
+<style>
+    .e-panel-header {
+        background-color: rgba(0, 0, 0, .1);
+        text-align: center;
+    }
+
+    .e-panel-content {
+        text-align: center;
+        margin-top: 10px;
+    }
+</style>

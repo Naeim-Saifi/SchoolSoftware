@@ -1,0 +1,339 @@
+﻿@page "/Transaction/StudentPendingFeeList"
+
+
+@using Syncfusion.Blazor.Navigations
+@using AIS.Model.MasterData;
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Cards
+@using AdminDashboard.Server.Models.PendingFee
+
+@inherits StudentPendingFeeListBase
+
+
+@{
+    var InitSearch = (new string[] { "studentName" });
+    var Tool = (new List<string>() { "Search" });
+
+
+    var Initmapclasswithsubject = (new string[] { "studentName", "className" });
+}
+
+<SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="8" MediaQuery="max-width:700px">
+    <DashboardLayoutPanels>
+        <DashboardLayoutPanel SizeX=7 SizeY="5">
+            <HeaderTemplate>Student Pending Fee List</HeaderTemplate>
+            <ContentTemplate>
+                <SfAccordion ExpandMode="ExpandMode.Multiple">
+                    <AccordionItems>
+                        <AccordionItem Header="Student List" IconCss="e-athletics e-acrdn-icons" Expanded=true>
+                            <ContentTemplate>
+                                @if (allStudentPendingFees.Count == 0)
+                                {
+                                    <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                                }
+                                else
+                                {
+                                    @*<div style="position:relative; min-height: 500px;">Height="100%" Width="100%"*@
+                            <SfGrid DataSource="@allStudentPendingFees"
+                                    EnableVirtualMaskRow="true"
+                                    RowHeight="38" Height="410"
+                                    Width="auto" EnableVirtualization="false"
+                                    AllowResizing="true" AllowExcelExport="true"
+                                    EnableAutoFill="true" AllowReordering="true"
+                                    ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                    AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                    @ref="Grid"
+                                    Toolbar="@(new string[] {"Search","Print","ColumnChooser" })">
+                                <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+                                <GridPageSettings PageCount="5" PageSizes="true"></GridPageSettings>
+                                <GridGroupSettings EnableLazyLoading="true"></GridGroupSettings>
+                                <GridAggregates>
+                                    <GridAggregate>
+                                        <GridAggregateColumns>
+                                            <GridAggregateColumn Field=@nameof(AllStudentPendingFee.totalDue) Type="AggregateType.Sum">
+                                                <GroupFooterTemplate>
+                                                    @{
+                                                        var Unit = (context as AggregateTemplateContext);
+                                                        <div>
+                                                            Total: @Unit.Sum
+                                                        </div>
+                                                    }
+                                                </GroupFooterTemplate>
+                                            </GridAggregateColumn>
+                                        </GridAggregateColumns>
+                                    </GridAggregate>
+                                </GridAggregates>
+
+                                <GridColumns>
+
+                                    <GridColumn Field=@nameof(AllStudentPendingFee.classSection) IsPrimaryKey="true"
+                                                HeaderText="User Id" TextAlign="TextAlign.Left" Width="60" Visible="true">
+                                    </GridColumn>
+                                    <GridColumn Field=@nameof(AllStudentPendingFee.className)
+                                                HeaderText="Class" TextAlign="TextAlign.Left" Width="60" Visible="false">
+                                    </GridColumn>
+                                    <GridColumn Field=@nameof(AllStudentPendingFee.sectionName)
+                                                HeaderText="Section" TextAlign="TextAlign.Left" Width="60" Visible="false">
+                                    </GridColumn>
+                                    <GridColumn Field=@nameof(AllStudentPendingFee.admissionNumber)
+                                                HeaderText="Admission No" TextAlign="TextAlign.Left" Width="60" Visible="false">
+                                    </GridColumn>
+                                    <GridColumn Field=@nameof(AllStudentPendingFee.studentName)
+                                                HeaderText="Student Name" TextAlign="TextAlign.Left" Width="60" Visible="true">
+                                    </GridColumn>
+                                    <GridColumn Field=@nameof(AllStudentPendingFee.fatherFullName)
+                                                HeaderText="Father's Name'" TextAlign="TextAlign.Left" Width="60" Visible="true">
+                                    </GridColumn>
+                                    <GridColumn Field=@nameof(AllStudentPendingFee.fatherContactNumber)
+                                                HeaderText="ContactNo" TextAlign="TextAlign.Left" Width="60" Visible="true">
+                                    </GridColumn>
+                                    <GridColumn Field=@nameof(AllStudentPendingFee.monthName)
+                                                HeaderText="Month" TextAlign="TextAlign.Left" Width="60" Visible="true">
+                                    </GridColumn>
+                                    <GridColumn Field=@nameof(AllStudentPendingFee.feeCategory)
+                                                HeaderText="Fee Category" TextAlign="TextAlign.Left" Width="60" Visible="true">
+                                    </GridColumn>
+                                    <GridColumn Field=@nameof(AllStudentPendingFee.busStopName)
+                                                HeaderText="Bus Stop" TextAlign="TextAlign.Left" Width="60" Visible="true">
+                                    </GridColumn>
+                                    <GridColumn Field=@nameof(AllStudentPendingFee.totalDue)
+                                                HeaderText="Total Due" TextAlign="TextAlign.Left" Width="60" Visible="true">
+                                    </GridColumn>
+                                    @*<GridColumn Field=@nameof(studentPendingFeeListModels.currentPaymentStatus) IsPrimaryKey="true"
+                        HeaderText="Admission No" TextAlign="TextAlign.Left" Width="60" Visible="false">
+            </GridColumn>*@
+                                    <GridColumn Field=@nameof(AllStudentPendingFee.paymentStatus)
+                                                HeaderText="Payment Status" TextAlign="TextAlign.Left" Width="60" Visible="false">
+                                    </GridColumn>
+                                    <GridColumn Field=@nameof(AllStudentPendingFee.listGeneratedDate)
+                                                HeaderText="GeneratedDate" TextAlign="TextAlign.Left"  Format="d" Type="ColumnType.Date"Width="60" Visible="true">
+                                    </GridColumn>
+                                    <GridColumn Field=@nameof(AllStudentPendingFee.lastDueDate)
+                                                HeaderText="lastDueDate" TextAlign="TextAlign.Left" Width="60" Visible="false">
+                                    </GridColumn>
+                                    <GridColumn Field=@nameof(AllStudentPendingFee.monthOfPending)
+                                                HeaderText="Month" TextAlign="TextAlign.Left" Width="60" Visible="true">
+                                    </GridColumn>
+                                </GridColumns>
+                                <GridColumn HeaderText="Action" TextAlign="TextAlign.Center" Width="80">
+                                    <GridCommandColumns>
+                                        <GridCommandColumn ButtonOption="@(new CommandButtonOptions() { Content = "Delete", CssClass = "e-flat" })" Title="Call"></GridCommandColumn>
+                                        @*<GridCommandColumn ButtonOption="@(new CommandButtonOptions() { Content = "Active", CssClass = "e-flat" })" Title="Active"></GridCommandColumn>*@
+                                    </GridCommandColumns>
+                                </GridColumn>
+                                <SfToolbar>
+                                    <ToolbarItems>
+                                        <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>
+                                        <ToolbarItem Text="My Home Page" Align="ItemAlign.Center"></ToolbarItem>
+                                        <ToolbarItem Text="Search" Align="ItemAlign.Right"></ToolbarItem>
+                                        <ToolbarItem Text="Settings" Align="ItemAlign.Right"></ToolbarItem>
+                                    </ToolbarItems>
+                                </SfToolbar>
+                            </SfGrid>
+
+
+                                }
+                            </ContentTemplate>
+                        </AccordionItem>
+                        <AccordionItem Header="Month wise List" IconCss="e-athletics e-acrdn-icons" Expanded=false>
+                            <ContentTemplate>
+                                <SfCard ID="BasicCard">
+                                <CardHeader Title="Month wise List" />
+                                <CardContent>
+                                <MudGrid>
+                                    <MudItem xs="12" sm="6" md="5">
+                                        @if (monthWisePendingLists.Count == 0)
+                                        {
+                                            <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                                            <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n2">Nothing have any fee collection</MudText>
+                                            <MudProgressCircular Color="Color.Secondary" Indeterminate="false" />
+                                        }
+                                        else
+                                        {
+                                            <MudItem xs="12" sm="12" md="12">
+
+                                                <SfGrid DataSource="@monthWisePendingLists"
+                                                        AllowTextWrap="true"
+                                                        EnableVirtualMaskRow="true"
+                                                        RowHeight="38" Height="410"
+                                                        Width="auto" EnableVirtualization="false"
+                                                        AllowResizing="false" AllowExcelExport="true"
+                                                        EnableAutoFill="true" AllowReordering="true"
+                                                        ShowColumnChooser="false" AllowGrouping="false" AllowSorting="true"
+                                                        AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                                        @ref="monthwisependingGrid"
+                                                        Toolbar="@(new string[] {"Search","Print","ExcelExport" })">
+                                                    <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                                    <GridPageSettings PageSize="30"></GridPageSettings>
+
+
+                                                    <GridAggregates>
+                                                        <GridAggregate>
+                                                            <GridAggregateColumns>
+                                                                <GridAggregateColumn Field=@nameof(MonthWisePendingList.pendingAmount) Type="AggregateType.Sum">
+                                                                    <GroupFooterTemplate>
+                                                                        @{
+                                                                            var Unit = (context as AggregateTemplateContext);
+                                                                            <div>
+                                                                                Total: @Unit.Sum
+                                                                            </div>
+                                                                        }
+                                                                    </GroupFooterTemplate>
+                                                                </GridAggregateColumn>
+
+                                                            </GridAggregateColumns>
+                                                        </GridAggregate>
+                                                    </GridAggregates>
+
+                                                    <GridColumns>
+
+                                                        <GridColumn Field=@nameof(MonthWisePendingList.monthName)
+                                                                    HeaderText="Month Name" Width="80"></GridColumn>
+                                                        <GridColumn Field=@nameof(MonthWisePendingList.noOfStudent)
+                                                                    HeaderText="Count" Width="40"></GridColumn>
+                                                        <GridColumn Field=@nameof(MonthWisePendingList.pendingAmount)
+                                                                    HeaderText="Amount" Width="50"></GridColumn>
+                                                        <GridColumn Field=@nameof(MonthWisePendingList.pendingGeneratedMonth)
+                                                                    HeaderText="Pending Month" Width="65"></GridColumn>
+                                                    </GridColumns>
+
+                                                </SfGrid>
+                                            </MudItem>
+                                        }
+                                    </MudItem>
+
+                                    <MudItem xs="12" sm="6" md="7">
+                                        <SfChart Title="Month wise Details">
+                                            <ChartSeriesCollection>
+                                                <ChartPrimaryXAxis ValueType="Syncfusion.Blazor.Charts.ValueType.Category" />
+                                                <ChartPrimaryYAxis LabelFormat="{value}">
+                                                </ChartPrimaryYAxis>
+                                                <ChartTooltipSettings Enable="true"></ChartTooltipSettings>
+                                                <ChartSeries DataSource="@monthWisePendingLists" XName="monthName" YName="pendingAmount" Type="ChartSeriesType.Column"
+                                                             ColumnSpacing="0.1" ColumnWidth="0.2">
+                                                </ChartSeries>
+                                            </ChartSeriesCollection>
+                                        </SfChart>
+
+
+                                    </MudItem>
+
+                                </MudGrid>
+                                </CardContent>
+                                @*<CardFooter>
+                                    <CardFooterContent>
+                                        <SfButton CssClass="e-btn e-outline e-primary">Read More</SfButton>
+                                    </CardFooterContent>
+                                </CardFooter>*@
+                                </SfCard>
+                                </ContentTemplate>
+                        </AccordionItem>
+                        <AccordionItem Header="Class and Section wise List" IconCss="e-athletics e-acrdn-icons">
+                            <ContentTemplate>
+                                <SfCard ID="BasicCard">
+                                    <CardHeader Title="Class & Section List" />
+                                    <CardContent>
+                                        <MudGrid>
+                                            <MudItem xs="12" sm="6" md="7">
+                                                <SfChart Title="Class and Section wise Details">
+                                                    <ChartSeriesCollection>
+                                                        <ChartPrimaryXAxis ValueType="Syncfusion.Blazor.Charts.ValueType.Category" />
+                                                        <ChartPrimaryYAxis LabelFormat="{value}">
+                                                        </ChartPrimaryYAxis>
+                                                        <ChartTooltipSettings Enable="true"></ChartTooltipSettings>
+                                                        <ChartSeries DataSource="@classAndSectionPendingLists" XName="className" YName="pendingAmont" Type="ChartSeriesType.Column"
+                                                                     ColumnSpacing="0.1" ColumnWidth="0.2">
+                                                        </ChartSeries>
+                                                    </ChartSeriesCollection>
+                                                </SfChart>
+
+
+                                            </MudItem>
+                                            <MudItem xs="12" sm="6" md="5">
+                                                @if (classAndSectionPendingLists.Count == 0)
+                                                {
+                                                    <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                                                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n2">Nothing have any fee collection</MudText>
+                                                    <MudProgressCircular Color="Color.Secondary" Indeterminate="false" />
+                                                }
+                                                else
+                                                {
+                                                    <MudItem xs="12" sm="12" md="12">
+
+                                                        <SfGrid DataSource="@classAndSectionPendingLists"
+                                                                AllowTextWrap="true"
+                                                                EnableVirtualMaskRow="true"
+                                                                RowHeight="38" Height="410"
+                                                                Width="auto" EnableVirtualization="false"
+                                                                AllowResizing="false" AllowExcelExport="true"
+                                                                EnableAutoFill="true" AllowReordering="true"
+                                                                ShowColumnChooser="false" AllowGrouping="true" AllowSorting="true"
+                                                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                                                @ref="classandSectionGrid"
+                                                                Toolbar="@(new string[] {"Search","Print","ExcelExport" })">
+                                                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                                            <GridPageSettings PageSize="30"></GridPageSettings>
+                                                            <GridGroupSettings Columns="@GroupByClass"></GridGroupSettings>
+
+                                                            <GridAggregates>
+                                                                <GridAggregate>
+                                                                    <GridAggregateColumns>
+                                                                        <GridAggregateColumn Field=@nameof(ClassAndSectionPendingList.pendingAmont) Type="AggregateType.Sum">
+                                                                            <GroupFooterTemplate>
+                                                                                @{
+                                                                                    var Unit = (context as AggregateTemplateContext);
+                                                                                    <div>
+                                                                                        Total: @Unit.Sum
+                                                                                    </div>
+                                                                                }
+                                                                            </GroupFooterTemplate>
+                                                                        </GridAggregateColumn>
+                                                                    </GridAggregateColumns>
+                                                                </GridAggregate>
+                                                            </GridAggregates>
+
+                                                            <GridColumns>
+
+                                                                <GridColumn Field=@nameof(ClassAndSectionPendingList.sectionName)
+                                                                            HeaderText="Section Name" Width="80"></GridColumn>
+                                                                <GridColumn Field=@nameof(ClassAndSectionPendingList.studentCount)
+                                                                            HeaderText="Count" Width="40"></GridColumn>
+                                                                <GridColumn Field=@nameof(ClassAndSectionPendingList.pendingAmont)
+                                                                            HeaderText="Amount" Width="50"></GridColumn>
+                                                                <GridColumn Field=@nameof(ClassAndSectionPendingList.className )
+                                                                            HeaderText="ClassName" Width="65"></GridColumn>
+                                                            </GridColumns>
+
+                                                        </SfGrid>
+                                                    </MudItem>
+                                                }
+                                            </MudItem>
+
+
+                                        </MudGrid>
+                                    </CardContent>
+                                    @*<CardFooter>
+                    <CardFooterContent>
+                        <SfButton CssClass="e-btn e-outline e-primary">Read More</SfButton>
+                    </CardFooterContent>
+                </CardFooter>*@
+                                </SfCard>
+                            </ContentTemplate>
+                        </AccordionItem>
+
+                    </AccordionItems>
+                </SfAccordion>
+            </ContentTemplate>
+        </DashboardLayoutPanel>
+    </DashboardLayoutPanels>
+</SfDashboardLayout>

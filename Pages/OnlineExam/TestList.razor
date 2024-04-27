@@ -1,0 +1,139 @@
+﻿@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@page "/OnlineExam/TestList"
+
+@inherits TestListBase
+@{
+
+    var InitSearch1 = (new string[] { "subjectName" });
+    var Tool = (new List<string>() { "Search" });
+}
+
+<!--<SfCard ID="HugeImage">
+    <CardHeader Title="OnLine Exam"></CardHeader>--> @*SubTitle="Sales Coordinator and Representative" />*@
+    <MudGrid>
+        <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="9" CellAspectRatio="2" AllowResizing="false">
+            <DashboardLayoutPanels>
+                <DashboardLayoutPanel SizeX=7 SizeY="2">
+                    <HeaderTemplate>Online Test List</HeaderTemplate>
+                    <ContentTemplate>
+                        <SfGrid DataSource="@testListModels"
+                                EnableVirtualMaskRow="true"
+                                RowHeight="38" Height="410"
+                                Width="auto" EnableVirtualization="false"
+                                AllowResizing="true" AllowExcelExport="true"
+                                EnableAutoFill="true" AllowReordering="true"
+                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                ContextMenuItems="MenuItems"
+                                @ref="sftestList"
+                                Toolbar="ToolBarItems">
+                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                            <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+                            <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+                            <GridEvents CommandClicked="OnCommandClicked" RowDataBound="RowBound" TValue="TestListModel"></GridEvents>
+
+                            @*<GridEvents QueryCellInfo="QueryCellInfoHandler" OnActionBegin="OnActionBegin"
+                                RowSelected="RowSelectHandler" OnToolbarClick="ToolClick" TValue="UnitMasterListModel"
+                                RowDeselected="RowDeSelectHandler"></GridEvents>*@
+                            @*<GridEditSettings AllowEditing="true" AllowAdding="true" AllowEditOnDblClick="false" AllowDeleting="true"></GridEditSettings>*@
+                            @*<GridEvents OnToolbarClick="ToolbarClick" TValue="EmployeeViewModel"></GridEvents>*@
+                            <GridSearchSettings Fields=@InitSearch1 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                IgnoreCase="true"></GridSearchSettings>
+                            @*<GridEvents CommandClicked="OnCommandClicked" TValue="TimeTableListModel"> </GridEvents>*@
+                            @*<GridEvents OnActionBegin="OnActionBegin" RowSelected="RowSelectHandler" TValue="MapSubjectWithTeacherList"></GridEvents>*@
+                            @*<GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>*@
+                        <GridColumns>
+                            <GridColumn Field="@nameof(TestListModel.testID)" Visible="false" IsPrimaryKey="true" HeaderText="ID" Width="40" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(TestListModel.subjectName)" HeaderText="Subject" Width="25" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(TestListModel.testName)" HeaderText="Test Name" Width="20" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(TestListModel.testTime)" HeaderText="Test Time" Width="10" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(TestListModel.testStatus)" HeaderText="Status" Width="20" TextAlign="TextAlign.Center"></GridColumn>
+
+                            <GridColumn HeaderText="Action" Width="20" TextAlign="TextAlign.Center">
+                                
+                                <GridCommandColumns>
+
+                                    <GridCommandColumn Type="CommandButtonType.Delete"  ButtonOption="@(new CommandButtonOptions() { Content = "View Result",
+                                                                                                         CssClass = "e-success e-outline" })">
+                                        @*<GridCommandColumn Type="CommandButtonType.Edit" 
+                                                           ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-edit", CssClass = "e-flat" })"></GridCommandColumn>*@
+
+                                    </GridCommandColumn>
+                                    <GridCommandColumn Type="CommandButtonType.Edit" 
+                                                       ButtonOption="@(new CommandButtonOptions() { Content = "Go to Test", CssClass = "e-primary e-outline" })"></GridCommandColumn>
+
+                                </GridCommandColumns>
+                            </GridColumn>
+                            <GridColumn Field="@nameof(TestListModel.totalMarks)" HeaderText="Total Marks" Width="10" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(TestListModel.totalObtainMarks)" HeaderText="Obtain Marks" Width="10" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(TestListModel.correctAnsweer)" HeaderText="Correct Answeer" Width="10" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(TestListModel.worngAnsweer)" HeaderText="Incorrect Answeer" Width="10" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(TestListModel.testCompletedTime)" HeaderText="Completed Date" Width="10" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(TestListModel.testRemarks)" HeaderText="Remarks" Width="20" TextAlign="TextAlign.Center"></GridColumn>
+
+                        </GridColumns>
+                            <SfToolbar>
+                                <ToolbarItems>
+                                    <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>
+                                    @*<ToolbarItem Text="Map Subject & Class Section" Align="ItemAlign.Center"
+                                        SuffixIcon="e-outline e-icons e-plus-icon"
+                                        OnClick="@OpenDialog"></ToolbarItem>*@
+                                    @*<ToolbarItem Text="Add Time Table" OnClick="@ShowDialog" CssClass="e-flat" Align="ItemAlign.Right"></ToolbarItem>
+                                        <ToolbarItem Text="Settings" Align="ItemAlign.Right"></ToolbarItem>*@
+                                </ToolbarItems>
+                            </SfToolbar>
+                        </SfGrid>
+                    </ContentTemplate>
+                </DashboardLayoutPanel>
+            </DashboardLayoutPanels>
+        </SfDashboardLayout>
+    </MudGrid>
+@*</SfCard>*@
+
+<style>
+    /*to remove the edit button alone*/
+    .e-removeEditcommand .e-unboundcell .e-unboundcelldiv button.e-Editbutton {
+        display: none;
+    }
+
+    /*to remove the delete button alone*/
+    .e-removeDeletecommand .e-unboundcell .e-unboundcelldiv button.e-Deletebutton {
+        display: none;
+    }
+    .e-toolbar-item .e-tbar-btn {
+        background-color: powderblue;
+    }
+
+    /*  .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }*/
+
+    /* .e-rowcell.e-attr {
+        background-color: lightgrey;
+    }*/
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        position: fixed;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+
+    .disablerow {
+        background-color: red;
+    }
+</style>
+
+ 

@@ -1,0 +1,391 @@
+﻿@page "/Transaction/StudentTransactionDetails"
+@using AdminDashboard.Server.Models.Dashboard.Management;
+@using Syncfusion.Blazor.Charts
+@using AdminDashboard.Server.Models.Transaction;
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Buttons
+@inject NavigationManager NavigationManager
+
+@inherits StudentTransactionBase
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="8" MediaQuery="max-width:700px">
+            <DashboardLayoutPanels>
+                <DashboardLayoutPanel SizeX=8 SizeY=4>
+
+                    @*<p>DateRangePicker StarteDate and EndDate is: <strong> @StartValue </strong> and <strong> @EndValue </strong></p>*@
+                    
+                    <HeaderTemplate>Fee Collection </HeaderTemplate>
+                    <ContentTemplate>
+                        <MudGrid>
+                            
+                            <MudItem xs="12" sm="6" md="12">
+                                <SfAccordion>
+                                    <MudItem xs="12" sm="4" md="4">
+                                        <label>Select Date :</label>
+                                        <SfDateRangePicker TValue="DateTime?" StartDate="@StartValue" EndDate="@EndValue">
+                                            <DateRangePickerEvents TValue="DateTime?" ValueChange="@onChange"></DateRangePickerEvents>
+                                        </SfDateRangePicker>
+                                    </MudItem>
+                                    <AccordionItems>
+                                        <AccordionItem Header="Transaction" IconCss="e-athletics e-acrdn-icons" Expanded=true>
+                                            <ContentTemplate>
+                                                <MudGrid>
+
+                                                    @*Transaction mode by*@
+                                                    <MudItem xs="12" sm="4" md="4">
+                                                        @if (modewiseTransactions.Count == 0)
+                                                        {
+                                                            <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                                                            <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n2">No Collection</MudText>
+                                                            <MudProgressCircular Color="Color.Secondary" Indeterminate="false" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <MudItem xs="12" sm="6" md="12">
+                                                                <SfGrid DataSource="@modewiseTransactions" @ref="modewiseTransaction_Grid"
+                                                                        Toolbar="@(new string[] {"Search","Print","ColumnChooser" })"
+                                                                        AllowTextWrap="true"
+                                                                        EnableVirtualMaskRow="true"
+                                                                        RowHeight="38" Height="410"
+                                                                        Width="auto" EnableVirtualization="false"
+                                                                        AllowResizing="true" AllowExcelExport="true"
+                                                                        EnableAutoFill="true" AllowReordering="true"
+                                                                        ShowColumnChooser="false" AllowGrouping="true" AllowSorting="true"
+                                                                        AllowFiltering="false" AllowPaging="true" ShowColumnMenu="false">
+                                                                    <GridPageSettings PageCount="5" PageSizes="true"></GridPageSettings>
+
+                                                                    <GridGroupSettings Columns="@PaymentByDate"></GridGroupSettings>
+                                                                    <GridPageSettings PageCount="5" PageSizes="true"></GridPageSettings>
+
+                                                                    <GridAggregates>
+                                                                        <GridAggregate>
+                                                                            <GridAggregateColumns>
+                                                                                <GridAggregateColumn Field=@nameof(ModewiseTransactionDetails.amount) Type="AggregateType.Sum">
+                                                                                    <GroupFooterTemplate>
+                                                                                        @{
+                                                                                            var Unit = (context as AggregateTemplateContext);
+                                                                                            <div>
+                                                                                                Received Amount: @Unit.Sum
+                                                                                            </div>
+                                                                                        }
+                                                                                    </GroupFooterTemplate>
+                                                                                </GridAggregateColumn>
+
+                                                                            </GridAggregateColumns>
+                                                                        </GridAggregate>
+                                                                        <GridAggregate>
+                                                                            <GridAggregateColumns>
+                                                                                <GridAggregateColumn Field=@nameof(ModewiseTransactionDetails.paymentModeCount) Type="AggregateType.Count">
+                                                                                    <GroupFooterTemplate>
+                                                                                        @{
+                                                                                            var Unit = (context as AggregateTemplateContext);
+                                                                                            <div>
+                                                                                                Count: @Unit.Count
+                                                                                            </div>
+                                                                                        }
+                                                                                    </GroupFooterTemplate>
+                                                                                </GridAggregateColumn>
+
+                                                                            </GridAggregateColumns>
+                                                                        </GridAggregate>
+                                                                    </GridAggregates>
+                                                                    <GridColumns>
+                                                                        <GridColumn Field=@nameof(ModewiseTransactionDetails.paymentMode)
+                                                                                    HeaderText="Payment Mode" AllowGrouping="true" Width="60"></GridColumn>
+                                                                        <GridColumn Field=@nameof(ModewiseTransactionDetails.paymentModeCount)
+                                                                                    HeaderText="Amount" Width="60"></GridColumn>
+                                                                        <GridColumn Field=@nameof(ModewiseTransactionDetails.amount)
+                                                                                    HeaderText="Date" Width="60" AllowGrouping="true"></GridColumn>
+                                                                        <GridColumn Field=@nameof(ModewiseTransactionDetails.paymentDate)
+                                                                                    HeaderText="Date" Width="60" AllowGrouping="true"></GridColumn>
+                                                                    </GridColumns>
+                                                                    <SfToolbar>
+                                                                        <ToolbarItems>
+                                                                            <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel_ModewisePayment" Align="ItemAlign.Left"></ToolbarItem>
+
+                                                                        </ToolbarItems>
+                                                                    </SfToolbar>
+                                                                </SfGrid>
+                                                            </MudItem>
+
+                                                        }
+
+                                                    </MudItem>
+                                                    @*Class wise Fee Collection*@
+                                                    <MudItem xs="12" sm="6" md="4">
+                                                        @if (classwiseFeeCollectionListModels.Count == 0)
+                                                        {
+                                                            <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                                                            <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n2">No collection</MudText>
+                                                            <MudProgressCircular Color="Color.Secondary" Indeterminate="false" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <MudItem xs="12" sm="6" md="12">
+                                                                <SfGrid DataSource="@classwiseFeeCollectionListModels"
+                                                                        @ref="classwiseFeeCollectionListModels_grid"
+                                                                        Toolbar="@(new string[] {"Search","Print","ColumnChooser" })"
+                                                                        AllowTextWrap="true"
+                                                                        EnableVirtualMaskRow="true"
+                                                                        RowHeight="38" Height="410"
+                                                                        Width="auto" EnableVirtualization="false"
+                                                                        AllowResizing="true" AllowExcelExport="true"
+                                                                        EnableAutoFill="true" AllowReordering="true"
+                                                                        ShowColumnChooser="false" AllowGrouping="true" AllowSorting="true"
+                                                                        AllowFiltering="false" AllowPaging="true" ShowColumnMenu="false">
+                                                                    <GridPageSettings PageCount="5" PageSizes="true"></GridPageSettings>
+                                                                    <GridGroupSettings Columns="@PaymentByDate"></GridGroupSettings>
+                                                                    <GridAggregates>
+                                                                        <GridAggregate>
+                                                                            <GridAggregateColumns>
+                                                                                <GridAggregateColumn Field=@nameof(ClasswiseFeeCollectionListModel.paidAmount) Type="AggregateType.Sum">
+                                                                                    <GroupFooterTemplate>
+                                                                                        @{
+                                                                                            var Unit = (context as AggregateTemplateContext);
+                                                                                            <div>
+                                                                                                Received Amount: @Unit.Sum
+                                                                                            </div>
+                                                                                        }
+                                                                                    </GroupFooterTemplate>
+                                                                                </GridAggregateColumn>
+
+                                                                            </GridAggregateColumns>
+                                                                        </GridAggregate>
+                                                                        <GridAggregate>
+                                                                            <GridAggregateColumns>
+                                                                                <GridAggregateColumn Field=@nameof(ClasswiseFeeCollectionListModel.payCount) Type="AggregateType.Count">
+                                                                                    <GroupFooterTemplate>
+                                                                                        @{
+                                                                                            var Unit = (context as AggregateTemplateContext);
+                                                                                            <div>
+                                                                                                Count: @Unit.Count
+                                                                                            </div>
+                                                                                        }
+                                                                                    </GroupFooterTemplate>
+                                                                                </GridAggregateColumn>
+
+                                                                            </GridAggregateColumns>
+                                                                        </GridAggregate>
+                                                                    </GridAggregates>
+
+                                                                    <GridColumns>
+
+                                                                        <GridColumn Field=@nameof(ClasswiseFeeCollectionListModel.className)
+                                                                                    HeaderText="Class" Width="80"></GridColumn>
+                                                                        <GridColumn Field=@nameof(ClasswiseFeeCollectionListModel.payCount)
+                                                                                    HeaderText="Count" Width="40"></GridColumn>
+                                                                        <GridColumn Field=@nameof(ClasswiseFeeCollectionListModel.paidAmount)
+                                                                                    HeaderText="PaidAmount" Width="50"></GridColumn>
+                                                                        <GridColumn Field=@nameof(ClasswiseFeeCollectionListModel.paymentDate)
+                                                                                    HeaderText="Date" Width="65" AllowGrouping="true"></GridColumn>
+                                                                    </GridColumns>
+
+                                                                    <SfToolbar>
+                                                                        <ToolbarItems>
+                                                                            <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>
+
+                                                                        </ToolbarItems>
+                                                                    </SfToolbar>
+                                                                </SfGrid>
+                                                            </MudItem>
+                                                        }
+
+                                                    </MudItem>
+                                                    @*------------------------------------------Transaction Details----------*@
+                                                    <MudItem xs="12" sm="12" md="12">
+                                                    @if (studentTransactionDetailsModels.Count == 0)
+                                                    {
+                                                        <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                                                    }
+                                                    else
+                                                    {
+                                                <SfGrid DataSource="@studentTransactionDetailsModels"
+                                                        AllowTextWrap="true"
+                                                        EnableVirtualMaskRow="true"
+                                                        RowHeight="38" Height="410"
+                                                        Width="auto" EnableVirtualization="false"
+                                                        AllowResizing="true" AllowExcelExport="true"
+                                                        EnableAutoFill="true" AllowReordering="true"
+                                                        ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                                        AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                                        @ref="StudentTransactionDetails_grid"
+                                                        Toolbar="@(new string[] {"Search","Print","ColumnChooser" })">
+                                                    <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+
+                                                    <GridGroupSettings Columns="@GroupedColumn"></GridGroupSettings>
+                                                    <GridPageSettings PageCount="5" PageSizes="true"></GridPageSettings>
+                                                    <GridAggregates>
+                                                        <GridAggregate>
+                                                            <GridAggregateColumns>
+                                                                <GridAggregateColumn Field=@nameof(StudentTransactionDetailsModel.totalAmount) Type="AggregateType.Sum">
+                                                                    <GroupFooterTemplate>
+                                                                        @{
+                                                                            var Unit = (context as AggregateTemplateContext);
+                                                                            <div>
+                                                                                Total: @Unit.Sum
+                                                                            </div>
+                                                                        }
+                                                                    </GroupFooterTemplate>
+                                                                </GridAggregateColumn>
+                                                                <GridAggregateColumn Field=@nameof(StudentTransactionDetailsModel.discount) Type="AggregateType.Sum">
+                                                                    <GroupFooterTemplate>
+                                                                        @{
+                                                                            var Unit = (context as AggregateTemplateContext);
+                                                                            <div>
+                                                                                Discount: @Unit.Sum
+                                                                            </div>
+                                                                        }
+                                                                    </GroupFooterTemplate>
+                                                                </GridAggregateColumn>
+                                                                <GridAggregateColumn Field=@nameof(StudentTransactionDetailsModel.netAmount) Type="AggregateType.Sum">
+                                                                    <GroupFooterTemplate>
+                                                                        @{
+                                                                            var Unit = (context as AggregateTemplateContext);
+                                                                            <div>
+                                                                                NetAmount: @Unit.Sum
+                                                                            </div>
+                                                                        }
+                                                                    </GroupFooterTemplate>
+                                                                </GridAggregateColumn>
+                                                                <GridAggregateColumn Field=@nameof(StudentTransactionDetailsModel.paidAmount) Type="AggregateType.Sum">
+                                                                    <GroupFooterTemplate>
+                                                                        @{
+                                                                            var Unit = (context as AggregateTemplateContext);
+                                                                            <div>
+                                                                                Paid: @Unit.Sum
+                                                                            </div>
+                                                                        }
+                                                                    </GroupFooterTemplate>
+                                                                </GridAggregateColumn>
+                                                                <GridAggregateColumn Field=@nameof(StudentTransactionDetailsModel.due) Type="AggregateType.Sum">
+                                                                    <GroupFooterTemplate>
+                                                                        @{
+                                                                            var Unit = (context as AggregateTemplateContext);
+                                                                            <div>
+                                                                                Due: @Unit.Sum
+                                                                            </div>
+                                                                        }
+                                                                    </GroupFooterTemplate>
+                                                                </GridAggregateColumn>
+                                                                <GridAggregateColumn Field=@nameof(StudentTransactionDetailsModel.advance) Type="AggregateType.Sum">
+                                                                    <GroupFooterTemplate>
+                                                                        @{
+                                                                            var Unit = (context as AggregateTemplateContext);
+                                                                            <div>
+                                                                                Advance: @Unit.Sum
+                                                                            </div>
+                                                                        }
+                                                                    </GroupFooterTemplate>
+                                                                </GridAggregateColumn>
+
+                                                            </GridAggregateColumns>
+                                                        </GridAggregate>
+                                                    </GridAggregates>
+
+                                                    <GridTemplates>
+                                                        <DetailTemplate>
+                                                            @{
+                                                                var employee = (context as StudentTransactionDetailsModel);
+                                                                <SfGrid DataSource="@studentTransactionHeaderDetailsModels" AllowExcelExport="true" AllowPdfExport="true"
+                                                                        Query="@(new Query().Where("receiptId", "equal", employee.receiptId))">
+                                                                    <GridColumns>
+                                                                        <GridColumn Field=@nameof(StudentTransactionHeaderDetailsModel.feeHeaderName) HeaderText="Header Name" Width="110"> </GridColumn>
+                                                                        <GridColumn Field=@nameof(StudentTransactionHeaderDetailsModel.amount) HeaderText="Amount" Width="110"></GridColumn>
+                                                                        <GridColumn Field=@nameof(StudentTransactionHeaderDetailsModel.discountAmount) HeaderText="Discount" Width="110"></GridColumn>
+                                                                        <GridColumn Field=@nameof(StudentTransactionHeaderDetailsModel.receivedAmount) HeaderText="Received" Width="110"></GridColumn>
+                                                                        <GridColumn Field=@nameof(StudentTransactionHeaderDetailsModel.feeReceivedDate) HeaderText="Date" Width="110"></GridColumn>
+                                                                    </GridColumns>
+                                                                </SfGrid>
+                                                            }
+                                                        </DetailTemplate>
+                                                    </GridTemplates>
+
+
+                                                    <GridColumns>
+                                                        <GridColumn Field=@nameof(studentTransactionDetails.admissionId) IsPrimaryKey="true"
+                                                                    HeaderText="Admission No" TextAlign="TextAlign.Left" Width="60" Visible="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(studentTransactionDetails.classSection) HeaderText="Class" Width="80" AllowGrouping="true"></GridColumn>
+
+                                                        <GridColumn Field=@nameof(studentTransactionDetails.studentName) HeaderText="Student's Name" Width="80"
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(studentTransactionDetails.fatherFullName) HeaderText="Father's Name" Width="80"
+                                                                    AllowGrouping="false"></GridColumn>
+
+                                                        <GridColumn Field=@nameof(studentTransactionDetails.receiptId) HeaderText="Receipt Id" Width="80"
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(studentTransactionDetails.paymentMode) HeaderText="Payment Mode" Width="80"
+                                                                    AllowGrouping="true"></GridColumn>
+                                                        <GridColumn Field=@nameof(studentTransactionDetails.monthName) HeaderText="Month Name" Width="80"
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(studentTransactionDetails.totalAmount) HeaderText="Total Amount" Width="80"
+                                                                    AllowGrouping="false">
+                                                        </GridColumn>
+                                                        <GridColumn Field=@nameof(studentTransactionDetails.discount) HeaderText="Discount" Width="80"
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(studentTransactionDetails.netAmount) HeaderText="Net Amount" Width="80"
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(studentTransactionDetails.paidAmount) HeaderText="Paid Amount" Width="80"
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(studentTransactionDetails.due) HeaderText="Due Amount" Width="80"
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(studentTransactionDetails.advance) HeaderText="Advance" Width="80"
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(studentTransactionDetails.receiptBy) HeaderText="Receipt By" Width="80"
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(studentTransactionDetails.paymentDate) HeaderText="Payment Date" Width="80"
+                                                                    AllowGrouping="true"></GridColumn>
+                                                        <GridColumn Field=@nameof(studentTransactionDetails.remark) HeaderText="Remark" Width="80"
+                                                                    AllowGrouping="false" Visible="false"></GridColumn>
+                                                    </GridColumns>
+
+                                                    <SfToolbar>
+                                                        <ToolbarItems>
+                                                            <ToolbarItem Text="Export to Excel" OnClick="@ExportStudentTransactionDetails_grid" Align="ItemAlign.Left"></ToolbarItem>
+                                                            <ToolbarItem Text="My Home Page" Align="ItemAlign.Center"></ToolbarItem>
+                                                            <ToolbarItem Text="Search" Align="ItemAlign.Right"></ToolbarItem>
+                                                            <ToolbarItem Text="Settings" Align="ItemAlign.Right"></ToolbarItem>
+                                                        </ToolbarItems>
+                                                    </SfToolbar>
+                                                </SfGrid>
+
+                                                    }
+
+                                                </MudItem>
+
+                                                </MudGrid>
+                                            </ContentTemplate>
+                                        </AccordionItem>
+                                      </AccordionItems>
+                                       
+                                </SfAccordion>
+                            </MudItem>
+                        </MudGrid>
+                    </ContentTemplate>
+                </DashboardLayoutPanel>
+            </DashboardLayoutPanels>
+        </SfDashboardLayout>
+    </MudItem>
+</MudGrid>
+
+@code {
+
+    public DateTime? DateValue { get; set; } = DateTime.Now;
+
+    private void onChange(Syncfusion.Blazor.Calendars.ChangedEventArgs<DateTime?> args)
+    {
+        DateValue = args.Value;
+        StateHasChanged();
+    }
+
+
+    
+
+}

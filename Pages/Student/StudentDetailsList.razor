@@ -1,0 +1,214 @@
+﻿@page "/Student/StudentDetailsList"
+
+@using Syncfusion.Blazor.Grids
+@using AIS.Model.Student;
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+
+@using Syncfusion.Blazor.Layouts
+@inherits StudentDetailsLiastBase
+@{
+
+    var InitSearch = (new string[] { "fatherFullName", "busstopname", "studentName", "uIDNumber" });
+    var Tool = (new List<string>() { "Search" });
+}
+
+
+<style type="text/css" class="cssStyles">
+    .detailtable td {
+        font-size: 13px;
+        padding: 4px;
+        max-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .photo {
+        width: 100px;
+        height: 100px;
+        border-radius: 50px;
+        box-shadow: inset 0 0 1px #e0e0e0, inset 0 0 14px rgba(0,0,0,0.2);
+    }
+</style>
+
+
+<SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7">
+    <DashboardLayoutPanels>
+        <DashboardLayoutPanel SizeX=6 SizeY="2">
+            <HeaderTemplate>Student List</HeaderTemplate>
+            <ContentTemplate>
+
+                @if (studentListModel.Count == 0)
+                {
+                    <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                }
+                else
+                {
+                    @*<div style="position:relative; min-height: 500px;">Height="100%" Width="100%"*@
+            <SfGrid DataSource="@studentListModel"
+                    EnableVirtualMaskRow="true"
+                    RowHeight="38" Height="410"
+                    Width="auto" EnableVirtualization="false"
+                    AllowResizing="true" AllowExcelExport="true"
+                    EnableAutoFill="true" AllowReordering="true"
+                    ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                    AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                    @ref="Grid"
+                    Toolbar="@(new string[] {"Search","Print","ColumnChooser" })">
+                <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                <GridPageSettings PageCount="5" PageSizes="true"></GridPageSettings>
+                <GridGroupSettings EnableLazyLoading="true"></GridGroupSettings>
+
+                @*<GridPageSettings PageSize="35"></GridPageSettings>Columns="@GroupedColumns"*@
+
+                <GridTemplates>
+                    <DetailTemplate>
+                        @{
+                            var employee = (context as StudentListModel);
+                            <table class="detailtable" width="100%">
+                                <colgroup>
+                                    <col width="25%">
+                                    <col width="25%">
+                                    <col width="25%">
+                                    <col width="25%">
+                                </colgroup>
+                                <tbody>
+                                    <tr>
+                                        @*<td rowspan="4" style="text-align: center;">
+                                <img class="photo" src="@($" scripts/Images/Employees/{employee.EmployeeID}.png")" alt="@employee.EmployeeID" />
+                                </td>*@
+
+                                        <td>
+                                            <span style="font-weight: 500;">DOB: </span> @employee.dOB.ToShortDateString()
+                                        </td>
+                                        <td>
+                                            <span style="font-weight: 500;">Gender: </span> @employee.genderStatusDetails
+                                        </td>
+                                        <td>
+                                            <span style="font-weight: 500;">Withdrawal Number: </span> @employee.withdrawalNumber
+                                        </td>
+                                        <td>
+                                            <span style="font-weight: 500;">Father's Number: </span> @employee.fatherContactNumber
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span style="font-weight: 500;">Religion: </span> @employee.religionDetails
+                                        </td>
+                                        <td>
+                                            <span style="font-weight: 500;">Cast Category: </span> @employee.castCategoryDetails
+                                        </td>
+                                        <td>
+                                            <span style="font-weight: 500;">Blood Group: </span> @employee.bloodGroupDetails
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span style="font-weight: 500;">UID: </span> @employee.uIDNumber
+                                        </td>
+                                        <td>
+                                            <span style="font-weight: 500;">UID Type: </span> @employee.uIDTypeDetails
+                                        </td>
+                                        <td>
+                                            <span style="font-weight: 500;">SRN No: </span> @employee.sRNNumber
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <span style="font-weight: 500;">Created Date: </span> @employee.createdDate
+                                        </td>
+                                        <td>
+                                            <span style="font-weight: 500;">Created By: </span> @employee.createdByUser
+                                        </td>
+                                        <td>
+                                            <span style="font-weight: 500;">User LoginID: </span> @employee.login_UserName
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        }
+                    </DetailTemplate>
+                </GridTemplates>
+                <GridColumns>
+                    <GridColumn Field=@nameof(studentModel.admissionNumber) IsPrimaryKey="true"
+                                HeaderText="Admission No" TextAlign="TextAlign.Left" Width="60">
+
+                    </GridColumn>
+                    <GridColumn Field=@nameof(studentModel.className) HeaderText="Class" Width="80">
+
+                    </GridColumn>
+                    <GridColumn Field=@nameof(studentModel.studentName) HeaderText="Student's Name" Width="80"
+                                AllowGrouping="false">
+
+                    </GridColumn>
+                    <GridColumn Field=@nameof(studentModel.fatherFullName) HeaderText="Father's Name" Width="80"
+                                AllowGrouping="true">
+
+                    </GridColumn>
+                    <GridColumn Field=@nameof(studentModel.motherFullName) HeaderText="Mother's Name"
+                                Width="80" AllowGrouping="false">
+
+                    </GridColumn>
+                    <GridColumn Field=@nameof(studentModel.rollNumber)
+                                HeaderText="Roll No"
+                                Width="80" AllowGrouping="false" Visible="false">
+
+                    </GridColumn>
+                    <GridColumn Field=@nameof(studentModel.dOB)
+                                HeaderText="DOB"
+                                Width="80" AllowGrouping="false" Visible="false"></GridColumn>
+                    <GridColumn Field=@nameof(studentModel.genderStatusDetails)
+                                HeaderText="Gender"
+                                Width="80" AllowGrouping="true" Visible="false"></GridColumn>
+                    <GridColumn Field=@nameof(studentModel.religionDetails)
+                                HeaderText="Religion" Visible="false"
+                                Width="80" AllowGrouping="true"></GridColumn>
+                    <GridColumn Field=@nameof(studentModel.castCategoryDetails)
+                                HeaderText="Cast Category"
+                                Width="80" AllowGrouping="false"></GridColumn>
+                    <GridColumn Field=@nameof(studentModel.bloodGroupDetails)
+                                HeaderText="Blood Group" Visible="false"
+                                Width="80" AllowGrouping="false"></GridColumn>
+                    <GridColumn Field=@nameof(studentModel.uIDNumber)
+                                HeaderText="UID Number" Visible="false"
+                                Width="80" AllowGrouping="false"></GridColumn>
+                    <GridColumn Field=@nameof(studentModel.uIDTypeDetails)
+                                HeaderText="UID Type" Visible="false"
+                                Width="80" AllowGrouping="false"></GridColumn>
+                    <GridColumn Field=@nameof(studentModel.feeCategory)
+                                HeaderText="Fee Category"
+                                Width="80" AllowGrouping="true"></GridColumn>
+                    <GridColumn Field=@nameof(studentModel.busstopname)
+                                HeaderText="BusStop"
+                                Width="80" AllowGrouping="true"></GridColumn>
+                    <GridColumn Field=@nameof(studentModel.sRNNumber)
+                                HeaderText="SRN Number" Visible="false"
+                                Width="80" AllowGrouping="false"></GridColumn>
+                    <GridColumn Field=@nameof(studentModel.withdrawalNumber)
+                                HeaderText="Withdrawal Number" Visible="false"
+                                Width="80" AllowGrouping="false"></GridColumn>
+                    <GridColumn Field=@nameof(studentModel.activeStatusDetails)
+                                HeaderText="Status"
+                                Width="80" AllowGrouping="false"></GridColumn>
+
+                </GridColumns>
+
+                <SfToolbar>
+                    <ToolbarItems>
+                        <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>
+                        <ToolbarItem Text="My Home Page" Align="ItemAlign.Center"></ToolbarItem>
+                        <ToolbarItem Text="Search" Align="ItemAlign.Right"></ToolbarItem>
+                        <ToolbarItem Text="Settings" Align="ItemAlign.Right"></ToolbarItem>
+                    </ToolbarItems>
+                </SfToolbar>
+            </SfGrid>
+            }
+            </ContentTemplate>
+        </DashboardLayoutPanel>
+    </DashboardLayoutPanels>
+</SfDashboardLayout>
+

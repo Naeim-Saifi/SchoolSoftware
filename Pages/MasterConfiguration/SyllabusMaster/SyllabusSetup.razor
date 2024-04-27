@@ -1,0 +1,244 @@
+﻿@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using AdminDashboard.Server.Models.Holiday;
+@using AdminDashboard.Server.Models.SyllabusSetup;
+@using AdminDashboard.Server.Models.MasterConfiguration.SubjectMaster;
+@using AdminDashboard.Server.Models.MasterConfiguration.UnitMaster;
+@using AIS.Model.MasterData;
+@using Syncfusion.Blazor.Popups;
+@using Syncfusion.Blazor.Layouts
+@page "/Syllabus/SyllabusSetup"
+@inherits SyllabusSetupBase
+
+@{
+
+    var InitSearch1 = (new string[] { "className", "subjectName", "unitTitle", "unitDescription", "chapterTitle", "subjectTopicTitle" });
+    var Tool = (new List<string>() { "Search" });
+}
+
+<MudGrid>
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="9" CellAspectRatio="2" AllowResizing="false">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Topic Master</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@syllabusSetupListModels"
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="410"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            ContextMenuItems="MenuItems"
+                            @ref="grid_syllabusSetup"
+                            Toolbar="ToolBarItems">
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+                        <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+                        <GridEvents QueryCellInfo="QueryCellInfoHandler" OnActionBegin="OnActionBegin"
+                                    RowSelected="RowSelectHandler" OnToolbarClick="ToolClick" TValue="SyllabusSetupListModel"
+                                    RowDeselected="RowDeSelectHandler"></GridEvents>
+                        <GridEditSettings AllowEditing="true" AllowAdding="true" AllowEditOnDblClick="false" AllowDeleting="true"></GridEditSettings>
+                        @*<GridEvents OnToolbarClick="ToolbarClick" TValue="EmployeeViewModel"></GridEvents>*@
+
+
+                        <GridSearchSettings Fields=@InitSearch1 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+                        @*<GridEvents CommandClicked="OnCommandClicked" TValue="TimeTableListModel"> </GridEvents>*@
+                        @*<GridEvents OnActionBegin="OnActionBegin" RowSelected="RowSelectHandler" TValue="MapSubjectWithTeacherList"></GridEvents>*@
+                        @*<GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>*@
+
+                        <GridColumns>
+                            <GridColumn Field="@nameof(SyllabusSetupListModel.syllabusId)" Visible="false" IsPrimaryKey="true" HeaderText="ID" Width="40" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(SyllabusSetupListModel.monthNameDetails)" HeaderText="Month" Width="40" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(SyllabusSetupListModel.className)" HeaderText="Class" Width="80" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(SyllabusSetupListModel.subjectName)" HeaderText="Subject" Width="80" AllowGrouping="true" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(SyllabusSetupListModel.unitName)" HeaderText="Unit" Width="80" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(SyllabusSetupListModel.chapterName)" HeaderText="Chapter" Width="80" AllowGrouping="true" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(SyllabusSetupListModel.topicName)" HeaderText="Topic" Width="80" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(SyllabusSetupListModel.createdDate)" HeaderText="Created Date" Width="80" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn HeaderText="Action" Width="40">
+                                <GridCommandColumns>
+                                    @*<GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-edit", CssClass = "e-flat" })"></GridCommandColumn>*@
+                                    <GridCommandColumn Type="CommandButtonType.Delete" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-delete", CssClass = "e-flat" })"></GridCommandColumn>
+                                    @*<GridCommandColumn Type="CommandButtonType.Save" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-update", CssClass = "e-flat" })"></GridCommandColumn>
+                                        <GridCommandColumn Type="CommandButtonType.Cancel" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-cancel-icon", CssClass = "e-flat" })"></GridCommandColumn>
+                                    *@
+                                </GridCommandColumns>
+                            </GridColumn>
+                        </GridColumns>
+
+                        <SfToolbar>
+                            <ToolbarItems>
+                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>
+                                @*<ToolbarItem Text="Map Subject & Class Section" Align="ItemAlign.Center"
+                                    SuffixIcon="e-outline e-icons e-plus-icon"
+                                    OnClick="@OpenDialog"></ToolbarItem>*@
+                                @*<ToolbarItem Text="Add Time Table" OnClick="@ShowDialog" CssClass="e-flat" Align="ItemAlign.Right"></ToolbarItem>
+                                    <ToolbarItem Text="Settings" Align="ItemAlign.Right"></ToolbarItem>*@
+                            </ToolbarItems>
+                        </SfToolbar>
+                    </SfGrid>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+
+</MudGrid>
+
+
+@* Confirmation Dialog*@
+<SfDialog @ref="Dialog" Width="250px" Visible="false" ShowCloseIcon="true" IsModal="true">
+    <DialogEvents Closed="Closed"></DialogEvents>
+    <DialogTemplates>
+        @*Here you can customize the Header and Content of delete confirmation dialog*@
+        <Header> Delete Record</Header>
+        <Content> You are about to Delete a Record @SelectedData1 ?</Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton OnClick="@OkClick" Content="OK" IsPrimary="true"></DialogButton>
+        <DialogButton OnClick="@CancelClick" Content="Cancel"></DialogButton>
+    </DialogButtons>
+</SfDialog>
+
+@* Setup Master Unit dialog details*@
+
+<MudGrid>
+    <MudItem xs="12" sm="3" md="12">
+        <MudItem xs="12" sm="3" md="12">
+            <SfDialog @ref="@DialogRef" Width="650px" AllowDragging="true" IsModal="false" ShowCloseIcon="true" @bind-Visible="@IsVisible">
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>
+                    <Header>@DialogHeaderName </Header>
+                    <Content>
+                        <MudItem xs="12" md="12" sm="3">
+                            <EditForm Model="syllabusviewModel" OnValidSubmit="OnValidSubmit">
+                                <DataAnnotationsValidator />
+                                <MudCardContent>
+                                    <MudGrid>
+                                       
+                                        <MudItem xs="12" md="12" sm="3">
+                                            <SfTextBox ID="syllabusid" @bind-Value="@syllabusviewModel.SyllabusId" Enabled="false" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList ID="MonthId" Placeholder="Select a Month Name"
+                                                            @bind-Value="@syllabusviewModel.MonthId"
+                                                            DataSource="@monthNameLists">
+                                                <ValidationMessage For="() => syllabusviewModel.MonthId" />
+                                                <DropDownListFieldSettings Text="MonthName" Value="MonthId"></DropDownListFieldSettings>
+                                            </SfDropDownList>
+                                        </MudItem>
+
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList ID="ClassId" TValue="string" TItem="MasterClassListModel"
+                                                            CssClass="e-outline" Placeholder="Select a Class"
+                                                            FloatLabelType="@FloatLabelType.Never"
+                                                            AllowFiltering="true"
+                                                            Enabled="ddEnable"
+                                                            @bind-Value="@syllabusviewModel.ClassId"
+                                                            DataSource="@masterClassListModels">
+                                                <DropDownListFieldSettings Text="name" Value="masterClassId" />
+                                                <DropDownListEvents TItem="MasterClassListModel" TValue="string"
+                                                                    ValueChange="OnChangeClass" />
+                                                <ValidationMessage For="() => syllabusviewModel.ClassId" />
+                                            </SfDropDownList>
+
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList ID="SubjectId" TValue="string" TItem="MapsubjectwithClassModel"
+                                                            CssClass="e-outline" Placeholder="Select a Subject"
+                                                            FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                            @bind-Value="@syllabusviewModel.SubjectId"
+                                                            Enabled="ddEnable"
+                                                            DataSource="@_mapSubjectList">
+                                                <DropDownListFieldSettings Text="subjectName" Value="masterSubjectId" />
+                                                <DropDownListEvents TItem="MapsubjectwithClassModel" TValue="string" ValueChange="OnChangeSubject" />
+                                                <ValidationMessage For="() => syllabusviewModel.SubjectId" />
+                                            </SfDropDownList>
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList ID="UnitId" TValue="string" TItem="TopicMasterListModel"
+                                                            CssClass="e-outline" Placeholder="Select a Unit"
+                                                            FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                            @bind-Value="@syllabusviewModel.UnitId"
+                                                            Enabled="ddEnable"
+                                                            DataSource="@_unitList">
+                                                <DropDownListEvents TItem="TopicMasterListModel" TValue="string" ValueChange="OnChangeUnit" />
+                                                <DropDownListFieldSettings Text="unitTitle" Value="subjectUnitId" />
+                                                <ValidationMessage For="() => syllabusviewModel.UnitId" />
+                                            </SfDropDownList>
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList ID="chapterId" TValue="string" TItem="TopicMasterListModel"
+                                                            CssClass="e-outline" Placeholder="Select a Chapter"
+                                                            FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                            @bind-Value="@syllabusviewModel.ChapterId"
+                                                            Enabled="ddEnable"
+                                                            DataSource="@_chapterList">
+                                                <DropDownListEvents TItem="TopicMasterListModel" TValue="string" ValueChange="OnChangeChapter" />
+                                                <DropDownListFieldSettings Text="chapterTitle" Value="subjectChapterId" />
+                                                <ValidationMessage For="() => syllabusviewModel.ChapterId" />
+                                            </SfDropDownList>
+                                        </MudItem>
+
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList ID="topicID" TValue="string" TItem="TopicMasterListModel"
+                                                            CssClass="e-outline" Placeholder="Select a Topic"
+                                                            FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                            @bind-Value="@syllabusviewModel.TopicId"
+                                                            Enabled="ddEnable"
+                                                            DataSource="@_topicList">
+                                                <DropDownListFieldSettings Text="topicTitle" Value="subjectTopicId"></DropDownListFieldSettings>
+                                                <ValidationMessage For="() => syllabusviewModel.TopicId" />
+                                            </SfDropDownList>
+                                        </MudItem>
+
+                                        <MudItem xs="12" md="4" sm="3">
+                                            <SfButton CssClass="e-outline" type="submit" IsPrimary="true">Save</SfButton>
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudCardContent>
+                            </EditForm>
+
+                            <MudItem xs="12" md="4" sm="3">
+                                <SfButton CssClass="e-outline" OnClick="@CloseDialog">Cancel</SfButton>
+                            </MudItem>
+                        </MudItem>
+
+                    </Content>
+                </DialogTemplates>
+                <DialogAnimationSettings Effect="@AnimationEffect" Duration=400 />
+            </SfDialog>
+        </MudItem>
+    </MudItem>
+</MudGrid>
+<style>
+    .e-toolbar-item .e-tbar-btn {
+        background-color: powderblue;
+    }
+
+    .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }
+
+    .e-rowcell.e-attr {
+        background-color: lightgrey;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        position: fixed;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+</style>
+

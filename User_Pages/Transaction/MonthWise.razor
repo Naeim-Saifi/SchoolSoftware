@@ -1,0 +1,113 @@
+﻿@using Syncfusion.Blazor.Grids
+@using AIS.Data.RequestResponseModel.StudentSetUp;
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using AIS.Data.RequestResponseModel.TransactionSetUp;
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Charts
+
+@page "/User_Pages/Transaction/MonthWise"
+
+
+@inherits MonthWiseBase;
+@{
+    var InitSearchMonthWise = (new string[] { "monthDetails" });
+}
+
+
+  <MudGrid>
+    <MudItem xs="6" sm="12" md="6">
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                    <HeaderTemplate>Month Wise</HeaderTemplate>
+                <ContentTemplate>
+                   
+                        <SfTab ID="Ej2Tab" Height="100%">
+                            <TabItems>
+                                <TabItem>
+                                    <HeaderTemplate>
+                                        Month Wise Collection Details
+                                    </HeaderTemplate>
+                                    <ContentTemplate>
+                                        <SfGrid DataSource="@_transaction_Details_List"
+                                                @ref="_sfMonthWise"
+                                                EnableVirtualMaskRow="true"
+                                                RowHeight="38" Height="710"
+                                                Width="auto" EnableVirtualization="false"
+                                                AllowResizing="true" AllowExcelExport="true"
+                                                EnableAutoFill="true" AllowReordering="true"
+                                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                                Toolbar="@(new string[] {"Search","Print" })">
+                                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                            <GridPageSettings PageSize="50" PageSizes="true"></GridPageSettings>
+                                            <GridSearchSettings Fields=@InitSearchMonthWise Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                                IgnoreCase="true"></GridSearchSettings>
+
+                                            <GridColumns>
+                                                <GridColumn Field=@nameof(MonthWise_TransactionDetails_LIST_Output_Model.monthDetails) HeaderText="MonthName" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+
+                                                <GridColumn Field=@nameof(MonthWise_TransactionDetails_LIST_Output_Model.paycount) HeaderText="Paycount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(MonthWise_TransactionDetails_LIST_Output_Model.totalAmount) HeaderText="TotalAmount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(MonthWise_TransactionDetails_LIST_Output_Model.discount) HeaderText="Discount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(MonthWise_TransactionDetails_LIST_Output_Model.netAmount) HeaderText="NetAmount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(MonthWise_TransactionDetails_LIST_Output_Model.recievedAmount) HeaderText="RecievedAmount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(MonthWise_TransactionDetails_LIST_Output_Model.dueAmount) HeaderText="DueAmount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(MonthWise_TransactionDetails_LIST_Output_Model.advanceAmount) HeaderText="AdvanceAmount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                            </GridColumns>
+                                           @*  <SfToolbar>
+                                                <ToolbarItems>
+                                                    <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel_MonthWise" Align="ItemAlign.Left"></ToolbarItem>
+                                                </ToolbarItems>
+                                            </SfToolbar> *@
+                                        </SfGrid>
+                                    </ContentTemplate>
+                                </TabItem>
+                                  <TabItem>
+                                    <HeaderTemplate>
+                                        Month Wise Collection Details In Chart
+                                    </HeaderTemplate>
+                                 <ContentTemplate>
+                                       
+                                      @*  <SfChart>
+                                            <ChartSeriesCollection>
+                                                <ChartSeries DataSource="@_transaction_Details_List" XName="monthDetails" YName="recievedAmount" Type="ChartSeriesType.Line">
+                                                    <ChartMarker Visible="true" Height="10" Width="10" />
+                                                </ChartSeries>
+                                            </ChartSeriesCollection>
+                                        </SfChart>*@
+
+                                        <SfChart>
+                                            <ChartPrimaryXAxis ValueType="Syncfusion.Blazor.Charts.ValueType.Category" />
+
+                                            <ChartSeriesCollection>
+                                                <ChartSeries DataSource="@_transaction_Details_List" XName="monthDetails" YName="recievedAmount" Type="ChartSeriesType.Column">
+                                                    <ChartMarker>
+                                                        <ChartDataLabel Visible="true" />
+                                                    </ChartMarker>
+                                                </ChartSeries>
+                                            </ChartSeriesCollection>
+                                        </SfChart>
+                                 </ContentTemplate>
+                                 </TabItem>
+                            </TabItems>
+                        </SfTab>
+                    </ContentTemplate>
+                </DashboardLayoutPanel>
+            </DashboardLayoutPanels>
+        </SfDashboardLayout>
+    </MudItem>
+</MudGrid>
+
+   @code{
+    private Theme Theme { get; set; }
+    public string Width { get; set; } = "90%";
+    public String[] palettes = new String[] { "#E94649", "#F6B53F", "#6FAAB0" };
+   }

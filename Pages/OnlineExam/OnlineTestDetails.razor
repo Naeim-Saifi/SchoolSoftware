@@ -1,0 +1,111 @@
+﻿@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@inherits OnlineTestDetailsBase
+
+@page "/OnlineExam/OnlineTestDetails/{Value}"
+
+
+<SfCard ID="HugeImage">
+
+    <CardHeader Title="Exam  Details"></CardHeader>
+    <MudCardContent>
+        <MudGrid>            
+            <MudItem xs="12" md="12" sm="3">
+                <MudItem xs="12" sm="6" md="3">
+                    <label>Total Question-20</label>
+                    <label>Subject-Hindi</label>
+                    <label>Start Time-10:20 PM</label>
+                    <label>End Time-12:20 PM</label>
+                </MudItem>               
+            </MudItem>
+        </MudGrid>
+        </MudCardContent>
+           
+            @{
+                List<Syncfusion.Blazor.Navigations.ItemModel> Toolbaritems = new List<Syncfusion.Blazor.Navigations.ItemModel>();
+                Toolbaritems.Add(new Syncfusion.Blazor.Navigations.ItemModel() { Text = "Submit Answeer", Id = "submitansweer", CssClass = "e-primary e-outline", TooltipText = "Submit Your Answeer", PrefixIcon = "find" });
+                Toolbaritems.Add(new Syncfusion.Blazor.Navigations.ItemModel() { Text = "Back", Id = "delete", TooltipText = "Previous Page"});
+            }
+<SfGrid DataSource="@onlineTestQuestionLists"
+        @ref="sfOnlineTestQuestionlist"
+        AllowTextWrap="true"
+        EnableVirtualMaskRow="true"
+        RowHeight="38" Height="410"
+        Width="auto" EnableVirtualization="false"
+        AllowResizing="true" AllowExcelExport="false"
+        EnableAutoFill="true" AllowReordering="true"
+        ShowColumnChooser="true" AllowGrouping="false" AllowSorting="false"
+        AllowFiltering="false" AllowPaging="true" ShowColumnMenu="true"
+        Toolbar="Toolbaritems">
+    <GridPageSettings PageCount="25" PageSizes="true"></GridPageSettings>
+    <GridEvents OnToolbarClick="ToolbarClickHandler" RowDataBound="RowDataBound" TValue="OnlineTestQuestionList"></GridEvents>
+    <GridTextWrapSettings WrapMode="WrapMode.Content"></GridTextWrapSettings>
+    <GridEditSettings AllowAdding="false" AllowEditing="true" AllowDeleting="false" Mode="EditMode.Normal"></GridEditSettings>
+    <GridColumns>
+        <GridColumn Field=@nameof(OnlineTestQuestionList.QuestionId) HeaderText="QuestionID" Visible="false" IsPrimaryKey="true" TextAlign="TextAlign.Right" Width="10"></GridColumn>
+        <GridColumn Field=@nameof(OnlineTestQuestionList.QuestionDetails) HeaderText="Question Details" Width="50" AllowEditing="false"></GridColumn>
+        <GridColumn Field=@nameof(OnlineTestQuestionList.Answeer_A) HeaderText="Answeer_A" Width="15" AllowEditing="false"></GridColumn>
+        <GridColumn Field=@nameof(OnlineTestQuestionList.Answeer_B) HeaderText="Answeer_B" Width="15" AllowEditing="false"></GridColumn>
+        <GridColumn Field=@nameof(OnlineTestQuestionList.Answeer_C) HeaderText="Answeer_C" Width="15" AllowEditing="false"></GridColumn>
+        <GridColumn Field=@nameof(OnlineTestQuestionList.Answeer_D) HeaderText="Answeer_D" Width="15" AllowEditing="false"></GridColumn>
+
+        <GridColumn Field=@nameof(OnlineTestQuestionList.ChooseAnsweer)
+                    HeaderText="Choose Answeer" AllowEditing="true" Width="10">
+            <EditTemplate>
+
+                <SfDropDownList TItem="SelectAnsweer" TValue="string" DataSource="@selectAnsweers"
+                                AllowFiltering="true"
+                                @bind-Value="@((context as OnlineTestQuestionList).ChooseAnsweer)"
+                                Placeholder="Select a Answeer">
+                    <DropDownListEvents TItem="SelectAnsweer" TValue="string" ValueChange="OnChangeSelectAnsweer" />
+                    <DropDownListFieldSettings Text="Text"></DropDownListFieldSettings>
+                </SfDropDownList>
+            </EditTemplate>
+
+
+        </GridColumn>
+    </GridColumns>
+</SfGrid>
+
+
+</SfCard>
+
+
+<p>@Value</p>
+
+<style>
+    .e-toolbar-item .e-tbar-btn {
+        background-color: powderblue;
+    }
+
+  /*  .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }*/
+
+   /* .e-rowcell.e-attr {
+        background-color: lightgrey;
+    }*/
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        position: fixed;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+    .disablerow {
+        background-color: red;
+    }
+</style>
+
+ 

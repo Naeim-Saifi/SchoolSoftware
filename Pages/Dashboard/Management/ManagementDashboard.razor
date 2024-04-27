@@ -1,0 +1,306 @@
+﻿
+@using AdminDashboard.Server.Models.Dashboard.Management;
+@using Syncfusion.Blazor.Charts
+@using AdminDashboard.Server.Models.Transaction;
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using AdminDashboard.Server.Models.TimeTable;
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Buttons
+@page "/Dashboard/Management/ManagementDashboard"
+@inherits ManagementDashboardBase
+
+<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Dashboard</MudText>
+@{
+    var InitSearch = (new string[] { "className" });
+    var InitSearch2 = (new string[] { "className" });
+    var InitSearch1 = (new string[] { "studentName" });
+    var InitSearchtimetable = (new string[] { "className", "subjectName", "teacherName", "dayDetails" });
+    var Tool = (new List<string>() { "Search" });
+}
+
+<MudGrid>
+
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.Euro" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n2">Net Fee Collection</MudText>
+                <MudText Typo="Typo.h5">@NetFeeCollection</MudText>
+
+                @*<MudNavLink Href="/Razorpay/RazorpayDetail" Icon="@Icons.Material.Outlined.Payment">Paynow</MudNavLink>*@
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.Layers" Color="Color.Secondary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Net Pending Fee</MudText>
+                <MudText Typo="Typo.h5">@NetPendingFee</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.Layers" Color="Color.Dark" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Active Student</MudText>
+                <MudText Typo="Typo.h5">@_netTotalStudent</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.Layers" Color="Color.Dark" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Gender</MudText>
+                <div>
+                    <MudText Typo="Typo.subtitle1">Male- @_Male</MudText>
+                </div>
+                <div>
+                    <MudText Typo="Typo.subtitle1">Female- @_Female</MudText>
+                </div>
+
+            </div>
+        </MudPaper>
+    </MudItem>
+
+    @*Main Dashboard Layout*@
+    <SfDashboardLayout Columns="5" AllowResizing="false">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel Id="one" Column="0" Row="0">
+                <HeaderTemplate>Fee Collection </HeaderTemplate>
+                <ContentTemplate>
+                    @*Transaction mode by*@
+                    <MudItem xs="12" sm="12" md="12">
+                        @if (transactionTypeDetailsModel.Count == 0)
+                        {
+                            <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                            <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n2">Nothing have any fee collection</MudText>
+                            <MudProgressCircular Color="Color.Secondary" Indeterminate="false" />
+                        }
+                        else
+                        {
+                            <MudItem xs="12" sm="12" md="12">
+                                <SfGrid DataSource="@transactionTypeDetailsModel" AllowResizing="true"
+                                        AllowPaging="false" AllowExcelExport="false" AllowPdfExport="false"
+                                        ContextMenuItems="@(new List<object>() {"PdfExport", "ExcelExport", "CsvExport"})" Toolbar=@Tool>
+
+                                    <GridColumns>
+
+                                        <GridColumn Field=@nameof(TransactionTypeDetailsModel.paymentMode)
+                                                    HeaderText="Mode of payment" Width="60"></GridColumn>
+                                        <GridColumn Field=@nameof(TransactionTypeDetailsModel.amount)
+                                                    HeaderText="Amount" Width="60"></GridColumn>
+                                    </GridColumns>
+                                </SfGrid>
+                            </MudItem>
+
+                        }
+
+                    </MudItem>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+            <DashboardLayoutPanel Id="two" Row="1" Column="0" SizeX=1 SizeY=2>
+                <HeaderTemplate>Class wise Count </HeaderTemplate>
+                <ContentTemplate>
+                    @*Class and Section wise count*@
+                    <MudItem xs="12" sm="12" md="12">
+                        @if (classWiseStudentCount.Count == 0)
+                        {
+                            <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                        }
+                        else
+                        {
+
+                            <MudItem xs="12" sm="12" md="12">
+                                <SfGrid DataSource="@classWisePendingFees" AllowResizing="true" AllowPaging="true" Toolbar=@Tool>
+                                    <GridSearchSettings Fields=@InitSearch Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                        IgnoreCase="true"></GridSearchSettings>
+                                    <GridColumns>
+
+                                        <GridColumn Field=@nameof(ClassWiseStudentCountModel.className)
+                                                    HeaderText="Class Name" Width="60"></GridColumn>
+                                        <GridColumn Field=@nameof(ClassWiseStudentCountModel.studentCount)
+                                                    HeaderText="Count Mode" Width="60"></GridColumn>
+
+                                        @*<GridColumn Field=@nameof(paymentDetails[1].paymentMode) HeaderText="paymentMode" Width="150"></GridColumn>*@
+                                        @*<GridColumn Field=@nameof(OrdersDetails.OrderDate) HeaderText="Order Date" Format="d" Type="ColumnType.Date" TextAlign="TextAlign.Right" Width="130"></GridColumn>
+                                    <GridColumn Field=@nameof(OrdersDetails.Freight) Format="C2" TextAlign="TextAlign.Right" Width="120"></GridColumn>
+                                    <GridColumn Field=@nameof(OrdersDetails.ShipCountry) HeaderText="Ship Country" Width="150"></GridColumn>*@
+                                    </GridColumns>
+                                </SfGrid>
+                            </MudItem>
+
+                        }
+
+                    </MudItem>
+                </ContentTemplate>
+
+            </DashboardLayoutPanel>
+            <DashboardLayoutPanel Id="four" Row="2" Column="1" SizeX=1 SizeY=1>
+                <HeaderTemplate>Panel 4</HeaderTemplate>
+            </DashboardLayoutPanel>
+            <DashboardLayoutPanel Id="five" Row="2" Column="2" SizeX=2 SizeY=1>
+            </DashboardLayoutPanel>
+            @*Teacher and Class-Section Time table**@
+        <DashboardLayoutPanel Id="three" Row="0" Column="1" SizeX=2 SizeY=2>
+            <HeaderTemplate>Teacher & Class-Section Time Table </HeaderTemplate>            
+                <ContentTemplate>
+                    <MudGrid>
+                        <MudItem xs="12" sm="12" md="12">
+                            <SfGrid DataSource="@timeTableListModels"
+                                    EnableVirtualMaskRow="true"
+                                    RowHeight="38" Height="410"
+                                    Width="auto" EnableVirtualization="false"
+                                    AllowResizing="true" AllowExcelExport="true"
+                                    EnableAutoFill="true" AllowReordering="true"
+                                    ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                    AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                    @ref="Timetable_Grid" 
+                                    Toolbar="@(new string[] {"Search","Print","ColumnChooser" })">
+                                <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                @*<GridEvents OnActionBegin="ActionBeginHandler" TValue="UnitMasterListModel"></GridEvents>*@
+                                <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+                                <GridPageSettings PageSize="12"></GridPageSettings>
+
+
+                                @*<GridEvents OnToolbarClick="ToolbarClick" TValue="EmployeeViewModel"></GridEvents>*@
+                                <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                @*<GridGroupSettings ShowGroupedColumn="true"></GridGroupSettings>*@
+
+                                <GridPageSettings PageSize="12"></GridPageSettings>
+                                <GridSearchSettings Fields=@InitSearchtimetable Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                    IgnoreCase="true"></GridSearchSettings>
+                                @*<GridEvents CommandClicked="OnCommandClicked" TValue="MapSubjectWithTeacherList"> </GridEvents>*@
+                                @*<GridEvents OnActionBegin="OnActionBegin" RowSelected="RowSelectHandler" TValue="MapSubjectWithTeacherList"></GridEvents>*@
+                                <GridEditSettings AllowDeleting="true" Mode="EditMode.Normal"></GridEditSettings>
+                                <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+
+                                <GridColumns>
+                                    <GridColumn Field="@nameof(TimeTableListModel.className)" HeaderText="Class" Width="15" TextAlign="TextAlign.Left"></GridColumn>
+                                    <GridColumn Field="@nameof(TimeTableListModel.sectionName)" HeaderText="Section" Width="15" TextAlign="TextAlign.Left"></GridColumn>
+                                    <GridColumn Field="@nameof(TimeTableListModel.dayDetails)" HeaderText="Day" Width="30" AllowGrouping="true" TextAlign="TextAlign.Left"></GridColumn>
+                                    <GridColumn Field="@nameof(TimeTableListModel.periodName)" HeaderText="Period" Width="30" TextAlign="TextAlign.Left"></GridColumn>
+                                    <GridColumn Field="@nameof(TimeTableListModel.startTime)" HeaderText="Start Time" Width="20" TextAlign="TextAlign.Left"></GridColumn>
+                                    <GridColumn Field="@nameof(TimeTableListModel.endTime)" HeaderText="End Time" Width="20" TextAlign="TextAlign.Center"></GridColumn>
+                                    <GridColumn Field="@nameof(TimeTableListModel.subjectName)" HeaderText="Subject" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                                    <GridColumn Field="@nameof(TimeTableListModel.teacherName)" HeaderText="Teacher Name" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                                    <GridColumn Field="@nameof(TimeTableListModel.createdDate)" HeaderText="Created On" Width="40"Visible="false" TextAlign="TextAlign.Center"></GridColumn>
+                                </GridColumns>
+
+                                <SfToolbar>
+                                    <ToolbarItems>
+                                        <ToolbarItem Text="Export to Excel" OnClick="@TimeTable_ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>
+                                    </ToolbarItems>
+                                </SfToolbar>
+                            </SfGrid>
+
+                        </MudItem>
+                    </MudGrid>
+                </ContentTemplate>               
+        </DashboardLayoutPanel>
+
+            <DashboardLayoutPanel Id="six" Row="0" Column="3" SizeX=1 SizeY=1>
+                <HeaderTemplate>Fee Collection </HeaderTemplate>
+                <ContentTemplate>
+                    <MudGrid>
+                        <MudItem xs="12" sm="12" md="12">
+                            <SfChart Title="Transaction Mode Details" Height="250px" Width="250px">
+                                <ChartSeriesCollection>
+                                    <ChartPrimaryXAxis ValueType="Syncfusion.Blazor.Charts.ValueType.Category" />
+                                    <ChartPrimaryYAxis LabelFormat="{value}">
+                                    </ChartPrimaryYAxis>
+                                    <ChartTooltipSettings Enable="true"></ChartTooltipSettings>
+                                    <ChartSeries DataSource="@transactionTypeDetailsModel" XName="paymentMode" YName="amount" Type="ChartSeriesType.Column"
+                                                 ColumnSpacing="0.1" ColumnWidth="0.1">
+                                    </ChartSeries>
+                                </ChartSeriesCollection>
+                            </SfChart>
+                        </MudItem>
+
+                    </MudGrid>
+                </ContentTemplate>
+
+            </DashboardLayoutPanel>
+            <DashboardLayoutPanel Id="seven" Row="1" Column="3" SizeX=1 SizeY=1>
+                <HeaderTemplate>Panel 7</HeaderTemplate>
+            </DashboardLayoutPanel>
+            <DashboardLayoutPanel Id="eight" Row="0" Column="4" SizeX=1 SizeY=3>
+                <HeaderTemplate>Class wise Pending fee</HeaderTemplate>
+                <ContentTemplate>
+                    @*Class wise Pending fee*@
+                    <MudItem xs="12" sm="12" md="12">
+                        @if (classWisePendingFees.Count == 0)
+                        {
+                            <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                        }
+                        else
+                        {
+                            <MudItem xs="12" sm="12" md="12">
+                                <SfGrid DataSource="@classWisePendingFees" AllowResizing="true" AllowPaging="true" Toolbar=@Tool>
+                                    <GridSearchSettings Fields=@InitSearch Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                        IgnoreCase="true"></GridSearchSettings>
+                                    <GridColumns>
+
+                                        <GridColumn Field=@nameof(ClassWisePendingFeeModel.className)
+                                                    HeaderText="Class Name" Width="60"></GridColumn>
+                                        <GridColumn Field=@nameof(ClassWisePendingFeeModel.studentCount)
+                                                    HeaderText="Count Mode" Width="60"></GridColumn>
+                                        <GridColumn Field=@nameof(ClassWisePendingFeeModel.pendingAmont
+                                           ) HeaderText="Pending Amont" AllowGrouping="false" Width="120"></GridColumn>
+
+                                        @*<GridColumn Field=@nameof(paymentDetails[1].paymentMode) HeaderText="paymentMode" Width="150"></GridColumn>*@
+                                        @*<GridColumn Field=@nameof(OrdersDetails.OrderDate) HeaderText="Order Date" Format="d" Type="ColumnType.Date" TextAlign="TextAlign.Right" Width="130"></GridColumn>
+                                    <GridColumn Field=@nameof(OrdersDetails.Freight) Format="C2" TextAlign="TextAlign.Right" Width="120"></GridColumn>
+                                    <GridColumn Field=@nameof(OrdersDetails.ShipCountry) HeaderText="Ship Country" Width="150"></GridColumn>*@
+                                    </GridColumns>
+                                </SfGrid>
+                            </MudItem>
+                        }
+
+                    </MudItem>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+
+</MudGrid>
+
+
+
+<style>
+    .e-panel-content {
+        text-align: center;
+        margin-top: 10px;
+    }
+</style>
+
+
+@code {
+
+    public DateTime? DateValue { get; set; } = DateTime.Now;
+
+    private void onChange(Syncfusion.Blazor.Calendars.ChangedEventArgs<DateTime?> args)
+    {
+        DateValue = args.Value;
+        StateHasChanged();
+    }
+
+
+    public DateTime? StartValue { get; set; } = DateTime.Now;
+
+    public DateTime? EndValue { get; set; } = DateTime.Now;
+
+    private void onChange(RangePickerEventArgs<DateTime?> args)
+    {
+        StartValue = args.StartDate;
+        EndValue = args.EndDate;
+        StateHasChanged();
+    }
+
+}

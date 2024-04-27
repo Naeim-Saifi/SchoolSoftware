@@ -1,0 +1,548 @@
+﻿@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using AdminDashboard.Server.Models.MasterConfiguration.UnitMaster;
+@using AdminDashboard.Server.Models.MasterConfiguration.SubjectMaster;
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
+@using AIS.Data.RequestResponseModel.ExamMasterSetup;
+@using AIS.Data.RequestResponseModel.Syllabus;
+@using AIS.Data.RequestResponseModel.QuestionSetUp;
+@using AIS.Model.MasterData;
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Popups;
+@using Syncfusion.Blazor.Layouts
+
+@page "/User_Pages/QuestionBank/GenerateQuestionPaper"
+
+@inherits GenerateQuestionPaperBase
+ 
+
+
+@{
+
+    var InitSearch2 = (new string[] { "subjectName" });
+    var Tool = (new List<string>() { "Search" });
+    var InitialGroupColumnsection = (new string[] { "questionSectionGroup" });
+    
+}
+
+
+@* Question List Grid Details.*@
+<MudGrid>
+    <MudItem xs="12" md="8" sm="12">
+        <SfGrid DataSource="@questionPaperListOutPutModels"
+        @ref="questionPaperListgrid"
+                AllowTextWrap="true"
+                EnableVirtualMaskRow="true"
+                RowHeight="38" Height="510"
+                Width="auto" EnableVirtualization="false"
+                AllowResizing="true" AllowExcelExport="true"
+                EnableAutoFill="true" AllowReordering="true"
+                ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
+                AllowFiltering="false" AllowPaging="true" ShowColumnMenu="false"
+                Toolbar="questionPaperToolBar">
+            @*   <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings> *@
+
+            <GridPageSettings PageCount="100" PageSizes="true"></GridPageSettings>
+
+
+            <GridEvents CommandClicked="EditquestionPaper" OnToolbarClick="questionPaperToolBarClick" TValue=QuestionPaperListOutPutModel></GridEvents>
+            <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                IgnoreCase="true"></GridSearchSettings>
+
+            @* <GridEvents RowSelected="GetSelectedRecords" RowDeselected="RowDeselectHandler" TValue="QuestionBankListModel"></GridEvents> *@
+           @*  <GridSelectionSettings Type="Syncfusion.Blazor.Grids.SelectionType.Multiple"></GridSelectionSettings> *@
+            <GridColumns>
+                @* <GridColumn Type="ColumnType.CheckBox" Width="50"></GridColumn> *@
+                  
+                <GridColumn Field=@nameof(QuestionPaperListOutPutModel.className) HeaderText="ClassName " TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                <GridColumn Field=@nameof(QuestionPaperListOutPutModel.subjectName) HeaderText="SubjectName" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                <GridColumn Field=@nameof(QuestionPaperListOutPutModel.examType) HeaderText="ExamType" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                <GridColumn Field=@nameof(QuestionPaperListOutPutModel.questionPaperGeneratedID) HeaderText="GenerateID" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                <GridCommandColumns>
+                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Download", IconCss = "e-icons e-download e-primary e-outline", CssClass = "e-flat e-primary e-outline" })"></GridCommandColumn>
+                        <GridCommandColumn Type="CommandButtonType.None" ButtonOption="@(new CommandButtonOptions() { Content="View Question", IconCss = "e-icons e-eye e-primary e-outline", CssClass = "e-flat e-success e-outline" })"></GridCommandColumn>
+                    <GridCommandColumn Type="CommandButtonType.Delete" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                </GridCommandColumns>
+                </GridColumn>
+                
+            </GridColumns>
+        </SfGrid>
+
+    </MudItem>
+</MudGrid>
+
+@*View Question Details *@
+@*    @ref="sfSelectedquestionListgrid" *@
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        <MudItem xs="12" sm="12" md="12">
+            <SfDialog @ref="@DialogRef" Width="1550px" Height="900" AllowDragging="true" IsModal="false" ShowCloseIcon="true" @bind-Visible="@IsVisibleQuestionDetails">
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>
+                    <Header>@DialogHeaderName </Header>
+                    <Content>
+                        <MudGrid>
+                            <MudItem xs="12" md="12" sm="12">
+                                <SfGrid DataSource="@viewQuestionPaperDetailsList"
+                            
+                                        AllowTextWrap="true"
+                                        EnableVirtualMaskRow="true"
+                                        RowHeight="38" Height="510"
+                                        Width="auto" EnableVirtualization="false"
+                                        AllowResizing="true" AllowExcelExport="true"
+                                        EnableAutoFill="true" AllowReordering="true"
+                                        ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                        AllowFiltering="false" AllowPaging="true" ShowColumnMenu="false"
+                                        Toolbar="questionBankToolBar">
+                                    @*   <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings> *@
+
+                                    <GridGroupSettings Columns=@InitialGroupColumnsection>
+                                        <CaptionTemplate>
+                                            @{
+                                                var UnitDetails = (context as CaptionTemplateContext);
+                                                <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                            }
+                                        </CaptionTemplate>
+                                    </GridGroupSettings>
+
+                                    <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+
+
+                                   @*  <GridEvents CommandClicked="EditSelectedQuestionListModel" OnToolbarClick="SelectedQuestionToolBarClick" TValue=SelectedQuestionListModel></GridEvents> *@
+                                    <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                        IgnoreCase="true"></GridSearchSettings>
+                                    <GridColumns>
+
+                                        <GridColumn Field=@nameof(QuestionPaperDetailsListOutPutModel.questionPaperID) HeaderText="ID " TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(QuestionPaperDetailsListOutPutModel.questionSectionGroup) HeaderText="Question Paper Section" AllowGrouping=true TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(QuestionPaperDetailsListOutPutModel.questionDetails) HeaderText="Question " TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(QuestionPaperDetailsListOutPutModel.answeer_A) HeaderText="Answeer A" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(QuestionPaperDetailsListOutPutModel.answeer_B) HeaderText="Answeer B" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                        <GridColumn Field=@nameof(QuestionPaperDetailsListOutPutModel.answeer_C) HeaderText="Answeer C" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(QuestionPaperDetailsListOutPutModel.answeer_D) HeaderText="Answeer D" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                        @*<GridColumn Field=@nameof(QuestionBankListModel.correctAnsweer) HeaderText="Correct Answeer" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(QuestionBankListModel.marks) HeaderText="Marks" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                        <GridColumn Field=@nameof(QuestionBankListModel.questionReview) HeaderText="Question Review" TextAlign="TextAlign.Right" AutoFit=true></GridColumn> *@
+
+                                        <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                            <GridCommandColumns>
+                                                @* <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn> *@
+                                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                            </GridCommandColumns>
+                                        </GridColumn>
+                                        @* <GridColumn Field=@nameof(Unit_Output_Model.createdByUser) HeaderText="CreatedBy User"   Visible="true" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(Unit_Output_Model.createdDate) HeaderText="Created Date" Visible="true" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(Unit_Output_Model.updatedDate) HeaderText="Updated Date"  Visible=false TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(Unit_Output_Model.updatedByUser) HeaderText="UpdateBy User"    Visible="false" TextAlign="TextAlign.Right" AutoFit=true></GridColumn> *@
+                                    </GridColumns>
+                                </SfGrid>
+
+                            </MudItem>
+                        
+                        
+                        </MudGrid>
+                    </Content>
+                    </DialogTemplates>
+                    </SfDialog>
+                    </MudItem>
+                    </MudItem>
+                    </MudGrid>
+
+@*Start Question Bank Dialog*@
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        <MudItem xs="12" sm="12" md="12">
+            <SfDialog @ref="@DialogRef" Width="1550px" Height="900" AllowDragging="true" IsModal="false" ShowCloseIcon="true" @bind-Visible="@IsVisible">
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>
+                    <Header>@DialogHeaderName </Header>
+                    <Content>
+                        <MudGrid>
+                            <MudItem xs="12" md="6" sm="12"> 
+                                    <SfAccordion>
+                                        <AccordionItems>
+                                        <AccordionItem Expanded="true">
+                                        <HeaderTemplate>
+                                            Select Question Details
+                                        </HeaderTemplate>
+                                         <ContentTemplate>
+                                        <EditForm Model="questionBankViewModel" OnValidSubmit="OnValidSubmit">
+                                            <DataAnnotationsValidator />
+                                            <MudCardContent>
+                                                <MudGrid>
+                                                    <MudItem xs="12" md="6" sm="6">
+
+                                                        <SfDropDownList ID="ClassId" TValue="string" TItem="Master_CLass_List_Output_Model"
+                                                                        CssClass="e-outline" Placeholder="Select a Class"
+                                                                        FloatLabelType="@FloatLabelType.Never"
+                                                                        AllowFiltering="true"
+                                                                        Enabled="ddEnable"
+                                                        @bind-Value="@questionBankViewModel.masterClassId"
+                                                                        DataSource="@master_CLass_List">
+
+                                                            <DropDownListFieldSettings Text="className" Value="classId" />
+                                                            <DropDownListEvents TItem="Master_CLass_List_Output_Model" TValue="string"
+                                                                                ValueChange="OnChangeClass" />
+                                                            <ValidationMessage For="() => questionBankViewModel.masterClassId" />
+                                                        </SfDropDownList>
+                                                    </MudItem>
+                                                    <MudItem xs="12" md="6" sm="6">
+                                                        <SfDropDownList ID="SectionId" TValue="string" TItem="Master_Map_Subject_With_Class_List_Output_Model"
+                                                                        CssClass="e-outline" Placeholder="Select a Subject"
+                                                                        FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                        @bind-Value="@questionBankViewModel.masterSubjectId"
+                                                                        Enabled="ddEnable"
+                                                                        DataSource="@map_classwithsubject_List">
+                                                            <DropDownListFieldSettings Text="subjectName" Value="subjectId" />
+                                                            <DropDownListEvents TItem="Master_Map_Subject_With_Class_List_Output_Model" TValue="string"
+                                                                                ValueChange="OnChangeSubject" />
+                                                            <ValidationMessage For="() => questionBankViewModel.masterSubjectId" />
+                                                        </SfDropDownList>
+                                                    </MudItem>
+                                                    <MudItem xs="12" md="6" sm="6">
+                                                        <SfDropDownList ID="UnitId" TValue="string" TItem="Unit_Output_Model"
+                                                                        CssClass="e-outline" Placeholder="Select a Unit"
+                                                                        FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                        @bind-Value="@questionBankViewModel.SubjectUnitId"
+                                                                        Enabled="ddEnable"
+                                                                        DataSource="@unitMasterList">
+
+                                                            <DropDownListFieldSettings Text="unitTitle" Value="unitId" />
+                                                            <DropDownListEvents TItem="Unit_Output_Model" TValue="string"
+                                                                                ValueChange="OnChangeUnit" />
+                                                            <ValidationMessage For="() => questionBankViewModel.SubjectUnitId" />
+                                                        </SfDropDownList>
+                                                    </MudItem>
+                                                    <MudItem xs="12" md="6" sm="6">
+                                                        <SfDropDownList ID="SectionId" TValue="string" TItem="Chapter_Output_Model"
+                                                                        CssClass="e-outline" Placeholder="Select a chapter"
+                                                                        FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                        @bind-Value="@questionBankViewModel.subjectChapterId"
+                                                                        Enabled="ddEnable"
+                                                                        DataSource="@chapterMasterList">
+                                                            <DropDownListFieldSettings Text="chapterTitle" Value="chapterID" />
+                                                            <DropDownListEvents TItem="Chapter_Output_Model" TValue="string"
+                                                                                ValueChange="OnChangeChapter" />
+                                                            <ValidationMessage For="() => questionBankViewModel.subjectChapterId" />
+                                                        </SfDropDownList>
+                                                    </MudItem>
+                                                    <MudItem xs="12" md="6" sm="6">
+                                                        <SfDropDownList ID="TopicId" TValue="string" TItem="Topic_Output_Model"
+                                                                        CssClass="e-outline" Placeholder="Select a topic"
+                                                                        FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                        @bind-Value="@questionBankViewModel.subjectTopicId" Enabled="ddEnable"
+                                                                        DataSource="@_topicMasterList">
+                                                            <DropDownListFieldSettings Text="topicTitle" Value="topicID" />
+
+                                                            <ValidationMessage For="() => questionBankViewModel.subjectTopicId" />
+                                                            <DropDownListEvents TItem="Topic_Output_Model" TValue="string"
+                                                                                ValueChange="OnChangeTopic" />
+
+                                                        </SfDropDownList>
+                                                    </MudItem>
+                                                    <MudItem xs="12" md="6" sm="6">
+                                                        <SfDropDownList ID="questiontypeID" TValue="string" TItem="QuestionType"
+                                                                        CssClass="e-outline" Placeholder="Select a question type"
+                                                                        FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                        @bind-Value="@questionBankViewModel.QuestionTypeId"
+                                                                        Enabled="ddEnable"
+                                                                        DataSource="@questionTypes">
+                                                            <DropDownListFieldSettings Text="Text" Value="Id" />
+                                                            <ValidationMessage For="() => questionBankViewModel.QuestionTypeId" />
+                                                            <DropDownListEvents TItem="QuestionType" TValue="string"
+                                                                                ValueChange="OnChangeQuestionType" />
+                                                            <ValidationMessage For="() => questionBankViewModel.QuestionTypeId" />
+
+                                                        </SfDropDownList>
+                                                    </MudItem>
+                                                    <MudItem xs="12" md="6" sm="4">
+
+                                                        <SfDropDownList ID="chapterId" TValue="string" TItem="QuestionTypeLevel"
+                                                                        CssClass="e-outline" Placeholder="Question Type Level"
+                                                                        FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                        @bind-Value="@questionBankViewModel.QuestionLevel"
+                                                                        Enabled="ddEnable"
+                                                                        DataSource="@questionTypesLevel">
+                                                            <DropDownListFieldSettings Text="Text" Value="Id" />
+                                                                    <DropDownListEvents TItem="QuestionTypeLevel" TValue="string"
+                                                                                        ValueChange="OnChangeQuestionTypeLevel" />
+                                                            <ValidationMessage For="() => questionBankViewModel.QuestionLevel" />
+                                                        </SfDropDownList>
+                                                    </MudItem>
+
+                                                            <MudItem xs="12" md="6" sm="4">
+
+                                                                <SfDropDownList ID="chapterId" TValue="string" TItem="QuestionPaperGroup"
+                                                                                CssClass="e-outline" Placeholder="Select Question Section Name"
+                                                                                FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                                @bind-Value="@questionBankViewModel.QuestionGroupName"
+                                                                                Enabled="ddEnable"
+                                                                                DataSource="@questionPaperGroup">
+                                                                    <DropDownListFieldSettings Text="Text" Value="Id" />
+                                                                    <DropDownListEvents TItem="QuestionPaperGroup" TValue="string"
+                                                                                        ValueChange="OnChangeQuestionPaperGroup" />
+                                                                    
+                                                                    <ValidationMessage For="() => questionBankViewModel.QuestionGroupName" />
+                                                                </SfDropDownList>
+                                                            </MudItem>
+                                                            <MudItem xs="12" md="6" sm="4">
+
+                                                                <SfDropDownList ID="chapterId" TValue="string" TItem="Exam_Type_List_Output_Model"
+                                                                                CssClass="e-outline" Placeholder="Select Exam Details"
+                                                                                FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                                @bind-Value="@questionBankViewModel.ExamName"
+                                                                                Enabled="ddEnable"
+                                                                                DataSource="@_examTypeList">
+                                                                    <DropDownListFieldSettings Text="examType" Value="examTypeId" />
+                                                                    <ValidationMessage For="() => questionBankViewModel.QuestionGroupName" />
+                                                                    <DropDownListEvents TItem="Exam_Type_List_Output_Model" TValue="string"
+                                                                                        ValueChange="OnChangeExamType" />
+                                                                </SfDropDownList>
+                                                            </MudItem>
+                                                    <MudItem xs="12" md="6" sm="6">
+                                                        <SfButton CssClass=e-outline type="submit" IsPrimary="true">Save</SfButton>
+                                                        @*  <SfButton CssClass="e-outline" OnClick="@CloseDialog">Cancel</SfButton>*@
+                                                        <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>
+                                                    </MudItem>
+                                                </MudGrid>
+                                            </MudCardContent>
+                                        </EditForm>
+                                        </ContentTemplate>
+                                        </AccordionItem>
+                                        <AccordionItem>
+                                            <HeaderTemplate>
+                                                <div>Question Details</div>
+                                            </HeaderTemplate>
+                                            <ContentTemplate>
+                                                <MudGrid>
+                                                    <MudItem xs="12" md="12" sm="12">
+                                                        <SfGrid DataSource="@questionBankListModels"
+                                                        @ref="sfquestionListgrid"
+                                                                AllowTextWrap="true"
+                                                                EnableVirtualMaskRow="true"
+                                                                RowHeight="38" Height="510"
+                                                                Width="auto" EnableVirtualization="false"
+                                                                AllowResizing="true" AllowExcelExport="true"
+                                                                EnableAutoFill="true" AllowReordering="true"
+                                                                ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
+                                                                AllowFiltering="false" AllowPaging="true" ShowColumnMenu="false"
+                                                                Toolbar="questionBankToolBar">
+                                                            @*   <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings> *@
+
+                                                            <GridPageSettings PageCount="100" PageSizes="true"></GridPageSettings>
+
+
+                                                            @* <GridEvents CommandClicked="EditQuestionMaster" OnToolbarClick="EditQuestionToolBarClick" TValue=QuestionBankListModel></GridEvents> *@
+                                                            <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                                                IgnoreCase="true"></GridSearchSettings>
+
+                                                            <GridEvents RowSelected="GetSelectedRecords" RowDeselected="RowDeselectHandler" TValue="QuestionBankListModel"></GridEvents>
+                                                            <GridSelectionSettings Type="Syncfusion.Blazor.Grids.SelectionType.Multiple"></GridSelectionSettings>
+                                                            <GridColumns>
+                                                                <GridColumn Type="ColumnType.CheckBox" Width="50"></GridColumn>
+                                                                @* <GridColumn Field=@nameof(QuestionBankListModel.className) HeaderText="Class" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                                                <GridColumn Field=@nameof(QuestionBankListModel.subjectName) HeaderText="Subject" AutoFit=true></GridColumn>
+                                                                <GridColumn Field=@nameof(QuestionBankListModel.unitName) HeaderText="Unit Title" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                                <GridColumn Field=@nameof(QuestionBankListModel.unitDescription) HeaderText="Unit Description" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                                                <GridColumn Field=@nameof(QuestionBankListModel.chapterName) HeaderText="Chapter Title" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                                <GridColumn Field=@nameof(QuestionBankListModel.chapterDescription) HeaderText="Chapter Description" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                                                <GridColumn Field=@nameof(QuestionBankListModel.topicName) HeaderText="Topic Title" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                                <GridColumn Field=@nameof(QuestionBankListModel.topicDescription) HeaderText="Topic Description" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+ *@
+                                                                @* <GridColumn Field=@nameof(QuestionBankListModel.questionLevel) HeaderText="Question Level" TextAlign="TextAlign.Right"   Width="50%"></GridColumn> *@
+
+                                                                <GridColumn Field=@nameof(QuestionBankListModel.questionDetails) HeaderText="Question " TextAlign="TextAlign.Right" Width="50%"></GridColumn>
+                                                                <GridColumn Field=@nameof(QuestionBankListModel.answeer_A) HeaderText="Answeer A" TextAlign="TextAlign.Right" Visible=false Width="50%"></GridColumn>
+                                                                <GridColumn Field=@nameof(QuestionBankListModel.answeer_B) HeaderText="Answeer B" TextAlign="TextAlign.Right" Visible=false Width="50%"></GridColumn>
+
+                                                                <GridColumn Field=@nameof(QuestionBankListModel.answeer_C) HeaderText="Answeer C" TextAlign="TextAlign.Right" Visible=false Width="50%"></GridColumn>
+                                                                <GridColumn Field=@nameof(QuestionBankListModel.answeer_D) HeaderText="Answeer D" TextAlign="TextAlign.Right" Visible=false Width="50%"></GridColumn>
+
+                                                                @* <GridColumn Field=@nameof(QuestionBankListModel.correctAnsweer) HeaderText="Correct Answeer" TextAlign="TextAlign.Right" AutoFit=true></GridColumn> *@
+                                                                <GridColumn Field=@nameof(QuestionBankListModel.marks) HeaderText="Marks" TextAlign="TextAlign.Right" Visible=false Width="50%"></GridColumn>
+
+                                                                <GridColumn Field=@nameof(QuestionBankListModel.questionReview) HeaderText="Question Review" TextAlign="TextAlign.Right" Visible=true Width="50%"></GridColumn>
+@* 
+                                                                <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                                                    <GridCommandColumns>
+                                                                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                                                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                                                    </GridCommandColumns>
+                                                                </GridColumn> *@
+                                                                @* <GridColumn Field=@nameof(Unit_Output_Model.createdByUser) HeaderText="CreatedBy User"   Visible="true" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                                <GridColumn Field=@nameof(Unit_Output_Model.createdDate) HeaderText="Created Date" Visible="true" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                                <GridColumn Field=@nameof(Unit_Output_Model.updatedDate) HeaderText="Updated Date"  Visible=false TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                                <GridColumn Field=@nameof(Unit_Output_Model.updatedByUser) HeaderText="UpdateBy User"    Visible="false" TextAlign="TextAlign.Right" AutoFit=true></GridColumn> *@
+                                                            </GridColumns>
+                                                        </SfGrid>
+
+                                                    </MudItem>
+                                                </MudGrid>
+                                            </ContentTemplate>
+                                        </AccordionItem>
+                                      
+                                     </AccordionItems>
+                                    </SfAccordion>
+                            </MudItem>
+                            <MudItem xs="12" md="6" sm="12">
+                                <MudGrid>
+                                    <MudItem xs="12" md="12" sm="12">
+                                        <SfGrid DataSource="@selectedQuestionListModels"
+                                        @ref="sfSelectedquestionListgrid"
+                                                AllowTextWrap="true"
+                                                EnableVirtualMaskRow="true"
+                                                RowHeight="38" Height="510"
+                                                Width="auto" EnableVirtualization="false"
+                                                AllowResizing="true" AllowExcelExport="true"
+                                                EnableAutoFill="true" AllowReordering="true"
+                                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                                AllowFiltering="false" AllowPaging="true" ShowColumnMenu="false"
+                                                Toolbar="questionBankToolBar">
+                                            @*   <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings> *@
+                                            
+                                             <GridGroupSettings Columns=@InitialGroupColumnsection>
+                                                <CaptionTemplate>
+                                                @{
+                                                var UnitDetails = (context as CaptionTemplateContext);
+                                                <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                                }
+                                                </CaptionTemplate>
+                                            </GridGroupSettings>
+
+                                            <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+
+
+                                            <GridEvents CommandClicked="EditSelectedQuestionListModel" OnToolbarClick="SelectedQuestionToolBarClick" TValue=SelectedQuestionListModel></GridEvents>
+                                            <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                                IgnoreCase="true"></GridSearchSettings>
+                                            <GridColumns>
+
+                                                <GridColumn Field=@nameof(SelectedQuestionListModel.selectedQuestionID) HeaderText="ID " TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(SelectedQuestionListModel.questionSectionGroup) HeaderText="Question Paper Section"  AllowGrouping=true  TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(SelectedQuestionListModel.questionDetails) HeaderText="Question " TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                               @*  <GridColumn Field=@nameof(QuestionBankListModel.answeer_A) HeaderText="Answeer A" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(QuestionBankListModel.answeer_B) HeaderText="Answeer B" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                                <GridColumn Field=@nameof(QuestionBankListModel.answeer_C) HeaderText="Answeer C" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(QuestionBankListModel.answeer_D) HeaderText="Answeer D" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                                <GridColumn Field=@nameof(QuestionBankListModel.correctAnsweer) HeaderText="Correct Answeer" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(QuestionBankListModel.marks) HeaderText="Marks" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                                <GridColumn Field=@nameof(QuestionBankListModel.questionReview) HeaderText="Question Review" TextAlign="TextAlign.Right" AutoFit=true></GridColumn> *@
+
+                                                <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                                    <GridCommandColumns>
+                                                        @* <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn> *@
+                                                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                                    </GridCommandColumns>
+                                                </GridColumn>
+                                                @* <GridColumn Field=@nameof(Unit_Output_Model.createdByUser) HeaderText="CreatedBy User"   Visible="true" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Unit_Output_Model.createdDate) HeaderText="Created Date" Visible="true" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Unit_Output_Model.updatedDate) HeaderText="Updated Date"  Visible=false TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Unit_Output_Model.updatedByUser) HeaderText="UpdateBy User"    Visible="false" TextAlign="TextAlign.Right" AutoFit=true></GridColumn> *@
+                                            </GridColumns>
+                                        </SfGrid>
+
+                                    </MudItem>
+                                </MudGrid>
+
+
+                            </MudItem>
+                        </MudGrid>
+                       
+                        
+                    </Content>
+                </DialogTemplates>
+                <DialogAnimationSettings Effect="@dialogAnimationEffect" Duration=400 />
+            </SfDialog>
+        
+        </MudItem>
+        
+    </MudItem>
+</MudGrid>
+
+
+
+@code {
+    private string Xvalue = "center";
+    private string Yvalue = "center";
+
+    /*
+    * Gets or sets the name of the animation that should be used when opening and closing the SfDialog.
+    * The following are the list of animation effects available to configure to the dialog:
+
+       Fade
+       FadeZoom
+       FlipLeftDown
+       FlipLeftUp
+       FlipRightDown
+       FlipRightUp
+       FlipXDown
+       FlipXUp
+       FlipYLeft
+       FlipYRight
+       SlideBottom
+       SlideLeft
+    SlideRight
+    SlideTop
+        Zoom
+       None.
+    */
+
+}
+
+
+
+
+<style>
+    .e-toolbar-item .e-tbar-btn {
+        background-color: orange;
+    }
+
+    .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+
+    .e-dialog .e-dlg-header {
+        color: cornflowerblue;
+        font-size: 20px;
+        font-weight: normal;
+    }
+
+
+
+    /*  .e-rowcell.e-attr {
+                            background-color: lightgrey;
+                        }*/
+
+    /* .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+                            position: fixed;
+                        }*/
+
+    /*
+
+                        .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
+                            transition: none;
+                        }*/
+    /*.e-content .e-item {
+                            font-size: 12px;
+                            padding: 10px;
+                            text-align: justify;
+                        }*/
+</style>

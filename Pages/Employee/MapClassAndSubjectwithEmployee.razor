@@ -1,0 +1,175 @@
+﻿@page  "/Employee/MapClasswithSubject"
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Buttons;
+@using AIS.Model.Employee
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Notifications
+@using AdminDashboard.Server.Models.MasterConfiguration.SubjectMaster;
+@using AIS.Model.MasterData;
+@using AIS.Model.Mapping;
+@using System.ComponentModel.DataAnnotations;
+@using Syncfusion.Blazor.Popups;
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Navigations
+
+@inherits MapClassAndSubjectwithEmployeeBase
+
+@{
+
+    var InitSearch1 = (new string[] { "teacherName", "subjectName", "classname", "sectionName" });
+    var Tool = (new List<string>() { "Search" });
+}
+
+
+<MudGrid>
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="9" CellAspectRatio="2" AllowResizing="true">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Map Subject with Class and Section</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@subjectWithTeacherList"
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="410"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            @ref="Grid"
+                            Toolbar="@(new string[] {"Search","Print","ColumnChooser" })">
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        @*<GridEvents OnActionBegin="ActionBeginHandler" TValue="UnitMasterListModel"></GridEvents>*@
+                        <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+                        <GridPageSettings PageSize="12"></GridPageSettings>
+
+
+                        @*<GridEvents OnToolbarClick="ToolbarClick" TValue="EmployeeViewModel"></GridEvents>*@
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        @*<GridGroupSettings ShowGroupedColumn="true"></GridGroupSettings>*@
+
+                        <GridPageSettings PageSize="12"></GridPageSettings>
+                        <GridSearchSettings Fields=@InitSearch1 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+                        <GridEvents CommandClicked="OnCommandClicked" TValue="MapSubjectWithTeacherList"> </GridEvents>
+                        @*<GridEvents OnActionBegin="OnActionBegin" RowSelected="RowSelectHandler" TValue="MapSubjectWithTeacherList"></GridEvents>*@
+                        <GridEditSettings AllowDeleting="true" Mode="EditMode.Normal"></GridEditSettings>
+                        <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+
+                        <GridColumns>
+                            <GridColumn Field="@nameof(MapSubjectWithTeacherList.teacherUserId)" HeaderText="ID" Width="40" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(MapSubjectWithTeacherList.teacherName)" HeaderText="Teacher Name" Width="80" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(MapSubjectWithTeacherList.classname)" HeaderText="Class Name" Width="50" AllowGrouping="true" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(MapSubjectWithTeacherList.sectionName)" HeaderText="Section Name" Width="50" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(MapSubjectWithTeacherList.subjectName)" HeaderText="Subject Name" Width="80" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(MapSubjectWithTeacherList.activeStatusDetails)" HeaderText="Status" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn HeaderText="Action" TextAlign="TextAlign.Center" Width="80">
+                                <GridCommandColumns>
+                                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions() { Content = "Delete", CssClass = "e-flat" })" Title="Delete"></GridCommandColumn>
+                                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions() { Content = "Active", CssClass = "e-flat" })" Title="Active"></GridCommandColumn>
+                                </GridCommandColumns>
+                            </GridColumn>
+                        </GridColumns>
+
+                        <SfToolbar>
+                            <ToolbarItems>
+                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>
+                                <ToolbarItem Text="Map Subject & Class Section" Align="ItemAlign.Center"
+                                             SuffixIcon="e-outline e-icons e-plus-icon"
+                                             OnClick="@OpenDialog"></ToolbarItem>
+                                <ToolbarItem Text="Search" Align="ItemAlign.Right"></ToolbarItem>
+                                <ToolbarItem Text="Settings" Align="ItemAlign.Right"></ToolbarItem>
+                            </ToolbarItems>
+                        </SfToolbar>
+                    </SfGrid>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+
+</MudGrid>
+
+
+<MudGrid>
+    <MudItem xs="12" sm="3" md="12">
+        <MudItem xs="12" sm="3" md="12">
+            @*<div id="target">*@
+            @*<SfButton @onclick="@OpenDialog">Open Dialog</SfButton>*@
+
+            <SfDialog Width="650px" AllowDragging="true" IsModal="false" ShowCloseIcon="true" @bind-Visible="@IsVisible">
+                <DialogTemplates>
+                    <Header>Map Subject with Class and Section </Header>
+                    <Content>
+
+                        <MudItem xs="12" md="12" sm="3">
+                            <EditForm Model="@mapClassAndSubjectwithEmployeeViewModel" OnValidSubmit="OnValidSubmit">
+                                <DataAnnotationsValidator />
+
+                                <MudCardContent>
+                                    <MudGrid>
+
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList TValue="int" TItem="EmployeeDetailsModel"  CssClass="e-outline"                                                             
+                                                            Placeholder="Select a Teacher" FloatLabelType="@FloatLabelType.Never" AllowFiltering="false"
+                                                            @bind-Value="@mapClassAndSubjectwithEmployeeViewModel.TeacherId"
+                                                            DataSource="@employeeDetailsModels"  >
+                                                <DropDownListFieldSettings Text="employeeName" Value="userId" />
+                                                <ValidationMessage For="() => mapClassAndSubjectwithEmployeeViewModel.TeacherId" />
+                                            </SfDropDownList>
+
+                                        </MudItem>
+
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList TValue="int" TItem="MasterClassListModel"  CssClass="e-outline" Placeholder="Select a Class"
+                                                            FloatLabelType="@FloatLabelType.Never"
+                                                            AllowFiltering="false"
+                                                            @bind-Value="@mapClassAndSubjectwithEmployeeViewModel.ClassId"
+                                                            DataSource="@masterClassListModels" >
+                                                <DropDownListFieldSettings Text="name" Value="masterClassId" />
+                                                <DropDownListEvents TItem="MasterClassListModel" TValue="int" ValueChange="OnChangeClass" />
+                                                <ValidationMessage For="() => mapClassAndSubjectwithEmployeeViewModel.ClassId" />
+                                            </SfDropDownList>
+
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList ID="Sname" @bind-Value="@mapClassAndSubjectwithEmployeeViewModel.SubjectID"
+                                                            TItem="MapsubjectwithClassModel"
+                                                            CssClass="e-outline" Placeholder="Select a Subject" FloatLabelType="@FloatLabelType.Never"
+                                                            TValue="int" DataSource="@subj" AllowFiltering="false">
+                                                <DropDownListFieldSettings Value="masterSubjectId" Text="subjectName"></DropDownListFieldSettings>
+                                                <ValidationMessage For="() => mapClassAndSubjectwithEmployeeViewModel.SubjectID" />
+                                            </SfDropDownList>
+
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList TValue="int" TItem="MasterSectionListModel"
+                                                            CssClass="e-outline" Placeholder="Select a Section" FloatLabelType="@FloatLabelType.Never" AllowFiltering="false"
+                                                            @bind-Value="@mapClassAndSubjectwithEmployeeViewModel.SectionID"
+                                                            DataSource="@masterSectionListModel"  >
+                                                <DropDownListFieldSettings Text="name" Value="masterSectionId" />
+                                                <ValidationMessage For="() => mapClassAndSubjectwithEmployeeViewModel.SectionID" />
+                                            </SfDropDownList>
+
+                                        </MudItem>
+                                        <MudItem xs="12" md="4" sm="3">
+                                            <SfButton CssClass="e-outline" type="submit" IsPrimary="true">Save</SfButton>
+                                            <SfButton CssClass="e-outline"  OnClick="@CloseDialog">Cancel</SfButton>
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudCardContent>
+
+                            </EditForm>
+                        </MudItem>
+                    </Content>
+                </DialogTemplates>
+                <DialogAnimationSettings Effect="@AnimationEffect" Duration=400 />
+                <!--<DialogButtons>-->
+                    @*<DialogButton Content="OK" IsPrimary="true" OnClick="@OnValidSubmit" />*@
+                    <!--<DialogButton Content="Cancel" OnClick="@CloseDialog" />
+                </DialogButtons>-->
+            </SfDialog>
+
+            @*</div>*@
+        </MudItem>
+    </MudItem>
+</MudGrid>

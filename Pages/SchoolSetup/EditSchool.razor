@@ -1,0 +1,273 @@
+﻿@page "/SchoolSetup/EditSchool"
+
+@inject IDialogService DialogService
+@inherits AddEditSchoolBase
+@using AIS.Model.MasterData
+@using AIS.Model.GeneralConversion
+
+<MudGrid>
+    <MudItem xs="12" sm="3" md="12">
+        <MudItem xs="12" sm="8" md="12">
+            <MudCard Elevation="25">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText>Add/Update School</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <div class="d-flex justify-center mb-4">
+                        <EditForm Model="@schoolModel" OnValidSubmit="OnValidSubmit">
+                            <DataAnnotationsValidator />
+                            <MudExpansionPanels MultiExpansion="true">
+                                <MudExpansionPanel Text="School Detail">
+                                    <MudCardContent>
+                                        <MudGrid>
+                                            <MudItem xs="12" md="4">
+                                                <MudTextField @bind-Value="schoolModel.SchoolCode" Label="SchoolCode"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.SchoolCode)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="4">
+                                                <MudTextField @bind-Value="schoolModel.SchoolName" Label="School Name"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.SchoolName)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="4">
+                                                <MudTextField @bind-Value="schoolModel.SchoolEmail" Label="School Email"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.SchoolEmail)" />
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.Tagline" Label="Tagline"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.Tagline)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.Description" Label="Description"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.Description)" />
+                                            </MudItem>
+                                            <label style="box-shadow: 0 2px 7px #4caf50;display: inline-flex;width: 200px; height:35px; margin-top:15px; justify-content: space-around; border-radius: 1em; color: white; border:2px solid; cursor: pointer; align-items: center; padding:16px; background-color: #4caf50;" for="fileInput2">
+                                                Upload Logo <MudIcon Icon="@Icons.Filled.CloudUpload" />
+                                            </label>
+                                            <MudItem xs="12" md="3">
+
+
+                                                <InputFile id="fileInput2" OnChange="UploadFiles" hidden multiple />
+
+                                                @if (files != null)
+                                                {
+                                                    <MudList>
+                                                        @foreach (var file in files)
+                                                        {
+                                                            <MudListItem Icon="@Icons.Filled.AttachFile">
+                                                                @file.Name <code>@file.Size bytes</code>
+                                                            </MudListItem>
+                                                        }
+                                                    </MudList>
+                                                }
+                                            </MudItem>
+                                            @*<MudItem xs="12" md="3">
+            <MudTextField @bind-Value="schoolModel.Logo" Label="Logo"
+                          Variant="Variant.Outlined" Margin="Margin.Dense"
+                          For="@(() => schoolModel.Logo)" />
+        </MudItem>*@
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.RegistrationNumber" Label="Registration Number"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.RegistrationNumber)" />
+                                            </MudItem>
+                                        </MudGrid>
+                                    </MudCardContent>
+                                </MudExpansionPanel>
+                                <MudExpansionPanel Text="School Address Detail">
+                                    <MudCardContent>
+                                        <MudGrid>
+
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.Address1" Label="Address1"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.Address1)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.Address2" Label="Address2"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.Address2)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.City" Label="City"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.City)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudSelect Label="Select State" @bind-Value="StateId"
+                                                           Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-4">
+                                                    @foreach (var stateList in GenericClass.StateList)
+                                                    {
+                                                        <MudSelectItem Value="@stateList">@stateList</MudSelectItem>
+                                                    }
+                                                </MudSelect>
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.PinCode" Label="Pin Code"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.PinCode)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.OwnerName" Label="Owner Name"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.OwnerName)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.OwnerContactNo" Label="Owner ContactNo"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.OwnerContactNo)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.OwnerEmail" Label="Owner Email"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.OwnerEmail)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.Gender" Label="Gender"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.Gender)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudDatePicker @bind-Date="schoolModel.DOB"
+                                                               Label="DOB" Margin="Margin.Dense" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.UIDType" Label="UID Type"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.UIDType)" />
+                                            </MudItem>
+                                        </MudGrid>
+                                    </MudCardContent>
+                                </MudExpansionPanel>
+                                <MudExpansionPanel Text="Bank Detail">
+                                    <MudCardContent>
+                                        <MudGrid>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.BankName" Label="Bank Name"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.BankName)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.IFSCCode" Label="IFSC Code"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.IFSCCode)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.AccountNo" Label="Account No"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.AccountNo)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.BankAddress" Label="Bank Address"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.BankAddress)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.PaymentLink" Label="Payment Link"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.PaymentLink)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.AdditionalInfo" Label="Additional Info"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.AdditionalInfo)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.Rank" Label="Rank"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.Rank)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudSelect Label="Select OrganizationType" @bind-Value="schoolModel.OrganizationType"
+                                                           Variant="Variant.Outlined" Margin="Margin.Dense">
+                                                    @foreach (var organizationtype in GenericClass.OrganationType)
+                                                    {
+                                                        <MudSelectItem Value="@organizationtype">@organizationtype</MudSelectItem>
+                                                    }
+                                                </MudSelect>
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudSelect Label="Select AffilatedTo" @bind-Value="schoolModel.AffilatedTo"
+                                                           Variant="Variant.Outlined" Margin="Margin.Dense">
+                                                    @foreach (var affilatedTo in GenericClass.AffilatedTo)
+                                                    {
+                                                        <MudSelectItem Value="@affilatedTo">@affilatedTo</MudSelectItem>
+                                                    }
+                                                </MudSelect>
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.Tahsheel" Label="Tahsheel"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.Tahsheel)" />
+                                            </MudItem>
+                                        </MudGrid>
+                                    </MudCardContent>
+                                </MudExpansionPanel>
+                                <MudExpansionPanel Text="SMS and Mail">
+                                    <MudCardContent>
+                                        <MudGrid>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.SMSUserID" Label="SMSUser ID"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.SMSUserID)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.SMSPassword" Label="SMS Password"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.SMSPassword)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.SMSAPIKey" Label="SMSAPI Key"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.SMSAPIKey)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.FromMailId" Label="FromMail Id"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.FromMailId)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.MailUserId" Label="MailUser Id"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.MailUserId)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.MailPassword" Label="Mail Password"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.MailPassword)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.ActiveStatus" Label="ActiveStatus"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.ActiveStatus)" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3">
+                                                <MudTextField @bind-Value="schoolModel.SMSAPIKey" Label="SMSAPI Key"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => schoolModel.SMSAPIKey)" />
+                                            </MudItem>
+
+                                        </MudGrid>
+                                    </MudCardContent>
+                                </MudExpansionPanel>
+                            </MudExpansionPanels>
+                        </EditForm>
+                    </div>
+                </MudCardContent>
+                <MudCardActions Class="d-flex justify-space-between align-center">
+
+                    <MudButton @onclick="@(()=>Cancel())" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Cancel" Color="Color.Warning" Size="Size.Small" Class="ml-n1 my-3">Cancel</MudButton>
+                    <MudButton @onclick="@(()=>UpdateSchoolDetaild())" ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Size="Size.Small">Update</MudButton>
+
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudItem>
+</MudGrid>

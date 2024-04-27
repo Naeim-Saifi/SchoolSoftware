@@ -1,0 +1,375 @@
+﻿@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.Cards
+@using AIS.Data.RequestResponseModel.StudentSetUp
+@using Syncfusion.Blazor.Navigations
+@page "/StudentModule/ProfileDetails/ProfilePage"
+
+@inherits ProfileDetailsBase
+
+@if (@studentListModel.Count != 0)
+{
+
+
+
+
+
+    <MudGrid>
+        <MudItem Class="mud-grid-item mud-grid-item-xs-12 mud-grid-item-sm-4 mud-grid-item-md-4 mud-grid-item-lg-4">
+
+            <SfCard>
+                <CardHeader Title=@studentListModel[0].firstName SubTitle="Student"></CardHeader>
+                <CardImage Image="/images/usrbig4.jpg"></CardImage>
+                <CardContent>
+                    @studentListModel[0].address1
+                </CardContent>
+                <CardContent>
+                    @studentListModel[0].fatherContactNo
+                </CardContent>
+                <CardContent>
+                    <b>Roll No : 26</b>
+                </CardContent>
+            </SfCard>
+
+
+            <SfCard>
+                <SfTab OverflowMode="OverflowMode.Scrollable" Width="100%">
+                    <TabItems>
+                        <TabItem Content="Hello i am Rakhi Sharma a student in SIS. i love to study with all my class friends & professors.">
+                            <ChildContent>
+                                <TabHeader Text="About"></TabHeader>
+                            </ChildContent>
+
+                            <ContentTemplate>
+                                <CardContent>Hello i am Rakhi Sharma a student in SIS. i love to study with all my class friends & professors.</CardContent>
+                                <CardStacked>
+                                    <CardContent><b>Gender</b></CardContent>
+                                    <CardContent>@studentListModel[0].gender</CardContent>
+                                </CardStacked>
+
+                                <CardStacked>
+                                    <CardContent><b>Department</b></CardContent>
+                                    <CardContent>Computer Engineering</CardContent>
+                                </CardStacked>
+                            </ContentTemplate>
+
+                        </TabItem>
+                        <TabItem Content="Hello i am Rakhi Sharma a student in SIS. i love to study with all my class friends & professors.">
+                            <ChildContent>
+                                <TabHeader Text="Skills"></TabHeader>
+                            </ChildContent>
+                        </TabItem>
+
+                    </TabItems>
+                </SfTab>
+
+            </SfCard>
+
+        </MudItem>
+        <MudItem Class="mud-grid-item mud-grid-item-xs-12 mud-grid-item-sm-8 mud-grid-item-md-8 mud-grid-item-lg-8">
+
+            <SfCard CssClass="tab-sec">
+                <SfTab OverflowMode="OverflowMode.Scrollable" Width="100%">
+                    <TabItems>
+                        <TabItem Content="Hello i am Rakhi Sharma a student in SIS. i love to study with all my class friends & professors.">
+                            <ChildContent>
+                                <TabHeader Text="About Me"></TabHeader>
+                            </ChildContent>
+                            <ContentTemplate>
+                                <CardHeader>About</CardHeader>
+                                <div class="first-content">
+                                    <CardStacked>
+                                        <CardContent><b>Withdrawal No</b></CardContent>
+                                        <CardContent>@studentListModel[0].withdrawalNumber</CardContent>
+                                    </CardStacked>
+                                    <CardStacked>
+                                        <CardContent><b>First Name</b></CardContent>
+                                        <CardContent>@studentListModel[0].firstName</CardContent>
+                                    </CardStacked>
+                                    <CardStacked>
+                                        <CardContent>
+                                            <b>
+                                                Middle Name
+                                            </b>
+                                        </CardContent>
+                                        <CardContent>@studentListModel[0].middleName</CardContent>
+                                    </CardStacked>
+                                    <CardStacked>
+                                        <CardContent>
+                                            <b>
+                                                Last Name
+                                            </b>
+                                        </CardContent>
+                                        <CardContent>@studentListModel[0].lastName</CardContent>
+                                    </CardStacked>
+                                    <CardStacked>
+                                        <CardContent><b>Father Name</b></CardContent>
+                                        <CardContent>@studentListModel[0].fatherName</CardContent>
+                                    </CardStacked>
+                                    <CardStacked>
+                                        <CardContent><b>Mother Name</b></CardContent>
+                                        <CardContent>@studentListModel[0].motherName</CardContent>
+                                    </CardStacked>
+                                    <CardStacked>
+                                        <CardContent><b>Father Mobile No</b></CardContent>
+                                        <CardContent>
+                                            @studentListModel[0].fatherContactNo
+
+                                        </CardContent>
+                                    </CardStacked>
+                                    <CardStacked>
+                                        <CardContent><b>Mother Mobile No</b></CardContent>
+                                        <CardContent>@studentListModel[0].motherContactNo</CardContent>
+                                    </CardStacked>
+                                </div>
+
+                                <CardHeader>STUDENT INFORMATION</CardHeader>
+                                <div class="first-content">
+                                    <CardStacked>
+                                        <CardContent><b>SRN No</b></CardContent>
+                                        <CardContent>@studentListModel[0].sRNNumber</CardContent>
+                                    </CardStacked>
+                                    <CardStacked>
+                                        <CardContent><b>Blood Group</b></CardContent>
+                                        <CardContent>
+                                            @studentListModel[0].bloodGroup
+
+                                        </CardContent>
+                                    </CardStacked>
+                                    <CardStacked>
+                                        <CardContent><b>Category</b></CardContent>
+                                        <CardContent>@studentListModel[0].feeCategoryID</CardContent>
+                                    </CardStacked>
+                                    <CardStacked>
+                                        <CardContent><b>Religion</b></CardContent>
+                                        <CardContent>@studentListModel[0].religion</CardContent>
+                                    </CardStacked>
+                                    <CardStacked>
+                                        <CardContent><b>Class</b></CardContent>
+                                        <CardContent>@studentListModel[0].className</CardContent>
+                                    </CardStacked>
+                                    <CardStacked>
+                                        <CardContent><b>Section</b></CardContent>
+                                        <CardContent>@studentListModel[0].sectionName</CardContent>
+                                    </CardStacked>
+                                    <CardStacked>
+                                        <CardContent><b>Fee Category</b></CardContent>
+                                        <CardContent>@studentListModel[0].feeCategoryID</CardContent>
+                                    </CardStacked>
+                                    <CardStacked>
+                                        <CardContent><b>Transport</b></CardContent>
+                                        <CardContent>@studentListModel[0].busStopID</CardContent>
+                                    </CardStacked>
+                                </div>
+                            </ContentTemplate>
+
+
+
+                        </TabItem>
+                        <TabItem Content="Hello i am Rakhi Sharma a student in SIS. i love to study with all my class friends & professors.">
+                            <ChildContent>
+                                <TabHeader Text="Settings"></TabHeader>
+                            </ChildContent>
+                        </TabItem>
+
+                    </TabItems>
+                </SfTab>
+
+            </SfCard>
+
+        </MudItem>
+
+    </MudGrid>
+
+
+
+}
+
+
+
+
+<style>
+    .tab-sec .e-card-stacked {
+        display: block !important;
+    }
+
+    .e-tab .e-tab-header .e-toolbar-items {
+        height: auto !important;
+        min-height: auto !important;
+    }
+
+    .tab-sec .e-card-header {
+        text-align: left;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: #000;
+        font-size: 21px;
+        border-bottom: 1px solid #ccc;
+        padding: 7px 0px 11px;
+        margin-bottom: 33px;
+        min-height: auto !important;
+        background-color: unset !important;
+    }
+
+
+
+    .e-card-stacked {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+    }
+
+    .e-tab .e-tab-header .e-toolbar-items {
+        background: inherit;
+        width: 100%;
+    }
+
+    .e-card {
+        padding-bottom: 23px;
+        margin-bottom: 21px;
+        box-shadow: 0 0 10px #b7c0ce33;
+        -webkit-box-shadow: 0 0 10px 0 rgba(183,192,206,.2);
+        border: unset;
+        border-radius: 10px !important;
+    }
+
+    .e-card-header {
+        opacity: 1;
+        background-color: rgba(33,37,41) !important;
+        min-height: 150px !important;
+        color: #fff;
+        display: block !important;
+        text-align: center;
+    }
+
+    .e-card-image {
+        border-radius: 10px;
+        max-width: 112px;
+        box-shadow: 0 10px 25px #0000004d;
+        margin: -42px auto 15px;
+    }
+
+    .e-card-header-title {
+        padding: 7px 3px 2px;
+        font-size: 22px !important;
+        text-align: center;
+        color: #fff !important;
+        font-weight: 600 !important;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .e-card-sub-title {
+        color: #fff !important;
+        font-weight: 600 !important;
+        font-family: 'Poppins', sans-serif;
+        font-size: 16px !important;
+    }
+
+    .e-card-content {
+        letter-spacing: 2px !important;
+        font-size: 15px !important;
+        font-family: 'Poppins', sans-serif;
+        text-align: center;
+        padding: 9px !important;
+    }
+
+    .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
+        min-width: 50% !important;
+        height: auto;
+    }
+
+
+    .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-wrap {
+        border-top: 0 !important;
+        border-left: 0 !important;
+        border-right: 0 !important;
+        border-bottom: 2px solid #4b5bb9 !important;
+        border-radius: 0 !important;
+        height: auto !important;
+    }
+
+    .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
+        height: auto !important;
+        border: unset !important;
+        border-bottom: 2px solid #0000 !important;
+        text-align: center;
+        padding: 12px 12px 4px;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .e-tab .e-tab-header .e-toolbar-item.e-active {
+        border: unset !important;
+        border-radius: 0;
+    }
+
+    .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap:hover {
+        border: none !important;
+        border-bottom: 2px solid #4b5bb9 !important;
+        border-radius: 0 !important;
+    }
+
+    .e-tab .e-tab-header::before {
+        border-color: unset;
+        border-style: solid;
+        border: unset;
+    }
+
+    .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text {
+        color: #4b5bb9 !important;
+    }
+
+    .e-tab .e-tab-header .e-toolbar-item .e-tab-text {
+        color: #000 !important;
+        font-weight: 600 !important;
+        font-size: 16px !important;
+    }
+
+    .e-tab .e-content {
+        background: inherit;
+        padding: 20px 20px 4px;
+    }
+
+        .e-tab .e-content .e-item {
+            line-height: 21px !important;
+            font-size: 14px !important;
+            text-align: left;
+            color: #000 !important;
+            font-family: 'Poppins', sans-serif;
+        }
+
+
+    .tab-con-detail {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 19px;
+    }
+
+
+    .e-tab .e-content .e-item .e-card-content {
+        display: flex;
+        justify-content: space-between;
+        letter-spacing: normal !important;
+    }
+
+
+    .first-content {
+        padding-left: 0;
+        list-style-type: none;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-bottom: 17px;
+    }
+
+        .first-content .e-card-stacked {
+            text-align: left;
+            width: 23%;
+            margin-bottom: 20px;
+            margin-right: 15px;
+        }
+
+            .first-content .e-card-stacked .e-card-content {
+                font-size: 14px !important;
+                font-family: 'Poppins', sans-serif;
+                padding: 6px !important;
+            }
+
+</style>

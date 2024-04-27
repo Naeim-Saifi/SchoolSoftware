@@ -1,0 +1,113 @@
+﻿@page "/Student/StudentList"
+
+@inject IDialogService DialogService
+@inherits StudentListBase
+@using AIS.Model.Student
+@using AIS.Model.GeneralConversion
+
+
+<MudGrid>
+    <MudItem xs="12" sm="8" md="12">
+        <MudCard Elevation="25">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText>Student Details</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudCard>
+
+                            @if (studentListModel.Count == 0)
+                            {
+                                <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                            }
+                            else
+                            {
+                                <MudTable Items="@StudentListModel()" Dense="true" Hover="true" Bordered="true" Striped="true"
+                                          @bind-SelectedItem="selectedItem" FixedHeader="true" Height="@(true || false ?"800px":"")"
+                                          SortLabel="Sort By">
+                                    <ToolBarContent>
+                                        <MudToolBarSpacer />
+                                        <MudTextField @bind-Value="_searchTerm" Placeholder="Search" Adornment="Adornment.End"
+                                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"
+                                                      Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true"></MudTextField>
+                                    </ToolBarContent>
+                                    <HeaderContent>
+                                        <MudTh>
+                                           
+                                            <MudTableSortLabel SortBy="new Func<StudentListModel, object>(x=>x.classId)">ClassId</MudTableSortLabel>
+                                        </MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.login_UserName)">login_UserName</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.latestLoginDate)">latestLoginDate</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.admissionNumber)">AdmNo</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.studentName)">StudentName</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<StudentListModel, object>(x=>x.className)">ClassName</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<StudentListModel, object>(x=>x.sectionName)">SectionName</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.fatherFullName)">Father'sName</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.motherFullName)">Mother'sName</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.fatherContactNumber)">MobileNo</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.rollNumber)">RollNo</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.dOB)">DOB</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.genderStatusDetails)">Gender</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.religionDetails)">Religion</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.castCategoryDetails)">Cast</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.bloodGroupDetails)">Blood</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.uIDNumber)">UIDNo</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.uIDTypeDetails)">UIDType</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.feeCategory)">FeeCategory</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.busstopname)">BusStop</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.sRNNumber)">SRNNo</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.withdrawalNumber)">WithdrawalNo</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<StudentListModel, object>(x=>x.activeStatusDetails)">Status</MudTableSortLabel></MudTh>
+                                        <MudTh>Action</MudTh>
+                                    </HeaderContent>
+                                    <RowTemplate>
+                                         
+                                        <MudTd DataLabel="ClassId">@context.classId</MudTd>
+                                        <MudTd DataLabel="login_UserName">@context.login_UserName</MudTd>
+                                        <MudTd DataLabel="latestLoginDate">@context.latestLoginDate</MudTd>
+                                        <MudTd DataLabel="AdmNo">@context.admissionNumber</MudTd>
+                                        <MudTd DataLabel="StudentName">
+                                            <MudAvatar Image="images/avatar_jonny.jpg" />
+                                            <MudHighlighter Text="@context.studentName" HighlightedText="@_searchTerm" />
+                                        </MudTd>
+                                        <MudTd DataLabel="ClassName">@context.className</MudTd>
+                                        <MudTd DataLabel="SectionName">@context.sectionName</MudTd>
+                                        <MudTd DataLabel="FatherName">@context.fatherFullName</MudTd>
+                                        <MudTd DataLabel="MotherName">@context.motherFullName</MudTd>
+                                        <MudTd DataLabel="MobileNo">@context.fatherContactNumber</MudTd>
+                                        <MudTd DataLabel="RollNo">@context.rollNumber</MudTd>
+                                        <MudTd DataLabel="DOB">@context.dOB</MudTd>
+                                        <MudTd DataLabel="Gender">@context.genderStatusDetails</MudTd>
+                                        <MudTd DataLabel="Religion">@context.religionDetails</MudTd>
+                                        <MudTd DataLabel="Cast">@context.castCategoryDetails</MudTd>
+                                        <MudTd DataLabel="Blood">@context.bloodGroupDetails</MudTd>
+                                        <MudTd DataLabel="UIDNo">@context.uIDNumber</MudTd>
+                                        <MudTd DataLabel="UIDType">@context.uIDTypeDetails</MudTd>
+                                        <MudTd DataLabel="FeeCategory">@context.feeCategory</MudTd>
+                                        <MudTd DataLabel="BusStop">@context.busstopname</MudTd>
+                                        <MudTd DataLabel="SRNNo">@context.sRNNumber</MudTd>
+                                        <MudTd DataLabel="WithdrawalNo">@context.withdrawalNumber</MudTd>
+                                        <MudTd DataLabel="Status">@context.activeStatusDetails</MudTd>
+                                        <MudTd DataLabel="Action">
+                                            @*<MudIconButton @onclick="@(()=>Edit(@context.masterBatchId))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2"></MudIconButton>*@
+                                            @*<MudIconButton OnClick="@(()=>DeleteRecord(@context.masterBatchId))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2"></MudIconButton>*@
+                                        </MudTd>
+                                    </RowTemplate>
+                                    <PagerContent>
+                                        <MudTablePager  />
+                                    </PagerContent>
+                                </MudTable>
+                            }
+                        </MudCard>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+            @*<MudCardActions Class="pb-4 pl-4">
+
+                </MudCardActions>*@
+        </MudCard>
+    </MudItem>>
+</MudGrid>

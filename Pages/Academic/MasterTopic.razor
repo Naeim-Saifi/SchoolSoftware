@@ -1,0 +1,144 @@
+﻿@page "/Academic/MasterTopic"
+
+@inject IDialogService DialogService
+@inherits MasterTopicBase
+@using AIS.Model.Academic
+@using AIS.Model.GeneralConversion
+
+
+<MudGrid>
+    <MudItem xs="12" sm="4" md="3">
+        <MudCard Elevation="25">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText>Add/Update Topic</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <div class="d-flex justify-center mb-4">
+                    <EditForm Model="@masterTopicModel" OnValidSubmit="OnValidSubmit">
+                        <DataAnnotationsValidator />
+                        <MudCard Elevation="5">
+                            <MudCardContent>
+                                <MudTextField Label="Topic Name" HelperText="Max. 8 characters"
+                                              @bind-Value="masterTopicModel.TopicTitle" For="@(() => masterTopicModel.TopicTitle)"
+                                              Variant="Variant.Outlined" Margin="Margin.Dense" />
+
+                                <MudTextField Label="Topic Name" HelperText="Max. 8 characters"
+                                              @bind-Value="masterTopicModel.TopicDescription" For="@(() => masterTopicModel.TopicDescription)"
+                                              Variant="Variant.Outlined" Margin="Margin.Dense" />
+
+                              
+
+                                <MudSelect Label="Select Status" @bind-Value="StatusValue" HelperText="Select any one status" Variant="Variant.Outlined" Margin="Margin.Dense" Topic="mt-4">
+                                    @foreach (var status in GenericClass.StatusDetails)
+                                    {
+                                        <MudSelectItem Value="@status">@status</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudCardContent>
+                            <MudCardActions class="d-flex justify-space-between align-center">
+
+                                <MudButton @onclick="@(()=>Cancel())" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Cancel" Color="Color.Warning" Size="Size.Small" Topic="ml-n1 my-3">Cancel</MudButton>
+                                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Size="Size.Small">@ActionName</MudButton>
+
+                            </MudCardActions>
+                        </MudCard>
+                    </EditForm>
+                </div>
+
+            </MudCardContent>
+
+        </MudCard>
+    </MudItem>
+    <MudItem xs="12" sm="8" md="9">
+        <MudCard Elevation="25">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText>Topic Details</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudCard>
+
+                            @if (masterTopicList.Count == 0)
+                            {
+                                <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                            }
+                            else
+                            {
+                                <MudTable Items="@MasterTopicList()" Dense="true" Hover="true" Bordered="true" Striped="true"
+                                          @bind-SelectedItem="selectedItem" FixedHeader="true" Height="@(true || false ?"300px":"")"
+                                          SortLabel="Sort By">
+                                    <ToolBarContent>
+                                        <MudToolBarSpacer />
+                                        <MudTextField @bind-Value="_searchTerm" Placeholder="Search" Adornment="Adornment.End"
+                                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" class="mt-0"
+                                                      Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true"></MudTextField>
+                                    </ToolBarContent>
+                                    <HeaderContent>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<MasterTopicList, object>(x=>x.subjectTopicId)">TopicId</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<MasterTopicList, object>(x=>x.className)">ClassName</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<MasterTopicList, object>(x=>x.subjectName)">SubjectName</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<MasterTopicList, object>(x=>x.unitTitle)">UnitTitle</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<MasterTopicList, object>(x=>x.unitDescription)">UnitDescription</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<MasterTopicList, object>(x=>x.chapterTitle)">ChepterTitle</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<MasterTopicList, object>(x=>x.chapterDescription)">ChapterDescription</MudTableSortLabel></MudTh>
+
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<MasterTopicList, object>(x=>x.topicTitle)">Topic Title</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<MasterTopicList, object>(x=>x.topicDescription)">Topic Description</MudTableSortLabel></MudTh>
+
+                                        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<MasterTopicList, object>(x=>x.activeStatus)">Status</MudTableSortLabel></MudTh>
+                                    
+                                        @*<MudTh><MudTableSortLabel SortBy="new Func<MasterTopicList, object>(x=>x.c)">Created By</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<MasterTopicList, object>(x=>x.createdDate)">Created Date</MudTableSortLabel></MudTh>*@
+                                        <MudTh>Action</MudTh>
+                                    </HeaderContent>
+                                    <RowTemplate>
+                                        <MudTd DataLabel="TopicId">@context.subjectTopicId</MudTd>
+                                        <MudTd DataLabel="TopicId">@context.className</MudTd>
+                                        <MudTd DataLabel="TopicId">@context.subjectName</MudTd>
+                                        <MudTd DataLabel="TopicId">@context.unitTitle</MudTd>
+                                        <MudTd DataLabel="TopicId">@context.unitDescription</MudTd>
+                                        <MudTd DataLabel="TopicId">@context.chapterTitle</MudTd>
+                                        <MudTd DataLabel="TopicId">@context.chapterDescription</MudTd>
+                                        <MudTd DataLabel="Topic Name">
+                                            <MudHighlighter Text="@context.topicTitle" HighlightedText="@_searchTerm" />
+                                        </MudTd>
+                                        <MudTd DataLabel="Topic Name">
+                                            <MudHighlighter Text="@context.topicDescription" HighlightedText="@_searchTerm" />
+                                        </MudTd>
+
+                                        <MudTd DataLabel="Active Status">@context.activeStatus</MudTd>
+                                        
+                                       
+                                        <MudTd DataLabel="Action">
+                                            <MudIconButton @onclick="@(()=>Edit(@context.subjectTopicId))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Size="Size.Small" Topic="ma-2"></MudIconButton>
+                                            <MudIconButton OnClick="@(()=>DeleteRecord(@context.subjectTopicId))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Size="Size.Small" Topic="ma-2"></MudIconButton>
+                                        </MudTd>
+                                    </RowTemplate>
+                                    <PagerContent>
+                                        <MudTablePager />
+                                    </PagerContent>
+                                </MudTable>
+                            }
+                        </MudCard>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+            @*<MudCardActions Topic="pb-4 pl-4">
+
+                </MudCardActions>*@
+        </MudCard>
+    </MudItem>>
+</MudGrid>
+<MudMessageBox @ref="mbox" Title="Warning" CancelText="Cancel">
+    <MessageContent>
+        Deleting can <b><i>not</i></b> be undone!
+    </MessageContent>
+    <YesButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Delete!</MudButton>
+    </YesButton>
+</MudMessageBox>

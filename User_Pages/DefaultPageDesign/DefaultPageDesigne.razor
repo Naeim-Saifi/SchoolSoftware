@@ -1,0 +1,322 @@
+﻿@using Syncfusion.Blazor.Grids
+@using AIS.Data.RequestResponseModel.Expense;
+@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@using AIS.Data.RequestResponseModel.MasterData;
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
+@using AIS.Data.RequestResponseModel.Enquiry;
+@page "/User_Pages/Enquiry/DefaultPageDesign"
+
+@inherits DefaultPageDesigneBase
+
+@{
+    var InitSearch2 = (new string[] { "organizationName" });
+    var Tool = (new List<string>() { "Search" });
+
+    var InitialGroupColumn = (new string[] { "currentClassName" });
+}
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+            <DashboardLayoutPanels>
+                <DashboardLayoutPanel SizeX=7 SizeY="2">
+                    <HeaderTemplate>Enquiry Details</HeaderTemplate>
+                    <ContentTemplate>
+                        <SfGrid DataSource="@_EnquiryDetailsList"
+                                EnableVirtualMaskRow="true"
+                                RowHeight="38" Height="710"
+                                Width="auto" EnableVirtualization="false"
+                                AllowResizing="true" AllowExcelExport="true"
+                                EnableAutoFill="true" AllowReordering="true"
+                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                ContextMenuItems="MenuItems"
+                        @ref="sfEnquiryDetails"
+                                Toolbar="EnquirytoolBarItems">
+                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+                            <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+                            <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
+                            <GridGroupSettings Columns=@InitialGroupColumn>
+                                <CaptionTemplate>
+                                    @{
+                                        var UnitDetails = (context as CaptionTemplateContext);
+                                        <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                    }
+                                </CaptionTemplate>
+                            </GridGroupSettings>
+
+                            <GridEvents CommandClicked="EditEnquiryDetail" OnToolbarClick="ToolbarClickHandler" TValue="EnquiryListModel"></GridEvents>
+                            <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                IgnoreCase="true"></GridSearchSettings>
+                            <GridColumns>
+                                <GridColumn Field=@nameof(EnquiryListModel.enquiryID) HeaderText="Enquiry ID" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(EnquiryListModel.studentName) HeaderText="Student Name" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(EnquiryListModel.fatherName) HeaderText="Father Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(EnquiryListModel.motherName) HeaderText="Mother Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(EnquiryListModel.fMobileNo) HeaderText="Father MobileNo" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(EnquiryListModel.mMobileNo) HeaderText="Mother MobileNo" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                               @*  <GridColumn Field=@nameof(EnquiryListModel.currentClassName) HeaderText="Current Class" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(EnquiryListModel.previousClassName) HeaderText="Previous Class" TextAlign="TextAlign.Right" AutoFit=true></GridColumn> *@
+                                <GridColumn Field=@nameof(EnquiryListModel.previousSchoolName) HeaderText="Previous School" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(EnquiryListModel.emailID) HeaderText="Email ID" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(EnquiryListModel.genderDetails) HeaderText="Gender" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(EnquiryListModel.dob) HeaderText="DOB" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(EnquiryListModel.visitingStatusDetaills) HeaderText="Visiting Status" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(EnquiryListModel.visitingTypeDetails) HeaderText="Visiting Type" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(EnquiryListModel.visitingRemrks) HeaderText="Visiting Remrks" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(EnquiryListModel.address) HeaderText="Address" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                    <GridCommandColumns>
+                                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                    </GridCommandColumns>
+                                </GridColumn>
+                                <GridColumn Field=@nameof(EnquiryListModel.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(EnquiryListModel.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(EnquiryListModel.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(EnquiryListModel.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                            </GridColumns>
+                        </SfGrid>
+                    </ContentTemplate>
+                </DashboardLayoutPanel>
+            </DashboardLayoutPanels>
+        </SfDashboardLayout>
+    </MudItem>
+</MudGrid>
+
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        <MudItem xs="12" sm="12" md="12">
+            <SfDialog @ref="@DialogRef" Width="750px" AllowDragging="true" IsModal="true" ShowCloseIcon="true" @bind-Visible="@IsVisible">
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>
+                    <Header>@DialogHeaderName </Header>
+                    <Content>
+                        <MudGrid>
+                            <MudItem xs="12" md="12" sm="12">
+                                <EditForm Model="enquiryViewModel" OnValidSubmit="OnValidSubmit">
+                                    <DataAnnotationsValidator />
+                                    <MudCardContent>
+                                        <MudGrid>
+                                            <MudItem xs="12" md="12" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Student Name" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@enquiryViewModel.studentName"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => enquiryViewModel.studentName" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Father Name" @bind-Value="@enquiryViewModel.fatherName"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => enquiryViewModel.fatherName" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfMaskedTextBox Mask="(000)-000-0000" Placeholder="Father Mobile No" @bind-Value="@enquiryViewModel.fMobileNo"></SfMaskedTextBox>
+                                                <ValidationMessage For="() => enquiryViewModel.fMobileNo" />
+
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Mother Name" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@enquiryViewModel.motherName" FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => enquiryViewModel.motherName" />
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfMaskedTextBox Mask="(000)-000-0000" Placeholder="Mother Mobile No" @bind-Value="@enquiryViewModel.mMobileNo"></SfMaskedTextBox>
+                                                <ValidationMessage For="() => enquiryViewModel.mMobileNo" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="4" sm="6">
+                                                <SfDropDownList ID="gender"
+                                                                CssClass="e-outline"
+                                                                Placeholder="Select a Gender"
+                                                                FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                @bind-Value="@enquiryViewModel.Gender"
+                                                                DataSource="@genderDetails">
+                                                    <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                                    <ValidationMessage For="@(() => enquiryViewModel.Gender)"></ValidationMessage>
+                                                </SfDropDownList>
+                                            </MudItem>
+                                            <MudItem xs="12" sm="4" md="4">
+                                                <SfDatePicker TValue="DateTime?" Format="yyyy-MM-dd" Placeholder="Date Of Birth" @bind-Value="@enquiryViewModel.DOB"></SfDatePicker>
+                                            </MudItem>
+                                            <MudItem xs="12" md="4" sm="4">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Email Id" @bind-Value="@enquiryViewModel.EmailId" FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => enquiryViewModel.EmailId" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="12" sm="4">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Prevoius School Details" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@enquiryViewModel.PreviousSchoolDetails" FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => enquiryViewModel.PreviousSchoolDetails" />
+                                            </MudItem>
+
+
+                                            @* <MudItem xs="12" md="6" sm="6">
+                                                <SfDropDownList ID="ClassId" TValue="string" TItem="Master_CLass_List_Output_Model"
+                                                                CssClass="e-outline" Placeholder="Select a Class"
+                                                                FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                                Enabled="ddEnable"
+                                                @bind-Value="@enquiryViewModel.CurrentClass"
+                                                                DataSource="@_classList">
+                                                    <DropDownListFieldSettings Text="className" Value="classId" />
+
+                                                    <ValidationMessage For="() => enquiryViewModel.CurrentClass" />
+                                                </SfDropDownList>
+                                            </MudItem> *@
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfDropDownList ID="ClassId" TValue="string" TItem="Master_CLass_List_Output_Model"
+                                                                CssClass="e-outline" Placeholder="Select a Class"
+                                                                FloatLabelType="@FloatLabelType.Never"
+                                                                Enabled="ddEnable"
+                                                                AllowFiltering="true"
+                                                @bind-Value="@enquiryViewModel.NextClass"
+                                                                DataSource="@_classList">
+                                                    <DropDownListFieldSettings Text="className" Value="classId" />
+
+                                                    <ValidationMessage For="() => enquiryViewModel.NextClass" />
+                                                </SfDropDownList>
+                                            </MudItem>
+
+
+                                            <MudItem xs="12" sm="6" md="6">
+                                                <SfDropDownList ID="visitingStatus"
+                                                                CssClass="e-outline"
+                                                                Placeholder="Select Visiting Status"
+                                                                FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                @bind-Value="@enquiryViewModel.VisitingStatus"
+                                                                DataSource="@visitingStatus">
+                                                    <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                                    <ValidationMessage For="@(() => enquiryViewModel.VisitingStatus)"></ValidationMessage>
+                                                </SfDropDownList>
+
+                                            </MudItem>
+                                            <MudItem xs="12" sm="6" md="6">
+                                                <SfDropDownList ID="visitingType"
+                                                                CssClass="e-outline"
+                                                                Placeholder="Select Visiting Type"
+                                                                FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                @bind-Value="@enquiryViewModel.VisitingType"
+                                                                DataSource="@visitingTypes">
+                                                    <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                                    <ValidationMessage For="@(() => enquiryViewModel.VisitingType)"></ValidationMessage>
+                                                </SfDropDownList>
+                                            </MudItem>
+                                            <MudItem xs="12" sm="6" md="6">
+                                                <SfTextBox ID="visitingRemarks" @bind-Value="@(enquiryViewModel.VisitingRemarks)"
+                                                           Multiline="true" FloatLabelType="FloatLabelType.Never" Placeholder="Visiting Remarks"></SfTextBox>
+                                            </MudItem>
+                                            <MudItem xs="12" sm="6" md="6">
+                                                <SfTextBox ID="address" @bind-Value="@(enquiryViewModel.Address)"
+                                                           Multiline="true" FloatLabelType="FloatLabelType.Never" Placeholder="Address"></SfTextBox>
+                                            </MudItem>
+                                            <MudItem xs="12" md="4" sm="6">
+                                                <SfButton CssClass="e-outline" type="submit" IsPrimary="true">Save</SfButton>
+                                            </MudItem>
+                                        </MudGrid>
+                                    </MudCardContent>
+                                </EditForm>
+                            </MudItem>
+
+                        </MudGrid>
+
+                    </Content>
+                </DialogTemplates>
+                <DialogAnimationSettings Delay="400" Effect="DialogEffect.FlipLeftUp">
+                </DialogAnimationSettings>
+                <DialogPositionData X="@Xvalue" Y="@Yvalue"></DialogPositionData>
+            </SfDialog>
+        </MudItem>
+    </MudItem>
+</MudGrid>
+@code {
+    private string Xvalue = "center";
+    private string Yvalue = "center";
+}
+<style>
+    .e-toolbar-item .e-tbar-btn {
+        background-color: orange;
+    }
+
+    .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+
+    .e-dialog .e-dlg-header {
+        color: cornflowerblue;
+        font-size: 20px;
+        font-weight: normal;
+    }
+
+
+
+    /* html,
+            body,
+            #container {
+                height: 100%;
+                overflow: hidden;
+                width: 100%;
+                position: relative;
+                min-height: 400px;
+            }
+
+            .text {
+                text-transform: capitalize;
+            }
+
+            #customization {
+                display: table;
+                margin: 0 auto;
+            }
+
+            .animate {
+                display: table-cell;
+                padding-left: 20px;
+            }
+
+            @@media only screen and (max-width: 360px) {
+                #customization {
+                    display: inline-block;
+                    margin: 0 auto;
+                    text-align: center;
+                }
+
+                .animate {
+                    display: inline-block;
+                    padding: 10px;
+                }
+            } */
+    /*  .e-rowcell.e-attr {
+                                        background-color: lightgrey;
+                                    }*/
+
+    /* .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+                                        position: fixed;
+                                    }*/
+
+    /*
+
+                                    .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
+                                        transition: none;
+                                    }*/
+    /*.e-content .e-item {
+                                        font-size: 12px;
+                                        padding: 10px;
+                                        text-align: justify;
+                                    }*/
+</style>

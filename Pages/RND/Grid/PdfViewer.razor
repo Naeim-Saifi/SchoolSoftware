@@ -1,0 +1,21 @@
+﻿<!--@using Syncfusion.Blazor.PdfViewer
+@using Syncfusion.Blazor.PdfViewerServer
+
+<SfPdfViewerServer @ref="Viewer"   DownloadFileName="@DownloadFileName">-->
+    
+     
+    @*<PdfViewerEvents Created="LoadDocument"/>*@
+<!--</SfPdfViewerServer>
+
+@code{
+    public SfPdfViewerServer Viewer { get; set; }
+    private string DownloadFileName { get; set; }
+
+    public void LoadDocument()
+    {
+        byte[] byteArray = System.IO.File.ReadAllBytes("wwwroot/Data/2.pdf");
+        string base64String = Convert.ToBase64String(byteArray);
+        Viewer.Load("data:application/pdf;base64," + base64String, null);
+        DownloadFileName = "Syncfusion.pdf";
+    }
+}-->

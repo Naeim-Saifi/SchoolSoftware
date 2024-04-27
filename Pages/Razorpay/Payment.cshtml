@@ -1,0 +1,57 @@
+﻿
+<button id="RzP_btn" hidden>Pay</button>
+@*<script src="https://checkout.razorpay.com/v1/checkout.js"></script>*@
+<script src="~/Js/checkout.js"></script>
+<script src="~/Js/razpayJs.js"></script>
+@*<script>
+    var options = {};
+    window.dotNetToJsSamples = {
+        printDotNetObject: function (node, model) {
+            options = {
+            "razorpayKey": "rzp_test_YoSVKcLVexTBr2", // Enter the Key ID generated from the Dashboard
+            "amount": "<label id='lblAmt'>" + model.amount + "</label>", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "<label id='lblAmt'>" + model.currency + "</label>" ,
+            "name": "<label id='lblName'>" + model.name+ "</label>",
+            "description": "<label id='lblDesc'>" + model.description+ "</label>" ,
+            // "image": "https://avatars.githubusercontent.com/u/65504583?v=4",  You can give your logo url
+            "orderId": "<label id='lblOId'>" + model.orderId + "</label>" ,
+            "handler": function (response) {
+                // After payment successfully made response will come here
+                // Set the data in hidden form
+                document.getElementById('rzp_paymentid').value = response.razorpay_payment_id;
+                document.getElementById('rzp_orderid').value = response.razorpay_order_id;
+                // // Let's submit the form automatically
+                document.getElementById('rzp-paymentresponse').click();
+            },
+            "prefill": {
+                "name": "<label id='lblNme'>" + model.name + "</label>",
+                "email": "<label id='lblEmail'>" + model.email + "</label>",
+                "phoneNumber": "<label id='lblPhno'>" + model.phoneNumber + "</label>"
+            },
+            "notes": {
+                "address": "<label id='lblAdd'>" + model.address + "</label>"
+            },
+            "theme": {
+                "color": "#F37254"
+            }
+        }
+        }
+    }
+    var rzp1 = new Razorpay(options);
+
+    //<!-- onload function -->
+    window.onload = function(){
+        document.getElementById('RzP_btn').click();
+    };
+
+    document.getElementById('RzP_btn').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}
+</script>*@
+
+<form action="CompleteOrderProcess" method="post" asp-antiforgery="true">
+    <input type="hidden" id="rzp_paymentid" name="rzp_paymentid" />
+    <input type="hidden" id="rzp_orderid"  name="rzp_orderid"/>
+    <button type="submit" id="rzp-paymentresponse" class="btn btn-primary" hidden>Submit</button>
+</form>

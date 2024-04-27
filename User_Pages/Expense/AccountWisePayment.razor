@@ -1,0 +1,403 @@
+﻿@using Syncfusion.Blazor.Grids
+@using AIS.Data.RequestResponseModel.Expense
+@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+
+@page "/User_Pages/Expense/AccountWisePayment"
+
+@inherits AccountWisePaymentBase
+@{
+    var InitSearch2 = (new string[] { "accountName", "contactName", "organizationName", "invoiceID" });
+    var Tool = (new List<string>() { "Search" });
+    var InitialGroupColumn = (new string[] { "accountType" });
+}
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+            <DashboardLayoutPanels>
+                <DashboardLayoutPanel SizeX=7 SizeY="2">
+                    <HeaderTemplate>Account Wise Bill Details</HeaderTemplate>
+                    <ContentTemplate>
+                        <SfGrid DataSource="@cccountBillDetailsList"
+                                EnableVirtualMaskRow="true"
+                                RowHeight="38" Height="710"
+                                Width="auto" EnableVirtualization="false"
+                                AllowResizing="true" AllowExcelExport="true"
+                                EnableAutoFill="true" AllowReordering="true"
+                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                ContextMenuItems="MenuItems"
+                                @ref="sfAccountBillDetail"
+                                Toolbar="AccountBilltoolBarItems">
+                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+                            <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+
+                            <GridGroupSettings Columns=@InitialGroupColumn>
+                                <CaptionTemplate>
+                                    @{
+                                        var UnitDetails = (context as CaptionTemplateContext);
+                                        <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                    }
+                                </CaptionTemplate>
+                            </GridGroupSettings>
+
+                            <GridEvents CommandClicked="EditAccountBillDetails" OnToolbarClick="ToolbarClickHandler" TValue="AccountBillDetailsList"></GridEvents>
+                            <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                IgnoreCase="true"></GridSearchSettings>
+                            <GridAggregates>
+                                <GridAggregate>
+                                    <GridAggregateColumns>
+                                        <GridAggregateColumn Field=@nameof(AccountBillDetailsList.totalAmount) Type="AggregateType.Sum">
+                                            <GroupFooterTemplate>
+                                                @{
+                                                    var Unit = (context as AggregateTemplateContext);
+                                                    <div>
+                                                        @Unit.Sum
+                                                    </div>
+                                                }
+                                            </GroupFooterTemplate>
+                                        </GridAggregateColumn>
+                                        <GridAggregateColumn Field=@nameof(AccountBillDetailsList.netDiscount) Type="AggregateType.Sum">
+                                            <GroupFooterTemplate>
+                                                @{
+                                                    var Unit = (context as AggregateTemplateContext);
+                                                    <div>
+                                                        @Unit.Sum
+                                                    </div>
+                                                }
+                                            </GroupFooterTemplate>
+                                        </GridAggregateColumn>
+                                        <GridAggregateColumn Field=@nameof(AccountBillDetailsList.netAmount) Type="AggregateType.Sum">
+                                            <GroupFooterTemplate>
+                                                @{
+                                                    var Unit = (context as AggregateTemplateContext);
+                                                    <div>
+                                                        @Unit.Sum
+                                                    </div>
+                                                }
+                                            </GroupFooterTemplate>
+                                        </GridAggregateColumn>
+                                        <GridAggregateColumn Field=@nameof(AccountBillDetailsList.paidAmount) Type="AggregateType.Sum">
+                                            <GroupFooterTemplate>
+                                                @{
+                                                    var Unit = (context as AggregateTemplateContext);
+                                                    <div>
+                                                        @Unit.Sum
+                                                    </div>
+                                                }
+                                            </GroupFooterTemplate>
+                                        </GridAggregateColumn>
+                                        <GridAggregateColumn Field=@nameof(AccountBillDetailsList.dueAmount) Type="AggregateType.Sum">
+                                            <GroupFooterTemplate>
+                                                @{
+                                                    var Unit = (context as AggregateTemplateContext);
+                                                    <div>
+                                                        @Unit.Sum
+                                                    </div>
+                                                }
+                                            </GroupFooterTemplate>
+                                        </GridAggregateColumn>
+
+                                    </GridAggregateColumns>
+                                </GridAggregate>
+                            </GridAggregates>
+                             <GridTemplates>
+                                <DetailTemplate>
+                                    @{
+                                        var employee = (context as AccountBillDetailsList);
+                                        <SfGrid DataSource="@billDetailsLists" AllowExcelExport="true" AllowPdfExport="true" AllowGrouping="false"
+                                                Query="@(new Query().Where("venderID", "equal", employee.accountID))">
+                                            <GridColumns>
+                                                <GridColumn Field=@nameof(BillDetailsList.billDescription) HeaderText="Bill Description" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(BillDetailsList.billDate) HeaderText="Bill Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(BillDetailsList.totalQty) HeaderText="Total Qty" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(BillDetailsList.totalAmount) HeaderText="Total Amount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(BillDetailsList.totalDiscount) HeaderText="Discount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(BillDetailsList.netAmount) HeaderText="Net Amount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(BillDetailsList.paidAmount) HeaderText="Paid Amount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(BillDetailsList.dueAmount) HeaderText="Net DueAmount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                            </GridColumns>
+                                        </SfGrid>
+                                        }
+                            </DetailTemplate>
+                            </GridTemplates>
+                            @*
+                                        var paymentdetailsList = (context as BillDetailsList);
+                                        <SfGrid DataSource="@billPaymentDetailsLists" AllowExcelExport="true" AllowPdfExport="true" AllowGrouping="false"
+                                                Query="@(new Query().Where("invoiceID", "equal", paymentdetailsList.invoiceID))">
+                                            <GridColumns>
+                                                <GridColumn Field=@nameof(BillPaymentDetailsList.billPaymentDetailsID) HeaderText="Payment ID" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(BillPaymentDetailsList.invoiceID) HeaderText="Invoice ID" AutoFit=true> </GridColumn>
+                                                <GridColumn Field=@nameof(BillPaymentDetailsList.paymentTypeID) HeaderText="Payment Type" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(BillPaymentDetailsList.bankName) HeaderText="Bank Name" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(BillPaymentDetailsList.chequeNo) HeaderText="Cheque No" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(BillPaymentDetailsList.totalAmount) HeaderText="Total Amount" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(BillPaymentDetailsList.paidAmount) HeaderText="Paid Amount" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(BillPaymentDetailsList.dueAmount) HeaderText="Due Amount" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(BillPaymentDetailsList.paymentDate) HeaderText="Payment Date" AutoFit=true></GridColumn>
+
+
+                                            </GridColumns>
+                                        </SfGrid>
+                                    }
+                                </DetailTemplate>
+                            </GridTemplates> *@
+                            <GridColumns>
+                                <GridColumn Field=@nameof(AccountBillDetailsList.accountType) HeaderText="Account Type" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(AccountBillDetailsList.organizationName) HeaderText="Organization Name" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(AccountBillDetailsList.totalBill) HeaderText="Total Bill" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(AccountBillDetailsList.totalQTY) HeaderText="Total QTY" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(AccountBillDetailsList.totalAmount) HeaderText="Total Amount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(AccountBillDetailsList.netDiscount) HeaderText="Net Discount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(AccountBillDetailsList.netAmount) HeaderText="Net Amount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(AccountBillDetailsList.paidAmount) HeaderText="Paid Amount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(AccountBillDetailsList.dueAmount) HeaderText="Due Amount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                               
+                                <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                    <GridCommandColumns>
+                                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Pay Amount", IconCss = "e-icons e-add e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                        @* <GridCommandColumn Type="CommandButtonType.Delete" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn> *@
+                                    </GridCommandColumns>
+                                </GridColumn>
+                               @*  <GridColumn Field=@nameof(BillDetailsList.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(BillDetailsList.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(BillDetailsList.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(BillDetailsList.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn> *@
+
+                            </GridColumns>
+                        </SfGrid>
+                    </ContentTemplate>
+                </DashboardLayoutPanel>
+            </DashboardLayoutPanels>
+        </SfDashboardLayout>
+    </MudItem>
+</MudGrid>
+
+
+@*
+  Vendor Payment Details dialog
+ *@
+<MudGrid>
+
+    <MudItem xs="12" sm="12" md="12">
+        <SfDialog @ref="@DialogRef" Width="750px" AllowDragging="true" IsModal="true" ShowCloseIcon="true" @bind-Visible="@IsPaymentVisible">
+            <DialogEvents OnOpen="onOpen"></DialogEvents>
+            <DialogTemplates>
+                <Header>@DialogHeaderName </Header>
+                <Content>
+                    <MudGrid>
+                        <MudItem xs="12" md="12" sm="12">
+                            <EditForm Model="_paymentViewModel" OnValidSubmit="OnValidPaymentSubmit">
+                                <DataAnnotationsValidator />
+                                <MudCardContent>
+                                    <MudGrid>
+
+                                        <MudItem xs="12" md="12" sm="12">
+                                            <SfTextBox CssClass="e-outline" Placeholder="Organization Name" Enabled=false Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                            @bind-Value="@_paymentViewModel.OrganizationName"
+                                                       FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                            <ValidationMessage For="() => _paymentViewModel.OrganizationName" />
+                                        </MudItem>
+
+                                        <MudItem xs="12" md="6" sm="6">
+                                            <SfTextBox CssClass="e-outline" Placeholder="Invoice No" Enabled=false Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                            @bind-Value="@_paymentViewModel.InvoiceNo"
+                                                       FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                            <ValidationMessage For="() => _paymentViewModel.InvoiceNo" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="6">
+
+
+                                            <SfDropDownList ID="ClassId" TValue="string" TItem="PaymentMode"
+                                                            CssClass="e-outline" Placeholder="Select a Payment Type"
+                                                            FloatLabelType="@FloatLabelType.Never" FilterType="Syncfusion.Blazor.DropDowns.FilterType.Contains"
+                                                            AllowFiltering="true"
+                                            @bind-Value="@_paymentViewModel.PaymentMode"
+                                                            DataSource="@PaymentModes">
+                                                <DropDownListFieldSettings Text="PaymentType" Value="PaymentID" />
+                                                <ValidationMessage For="() => _paymentViewModel.PaymentMode" />
+                                            </SfDropDownList>
+
+
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="6">
+                                            <SfTextBox CssClass="e-outline" Placeholder="Bank Name" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                            @bind-Value="@_paymentViewModel.BankName"
+                                                       FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                            <ValidationMessage For="() => _paymentViewModel.BankName" />
+                                        </MudItem>
+
+
+                                        <MudItem xs="12" md="6" sm="6">
+                                            <SfTextBox CssClass="e-outline" Placeholder="Cheque No" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                            @bind-Value="@_paymentViewModel.ChequeNo"
+                                                       FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                            <ValidationMessage For="() => _paymentViewModel.ChequeNo" />
+                                        </MudItem>
+
+                                        <MudItem xs="12" md="6" sm="6">
+                                            <SfTextBox CssClass="e-outline" Placeholder="Baranch Name" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                            @bind-Value="@_paymentViewModel.BaranchName"
+                                                       FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                            <ValidationMessage For="() => _paymentViewModel.BaranchName" />
+
+                                        </MudItem>
+                                        <MudItem xs="12" md="12" sm="12">
+                                            <SfTextBox CssClass="e-outline" Placeholder="Expense Description" Multiline=true Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                            @bind-Value="@_paymentViewModel.Description"
+                                                       FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                            <ValidationMessage For="() => _paymentViewModel.Description" />
+                                        </MudItem>
+                                        @*  <MudItem xs="12" md="6" sm="6">
+                                        <SfDatePicker TValue="DateTime?" Value="@DateValue" FloatLabelType="@FloatLabelType.Always" Placeholder="Transaction Date">
+                                        <DatePickerEvents TValue="DateTime?" ValueChange="@onChange"></DatePickerEvents>
+                                        </SfDatePicker>
+
+                                        </MudItem> *@
+                                        <MudItem xs="12" md="4" sm="4">
+                                            <SfDatePicker TValue="DateTime?" Format="yyyy-MM-dd" FloatLabelType="@FloatLabelType.Always" Placeholder="Bill Payment Date"
+                                            @bind-Value="@_paymentViewModel.TranDate"></SfDatePicker>
+                                        </MudItem>
+
+                                        <MudItem xs="12" md="4" sm="4">
+                                            <SfNumericTextBox CssClass="e-outline" Placeholder="Total Amount" Enabled=false Type="Syncfusion.Blazor.Inputs.InputType.number"
+                                            @bind-Value="@_paymentViewModel.TotalAmount"
+                                                              FloatLabelType="@FloatLabelType.Always"></SfNumericTextBox>
+                                            <ValidationMessage For="() => _paymentViewModel.TotalAmount" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="4" sm="4">
+                                            <SfNumericTextBox CssClass="e-outline" Placeholder="Paid Amount" Type="Syncfusion.Blazor.Inputs.InputType.number"
+                                            @bind-Value="@_paymentViewModel.PaidAmount"
+                                                              FloatLabelType="@FloatLabelType.Always">
+                                                @*  <NumericTextBoxEvents TValue="int?" ValueChange="@ValueChangeHandler"></NumericTextBoxEvents> *@
+                                            </SfNumericTextBox>
+
+                                            <ValidationMessage For="() => _paymentViewModel.PaidAmount" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="4">
+                                            <SfNumericTextBox CssClass="e-outline" Placeholder="Due Amount" Enabled=false Type="Syncfusion.Blazor.Inputs.InputType.number"
+                                            @bind-Value="@_paymentViewModel.DueAmount"
+                                                              FloatLabelType="@FloatLabelType.Always"></SfNumericTextBox>
+                                            <ValidationMessage For="() => _paymentViewModel.DueAmount" />
+                                        </MudItem>
+
+                                        <MudItem xs="12" md="6" sm="6">
+                                            <SfButton CssClass=@btncss type="submit" IsPrimary="true">@HeaderText</SfButton>
+                                            @*<SfButton CssClass="e-outline" OnClick="@CloseDialog">Cancel</SfButton>*@
+                                            <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@ClosePaymentDialog"></SfButton>
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudCardContent>
+                            </EditForm>
+                        </MudItem>
+                    </MudGrid>
+
+                </Content>
+            </DialogTemplates>
+            <DialogAnimationSettings Delay="400" Effect="DialogEffect.FlipLeftUp">
+            </DialogAnimationSettings>
+            <DialogPositionData X="@Xvalue" Y="@Yvalue"></DialogPositionData>
+        </SfDialog>
+    </MudItem>
+
+</MudGrid>
+
+
+
+@code {
+    private string Xvalue = "center";
+    private string Yvalue = "center";
+
+    // private void ValueChangeHandler(ChangeEventArgs<int?> args)
+    // {
+    //     // Here you can customize your code
+    // }
+
+}
+<style>
+    .e-toolbar-item .e-tbar-btn {
+        background-color: orange;
+    }
+
+    .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+
+    .e-dialog .e-dlg-header {
+        color: cornflowerblue;
+        font-size: 20px;
+        font-weight: normal;
+    }
+
+
+
+    /* html,
+                    body,
+                    #container {
+                        height: 100%;
+                        overflow: hidden;
+                        width: 100%;
+                        position: relative;
+                        min-height: 400px;
+                    }
+
+                    .text {
+                        text-transform: capitalize;
+                    }
+
+                    #customization {
+                        display: table;
+                        margin: 0 auto;
+                    }
+
+                    .animate {
+                        display: table-cell;
+                        padding-left: 20px;
+                    }
+
+                    @@media only screen and (max-width: 360px) {
+                        #customization {
+                            display: inline-block;
+                            margin: 0 auto;
+                            text-align: center;
+                        }
+
+                        .animate {
+                            display: inline-block;
+                            padding: 10px;
+                        }
+                    } */
+    /*  .e-rowcell.e-attr {
+                                                background-color: lightgrey;
+                                            }*/
+
+    /* .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+                                                position: fixed;
+                                            }*/
+
+    /*
+
+                                            .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
+                                                transition: none;
+                                            }*/
+    /*.e-content .e-item {
+                                                font-size: 12px;
+                                                padding: 10px;
+                                                text-align: justify;
+                                            }*/
+</style>

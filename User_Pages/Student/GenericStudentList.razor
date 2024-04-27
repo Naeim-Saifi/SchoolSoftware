@@ -1,0 +1,414 @@
+﻿@using Syncfusion.Blazor.Grids
+@using AIS.Data.RequestResponseModel.StudentSetUp;
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+
+@using Syncfusion.Blazor.Charts
+@page "/User_Pages/Student/GenericStudentList"
+@inherits GenericStudentListBase
+@{
+    var InitSearchClass = (new string[] { "className" });
+    var InitSearchReligion = (new string[] { "religionName" });
+    var InitSearchGender = (new string[] { "genderName" });
+    var InitSearchBusStop = (new string[] { "busStopnName" });
+    var InitSearchCastCategory = (new string[] { "castCategoryName" });
+    var InitSearchStudentStatus = (new string[] { "statusDescription" });
+    var InitSearchFeeCategory = (new string[] { "feeCategoryName" });
+    var InitSearchbloodGroup = (new string[] { "feeCategoryName" });
+
+    var Tool = (new List<string>() { "Search" });
+    var InitialGroupClass = (new string[] { "className" });
+}
+
+<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Student Generic Data</MudText>
+<MudGrid>
+
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.Euro" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n2">Mother mobile No NotFound</MudText>
+                <MudText Typo="Typo.h5">@_motherMobileNo_NotFound</MudText>
+                
+                @*<MudNavLink Href="/Razorpay/RazorpayDetail" Icon="@Icons.Material.Outlined.Payment">Paynow</MudNavLink>*@
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.Layers" Color="Color.Secondary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">SRN Number NotFound</MudText>
+                <MudText Typo="Typo.h5">@_sRNNumber_NotFound</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.Public" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Aaadhar Number NotFound</MudText>
+                <MudText Typo="Typo.h5">@_aadharNumber_NotFound</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Custom.Uncategorized.Radioactive" Color="Color.Warning" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Withdrawal Number NotFound</MudText>
+                <MudText Typo="Typo.h5">@_withdrawalNumberNotFound</MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+
+</MudGrid>
+<br />
+<MudGrid>
+
+    <MudItem xs="12" sm="12" md="12" >
+<SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="5">
+    <DashboardLayoutPanels>
+          <MudItem xs="12"  sm="12" md="12">
+         <MudItem xs="12" sm="12" md="3"  Style="height: 100%; width: 50%; top: 0px; left: 0px; z-index: 1000; position: absolute;">
+         <DashboardLayoutPanel SizeY=2 Column=1>
+                        <HeaderTemplate><div>Bus Stop </div></HeaderTemplate>
+                        <ContentTemplate>
+                            <SfGrid DataSource="@_BusStopCounts_List"
+                            @ref="_sfGridBusStop"
+                                    EnableVirtualMaskRow="true"
+                                    RowHeight="38" Height="570"
+                                    Width="auto" EnableVirtualization="false"
+                                    AllowResizing="true" AllowExcelExport="true"
+                                    EnableAutoFill="true" AllowReordering="true"
+                                    ShowColumnChooser="false" AllowGrouping="false" AllowSorting="true"
+                                    AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                    Toolbar="@(new string[] {"Search","Print" })">
+                                <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                <GridPageSettings PageSize="50" PageSizes="true"></GridPageSettings>
+                                <GridSearchSettings Fields=@InitSearchBusStop Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                    IgnoreCase="true"></GridSearchSettings>
+
+                                <GridColumns>
+                                    <GridColumn Field=@nameof(Student_BusStop_Count.busStopnName) HeaderText="Bus Stop Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                    <GridColumn Field=@nameof(Student_BusStop_Count.noStudent) HeaderText="Count" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                </GridColumns>
+                                <SfToolbar>
+                                    <ToolbarItems>
+                                        <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel_StopnName" Align="ItemAlign.Left"></ToolbarItem>
+                                    </ToolbarItems>
+                                </SfToolbar>
+                            </SfGrid>
+                        </ContentTemplate>
+                    </DashboardLayoutPanel>
+          </MudItem>
+         <MudItem xs="12" sm="12" md="3" Class="d-flex flex-row pt-6 pb-4" Style="height: 100%; width: 50%; top: 0px; left: 0px; z-index: 1000; position: absolute;">
+                    <DashboardLayoutPanel Column=1>
+                            <HeaderTemplate><div>Religion Details</div></HeaderTemplate>
+                            <ContentTemplate>
+                                <div>
+                                    <SfGrid DataSource="@_religionCount_list"
+                                    @ref="_sfGridReligion"
+                                            EnableVirtualMaskRow="true"
+                                            RowHeight="38" Height="180"
+                                            Width="auto" EnableVirtualization="false"
+                                            AllowResizing="true" AllowExcelExport="true"
+                                            EnableAutoFill="true" AllowReordering="true"
+                                            ShowColumnChooser="false" AllowGrouping="false" AllowSorting="true"
+                                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                            Toolbar="@(new string[] {"Search","Print" })">
+                                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                        <GridPageSettings PageSize="15" PageSizes="true"></GridPageSettings>
+                                        <GridSearchSettings Fields=@InitSearchReligion Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                            IgnoreCase="true"></GridSearchSettings>
+                                        <GridColumns>
+                                            <GridColumn Field=@nameof(Student_Religion_Count.religionName) HeaderText="Religion Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                            <GridColumn Field=@nameof(Student_Religion_Count.religioncount) HeaderText="Count" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                        </GridColumns>
+                                        <SfToolbar>
+                                            <ToolbarItems>
+                                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel_CasteCategory" Align="ItemAlign.Left"></ToolbarItem>
+                                            </ToolbarItems>
+                                        </SfToolbar>
+                                    </SfGrid>
+                                </div>
+                            </ContentTemplate>
+
+                        </DashboardLayoutPanel>
+         </MudItem>
+         <MudItem xs="12" sm="12" md="3" Class="d-flex flex-row pt-6 pb-4" Style="height: 100%; width: 50%; top: 0px; left: 0px; z-index: 1000; position: absolute;">
+                    <DashboardLayoutPanel Column=2>
+                            <HeaderTemplate><div>Caste Category List</div></HeaderTemplate>
+                            <ContentTemplate>
+                                <MudDivider></MudDivider>
+                                <div>
+                                    <SfGrid DataSource="@_student_CasteCategory_List"
+                                    @ref="_sfGridcastCategory"
+                                            EnableVirtualMaskRow="true"
+                                            RowHeight="38" Height="180"
+                                            Width="auto" EnableVirtualization="false"
+                                            AllowResizing="true" AllowExcelExport="true"
+                                            EnableAutoFill="true" AllowReordering="true"
+                                            ShowColumnChooser="false" AllowGrouping="false" AllowSorting="true"
+                                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                            Toolbar="@(new string[] {"Search","Print" })">
+                                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                        <GridPageSettings PageSize="15" PageSizes="true"></GridPageSettings>
+                                        <GridSearchSettings Fields=@InitSearchCastCategory Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                            IgnoreCase="true"></GridSearchSettings>
+                                        <GridColumns>
+                                            <GridColumn Field=@nameof(Student_CasteCategory_Count.castCategoryName) HeaderText="Category Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                            <GridColumn Field=@nameof(Student_CasteCategory_Count.castCategoryCount) HeaderText="Count" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                        </GridColumns>
+                                        <SfToolbar>
+                                            <ToolbarItems>
+                                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel_CasteCategory" Align="ItemAlign.Left"></ToolbarItem>
+                                            </ToolbarItems>
+                                        </SfToolbar>
+                                    </SfGrid>
+                                </div>
+                            </ContentTemplate>
+
+                        </DashboardLayoutPanel>
+         </MudItem>
+         <MudItem xs="12" sm="12" md="3" Class="d-flex flex-row pt-6 pb-4" Style="height: 100%; width: 50%; top: 0px; left: 0px; z-index: 1000; position: absolute;">
+                        <DashboardLayoutPanel Column=3>
+                            <HeaderTemplate><div>Student Status</div></HeaderTemplate>
+                            <ContentTemplate>
+                                <div>
+                                    <SfGrid DataSource="@_studentStatus_list"
+                                    @ref="_sfGridStudentStatus"
+                                            EnableVirtualMaskRow="true"
+                                            RowHeight="38" Height="180"
+                                            Width="auto" EnableVirtualization="false"
+                                            AllowResizing="true" AllowExcelExport="true"
+                                            EnableAutoFill="true" AllowReordering="true"
+                                            ShowColumnChooser="false" AllowGrouping="false" AllowSorting="true"
+                                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                            Toolbar="@(new string[] {"Search","Print" })">
+                                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                        <GridPageSettings PageSize="15" PageSizes="true"></GridPageSettings>
+                                        <GridSearchSettings Fields=@InitSearchStudentStatus Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                            IgnoreCase="true"></GridSearchSettings>
+                                        <GridColumns>
+                                            <GridColumn Field=@nameof(Student_Status_Count.statusDescription) HeaderText="Category Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                            <GridColumn Field=@nameof(Student_Status_Count.noStudent) HeaderText="Count" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                        </GridColumns>
+                                        <SfToolbar>
+                                            <ToolbarItems>
+                                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel_CasteCategory" Align="ItemAlign.Left"></ToolbarItem>
+                                            </ToolbarItems>
+                                        </SfToolbar>
+                                    </SfGrid>
+                                </div>
+                            </ContentTemplate>
+                        </DashboardLayoutPanel>
+         </MudItem>
+         <MudItem xs="12" sm="12" md="3" Class="d-flex flex-row pt-6 pb-4" Style="height: 100%; width: 50%; top: 0px; left: 0px; z-index: 1000; position: absolute;">
+                        <DashboardLayoutPanel Row=2 Column=1>
+                            <HeaderTemplate><div>Gender Details</div></HeaderTemplate>
+                            <ContentTemplate>
+                                <div>
+                                    <SfGrid DataSource="@_Gender_Counts_List"
+                                    @ref="sfGenderCount"
+                                            EnableVirtualMaskRow="true"
+                                            RowHeight="38" Height="180"
+                                            Width="auto" EnableVirtualization="false"
+                                            AllowResizing="true" AllowExcelExport="true"
+                                            EnableAutoFill="true" AllowReordering="true"
+                                            ShowColumnChooser="false" AllowGrouping="false" AllowSorting="true"
+                                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                            Toolbar="@(new string[] {"Search","Print" })">
+                                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                        <GridPageSettings PageSize="15" PageSizes="true"></GridPageSettings>
+                                        <GridSearchSettings Fields=@InitSearchStudentStatus Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                            IgnoreCase="true"></GridSearchSettings>
+                                        <GridColumns>
+                                            <GridColumn Field=@nameof(Student_Gender_Count.genderName) HeaderText="Gender Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                            <GridColumn Field=@nameof(Student_Gender_Count.genderCount) HeaderText="Count" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                        </GridColumns>
+                                        <SfToolbar>
+                                            <ToolbarItems>
+                                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel_CasteCategory" Align="ItemAlign.Left"></ToolbarItem>
+                                            </ToolbarItems>
+                                        </SfToolbar>
+                                    </SfGrid>
+                                </div>
+                            </ContentTemplate>
+                        </DashboardLayoutPanel>
+         
+         </MudItem>
+         <MudItem xs="12" sm="12" md="3" Class="d-flex flex-row pt-6 pb-4" Style="height: 100%; width: 50%; top: 0px; left: 0px; z-index: 1000; position: absolute;">
+          <DashboardLayoutPanel Row=2 Column=2>
+                            <HeaderTemplate><div>Fee Category Details</div></HeaderTemplate>
+                            <ContentTemplate>
+                                <div>
+                                    <SfGrid DataSource="@_FeeCategory_Counts_list"
+                                    @ref="sfFeecategoryCount"
+                                            EnableVirtualMaskRow="true"
+                                            RowHeight="38" Height="180"
+                                            Width="auto" EnableVirtualization="false"
+                                            AllowResizing="true" AllowExcelExport="true"
+                                            EnableAutoFill="true" AllowReordering="true"
+                                            ShowColumnChooser="false" AllowGrouping="false" AllowSorting="true"
+                                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                            Toolbar="@(new string[] {"Search","Print" })">
+                                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                        <GridPageSettings PageSize="15" PageSizes="true"></GridPageSettings>
+                                        <GridSearchSettings Fields=@InitSearchFeeCategory Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                            IgnoreCase="true"></GridSearchSettings>
+                                        <GridColumns>
+                                            <GridColumn Field=@nameof(Student_FeeCategory_Count.feeCategoryName) HeaderText="Fee Category Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                            <GridColumn Field=@nameof(Student_FeeCategory_Count.countFeeCategory) HeaderText="Count" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                        </GridColumns>
+                                        <SfToolbar>
+                                            <ToolbarItems>
+                                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel_CasteCategory" Align="ItemAlign.Left"></ToolbarItem>
+                                            </ToolbarItems>
+                                        </SfToolbar>
+                                    </SfGrid>
+                                </div>
+                            </ContentTemplate>
+                        </DashboardLayoutPanel>
+        </MudItem>
+         <MudItem xs="12" sm="12" md="3" Class="d-flex flex-row pt-6 pb-4" Style="height: 100%; width: 50%; top: 0px; left: 0px; z-index: 1000; position: absolute;">
+         <DashboardLayoutPanel Row=2 Column=3>
+                            <HeaderTemplate><div>Blood Group List</div></HeaderTemplate>
+                            <ContentTemplate>
+                                <div>
+                                    <SfGrid DataSource="@_bloodgroupcount_list"
+                                    @ref="sfbloodGroupCount"
+                                            EnableVirtualMaskRow="true"
+                                            RowHeight="38" Height="180"
+                                            Width="auto" EnableVirtualization="false"
+                                            AllowResizing="true" AllowExcelExport="true"
+                                            EnableAutoFill="true" AllowReordering="true"
+                                            ShowColumnChooser="false" AllowGrouping="false" AllowSorting="true"
+                                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                            Toolbar="@(new string[] {"Search","Print" })">
+                                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                        <GridPageSettings PageSize="15" PageSizes="true"></GridPageSettings>
+                                        <GridSearchSettings Fields=@InitSearchFeeCategory Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                            IgnoreCase="true"></GridSearchSettings>
+                                        <GridColumns>
+                                            <GridColumn Field=@nameof(Student_BloodGroup_Count.bloodGroupName) HeaderText="Blood Group Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                            <GridColumn Field=@nameof(Student_BloodGroup_Count.bloodGroupcount) HeaderText="Count" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                        </GridColumns>
+                                        <SfToolbar>
+                                            <ToolbarItems>
+                                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel_CasteCategory" Align="ItemAlign.Left"></ToolbarItem>
+                                            </ToolbarItems>
+                                        </SfToolbar>
+                                    </SfGrid>
+                                </div>
+                            </ContentTemplate>
+                        </DashboardLayoutPanel>
+         </MudItem>
+         <MudItem xs="12" sm="12" md="3" Class="d-flex flex-row pt-6 pb-4" Style="height: 100%; width: 50%; top: 0px; left: 0px; z-index: 1000; position: absolute;">
+         <DashboardLayoutPanel SizeY=2 Column=4>
+                            <HeaderTemplate><div>Class & Section List</div></HeaderTemplate>
+                            <ContentTemplate>
+                                <div>
+                                    <SfGrid DataSource="@_classSectionCount_List"
+                                    @ref="_sfgridclassSectionCount"
+                                            EnableVirtualMaskRow="true"
+                                            RowHeight="38" Height="550"
+                                            Width="auto" EnableVirtualization="false"
+                                            AllowResizing="true" AllowExcelExport="true"
+                                            EnableAutoFill="true" AllowReordering="true"
+                                            ShowColumnChooser="false" AllowGrouping="true" AllowSorting="true"
+                                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                            Toolbar="@(new string[] {"Search","Print" })">
+                                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                        <GridPageSettings PageSize="100" PageSizes="true"></GridPageSettings>
+                                        <GridSearchSettings Fields=@InitSearchClass Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                            IgnoreCase="true"></GridSearchSettings>
+                                        <GridGroupSettings Columns=@InitialGroupClass>
+                                            <CaptionTemplate>
+                                                @{
+                                                    var _class = (context as CaptionTemplateContext);
+                                                    <div>@_class.Field - @_class.Key</div>
+                                                }
+                                            </CaptionTemplate>
+                                        </GridGroupSettings>
+                                        <GridAggregates>
+                                            <GridAggregate>
+                                                <GridAggregateColumns>
+                                                    <GridAggregateColumn Field=@nameof(Class_And_Section_Count.studentCount) Type="AggregateType.Sum">
+                                                        <GroupFooterTemplate>
+                                                            @{
+                                                                var _studentCount = (context as AggregateTemplateContext);
+                                                                <div>
+                                                                    Total Student: @_studentCount.Sum
+                                                                </div>
+                                                            }
+                                                        </GroupFooterTemplate>
+                                                    </GridAggregateColumn>
+
+                                                </GridAggregateColumns>
+                                            </GridAggregate>
+                                        </GridAggregates>
+                                        <GridColumns>
+                                            <GridColumn Field=@nameof(Class_And_Section_Count.className) HeaderText="Class" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                            <GridColumn Field=@nameof(Class_And_Section_Count.sectionName) HeaderText="Section" AutoFit=true></GridColumn>
+                                            <GridColumn Field=@nameof(Class_And_Section_Count.studentCount) HeaderText="Count" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                        </GridColumns>
+                                        <SfToolbar>
+                                            <ToolbarItems>
+                                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>
+                                            </ToolbarItems>
+                                        </SfToolbar>
+                                    </SfGrid>
+                                </div>
+                            </ContentTemplate>
+                        </DashboardLayoutPanel>
+        </MudItem>
+      
+       
+       </MudItem>
+    </DashboardLayoutPanels>
+</SfDashboardLayout>
+</MudItem>
+</MudGrid>
+ 
+
+
+<style type="text/css" class="cssStyles">
+    .e-grid .e-altrow {
+        background-color: #fafafa;
+    }
+
+    
+
+    .e-toolbar-item .e-tbar-btn {
+        background-color: powderblue;
+    }
+    .e-panel-header {
+        background-color: rgba(0, 0, 0, .1);
+        text-align: center;
+    /* .e-panel-header {
+            background-color: rgba(0, 0, 0, .1);
+            text-align: center;
+        }
+
+        .e-panel-content {
+            text-align: center;
+            margin-top: 10px;
+        }*/
+</style>
+
+

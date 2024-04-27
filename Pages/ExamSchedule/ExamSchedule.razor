@@ -1,0 +1,231 @@
+﻿@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Buttons;
+@using AIS.Model.Employee
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Notifications
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Navigations
+@using AIS.Model.MasterData;
+@using Syncfusion.Blazor.Popups
+@using AdminDashboard.Server.Models.MasterConfiguration.SubjectMaster;
+@using AdminDashboard.Server.Models.MasterConfiguration.UnitMaster;
+@using AdminDashboard.Server.Models.ExamSchedule;
+
+@page "/ExamSchedule/ExamSchedule"
+
+@inherits ExamScheduleBase
+
+@*Show dialog prompt delete confirmation*@
+
+<SfDialog @ref="Dialog" Width="350px" Visible="false" ShowCloseIcon="true" IsModal="true">
+    <DialogEvents Closed="Closed"></DialogEvents>
+    <DialogTemplates>
+        @*Here you can customize the Header and Content of delete confirmation dialog*@
+        <Header> Delete Record</Header>
+        <Content> You are about to Delete a Record @SelectedData ?</Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton OnClick="@OkClick" Content="OK" IsPrimary="true"></DialogButton>
+        <DialogButton OnClick="@CancelClick" Content="Cancel"></DialogButton>
+    </DialogButtons>
+</SfDialog>
+
+@*Exam Schedule List Details*@
+<MudGrid>
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="9" CellAspectRatio="2" AllowResizing="false">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Exam Schedule Details</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@examScheduleListModels"
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="410"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            Toolbar="@(new string[] {"Delete","Search","Print","ColumnChooser" })"
+                            @ref="@ExamSchedule_grid"
+                            >
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        <GridPageSettings PageSize="12"></GridPageSettings>
+                        <GridEvents OnActionBegin="OnActionBegin" RowSelected="RowSelectHandler" TValue="ExamScheduleListModel"></GridEvents>
+                        <GridEditSettings AllowDeleting="true" Mode="EditMode.Normal"></GridEditSettings>
+                        <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+
+                        <GridColumns>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.examTypeName)" HeaderText="Exam Type" Width="40" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.monthNameDetails)" HeaderText="Month's Name" Width="80" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.className)" HeaderText="Class Name" Width="50" AllowGrouping="true" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.subjectName)" HeaderText="Subject" Width="50" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.unitTitle)" HeaderText="Unit Details" Width="80" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.examScheduleDate)" HeaderText="Exam Date" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.startTime)" HeaderText="Start Time" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.endTime)" HeaderText="End Time" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.createdDate)" HeaderText="Created On" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.updatedDate)" HeaderText="Updated On" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <!--<GridColumn HeaderText="Action" TextAlign="TextAlign.Center" Width="80">-->
+                                @*<GridCommandColumns>
+                                        <GridCommandColumn ButtonOption="@(new CommandButtonOptions() { Content = "Delete", CssClass = "e-flat" })" Title="Delete"></GridCommandColumn>
+                                        <GridCommandColumn ButtonOption="@(new CommandButtonOptions() { Content = "Active", CssClass = "e-flat" })" Title="Active"></GridCommandColumn>
+                                    </GridCommandColumns>*@
+                            <!--</GridColumn>-->
+                        </GridColumns>
+
+                        <SfToolbar>
+                            <ToolbarItems>
+                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>
+                                @*<ToolbarItem Text="Map Subject & Class Section" Align="ItemAlign.Center"
+        SuffixIcon="e-outline e-icons e-plus-icon"
+        OnClick="@OpenDialog"></ToolbarItem>*@
+                                <ToolbarItem Text="Add Exam Schedule" OnClick="@AddExamSchedule" Align="ItemAlign.Left"></ToolbarItem>
+                                <ToolbarItem Text="Search" Align="ItemAlign.Right"></ToolbarItem>
+                                <ToolbarItem Text="Settings" Align="ItemAlign.Right"></ToolbarItem>
+                            </ToolbarItems>
+                        </SfToolbar>
+                    </SfGrid>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+
+</MudGrid>
+
+@*Exam schedule Dialog *@
+<MudGrid>
+    <MudItem xs="12" sm="3" md="12">
+        <MudItem xs="12" sm="3" md="12">
+            <SfDialog @ref="DialogRef" Width="650px" AllowDragging="true" IsModal="false" ShowCloseIcon="true" @bind-Visible="@IsVisible">
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>
+                    <Header>Time Table Setup </Header>
+                    <Content>
+                        <MudItem xs="12" md="12" sm="3">
+                            <EditForm Model="@examScheduleViewModel" OnValidSubmit="OnValidSubmit">
+                                <DataAnnotationsValidator />
+                                @*<ValidationSummary />*@
+                                <MudCardContent>
+                                    <MudGrid>
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList ID="ExanTypeId"
+                                                            CssClass="e-outline"
+                                                            Placeholder="Select a ExamType"
+                                                            FloatLabelType="@FloatLabelType.Never"
+                                                            AllowFiltering="true"
+                                                            @bind-Value="@examScheduleViewModel.ExamType"
+                                                            DataSource="@examTypeDetails">
+                                                <DropDownListFieldSettings Text="Text" Value="ID" />
+                                                <ValidationMessage For="@(() => examScheduleViewModel.ExamType)" />
+                                            </SfDropDownList>
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList ID="MonthID"
+                                                            CssClass="e-outline"
+                                                            Placeholder="Select a Month"
+                                                            FloatLabelType="@FloatLabelType.Never"
+                                                            AllowFiltering="true"
+                                                            @bind-Value="@examScheduleViewModel.MonthName"
+                                                            DataSource="@monthNameLists">
+                                                <DropDownListFieldSettings Text="MonthName" Value="MonthId"></DropDownListFieldSettings>
+                                                <ValidationMessage For="@(() => examScheduleViewModel.MonthName)"></ValidationMessage>
+                                            </SfDropDownList>
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList ID="ClassId"
+                                                            CssClass="e-outline"
+                                                            Placeholder="Select a Class"
+                                                            FloatLabelType="@FloatLabelType.Never"
+                                                            AllowFiltering="true"
+                                                            @bind-Value="@examScheduleViewModel.ClassDetails"
+                                                            DataSource="@masterClassListModels">
+                                                <DropDownListFieldSettings Text="name" Value="masterClassId"></DropDownListFieldSettings>
+                                                <ValidationMessage For="@(() => examScheduleViewModel.ClassDetails)"></ValidationMessage>
+                                                <DropDownListEvents TValue="string" TItem="MasterClassListModel" ValueChange="OnChangeClass"></DropDownListEvents>
+                                            </SfDropDownList>
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList ID="SubjectId"
+                                                            CssClass="e-outline"
+                                                            Placeholder="Select a Subject"
+                                                            FloatLabelType="@FloatLabelType.Never"
+                                                            AllowFiltering="true"
+                                                            @bind-Value="@examScheduleViewModel.SubjectName"
+                                                            DataSource="@_mapSubjectList">
+                                                <DropDownListFieldSettings Text="subjectName" Value="masterSubjectId"></DropDownListFieldSettings>
+                                                <ValidationMessage For="@(() => examScheduleViewModel.SubjectName)"></ValidationMessage>
+                                                <DropDownListEvents TValue="string" TItem="MapsubjectwithClassModel" ValueChange="OnChangeSubject"></DropDownListEvents>
+                                            </SfDropDownList>
+                                        </MudItem>
+                                        <MudItem xs="12" md="12" sm="3">
+                                            <SfDropDownList ID="UnitId"
+                                                            CssClass="e-outline"
+                                                            Placeholder="Select a Unit"
+                                                            FloatLabelType="@FloatLabelType.Never"
+                                                            AllowFiltering="true"
+                                                            @bind-Value="@examScheduleViewModel.UnitName"
+                                                            DataSource="@_unitList">
+                                                @*<DropDownListEvents TValue="int" TItem="TopicMasterListModel" ValueChange="OnChangeUnit"></DropDownListEvents>*@
+                                                <DropDownListFieldSettings Text="unitTitle" Value="subjectUnitId"></DropDownListFieldSettings>
+                                                <ValidationMessage For="@(() => examScheduleViewModel.UnitName)"></ValidationMessage>
+                                            </SfDropDownList>
+                                        </MudItem>
+
+                                        @*<MudItem xs="12" md="4" sm="3">
+                                                <SfDropDownList ID="ChapterId"
+                                                                CssClass="e-outline"
+                                                                Placeholder="Select a Chapter"
+                                                                FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                                @bind-Value="@examScheduleViewModel.ChapterName"
+                                                                DataSource="@_chapterList">
+                                                    <DropDownListEvents TValue="int" TItem="TopicMasterListModel" ValueChange="OnChangeChapter"></DropDownListEvents>
+                                                    <DropDownListFieldSettings Text="chapterTitle" Value="subjectChapterId"></DropDownListFieldSettings>
+                                                    <ValidationMessage For="@(() => examScheduleViewModel.ChapterName)"></ValidationMessage>
+                                                </SfDropDownList>
+                                            </MudItem>
+                                            <MudItem xs="12" md="4" sm="3">
+                                                <SfDropDownList ID="TopicId"
+                                                                CssClass="e-outline"
+                                                                Placeholder="Select a Topic"
+                                                                FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                                @bind-Value="@examScheduleViewModel.TopicName"
+                                                                DataSource="@_topicList">
+                                                    <DropDownListEvents TValue="int" TItem="MapsubjectwithClassModel" ValueChange="OnChangeSubject"></DropDownListEvents>
+                                                    <DropDownListFieldSettings Text="topicTitle" Value="subjectTopicId"></DropDownListFieldSettings>
+                                                    <ValidationMessage For="@(() => examScheduleViewModel.TopicName)"></ValidationMessage>
+                                                </SfDropDownList>
+                                            </MudItem>*@
+                                        <MudItem xs="12" md="4" sm="3">
+                                            <SfDatePicker TValue="DateTime" @bind-Value="@examScheduleViewModel.ExamDate"></SfDatePicker>
+                                            <ValidationMessage For="@(() => examScheduleViewModel.ExamDate)"></ValidationMessage>
+                                        </MudItem>
+                                        <MudItem xs="12" md="4" sm="3">
+                                            <SfTimePicker TValue="DateTime" Placeholder="Select a Start Time" Min="@MinVal"
+                                                          Max="@MaxVal" @bind-Value="@examScheduleViewModel.StartTime">
+                                                <ValidationMessage For="@(() => examScheduleViewModel.StartTime)"></ValidationMessage>
+                                            </SfTimePicker>
+                                        </MudItem>
+                                        <MudItem xs="12" md="4" sm="3">
+                                            <SfTimePicker TValue="DateTime" Placeholder="Select a End Time" Min="@MinVal"
+                                                          Max="@MaxVal" @bind-Value="@examScheduleViewModel.EndTime">
+                                                <ValidationMessage For="@(() => examScheduleViewModel.EndTime)"></ValidationMessage>
+                                            </SfTimePicker>
+                                        </MudItem>
+                                        <MudItem xs="12" md="4" sm="3">
+                                            <SfButton CssClass="e-outline" type="submit" IsPrimary="true">Save</SfButton>
+                                            <SfButton CssClass="e-outline" OnClick="@CloseDialog">Cancel</SfButton>
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudCardContent>
+                            </EditForm>
+                        </MudItem>
+                    </Content>
+                </DialogTemplates>
+                <DialogAnimationSettings Effect="@AnimationEffect" Duration="400" />
+            </SfDialog>
+        </MudItem>
+    </MudItem>
+</MudGrid>

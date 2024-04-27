@@ -1,0 +1,75 @@
+﻿@using Syncfusion.Blazor.Grids
+
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using AdminDashboard.Server.Models.Holiday;
+
+@page "/Holiday/HolidayTypeMaster"
+@inherits HolidayTypeMasterBase
+
+@{
+
+    var InitSearch1 = (new string[] { "periodName" });
+ //var Tool = (new List<string>() { "Search" });
+}
+
+<MudGrid>
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="9" CellAspectRatio="2" AllowResizing="true">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Period Master Details</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@holidayTypeListMasters"
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="410"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            @ref="Grid"
+                            AllowTextWrap="true"GridLines="GridLine.Both"
+                            Toolbar="@(new string[] {"Add", "Edit" ,"Delete","Update","Cancel","Search","Print","ColumnChooser"  })">
+                        <GridEvents OnActionBegin="ActionBeginHandler" TValue="HolidayTypeListMaster"></GridEvents>
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        <GridTextWrapSettings WrapMode="WrapMode.Content"></GridTextWrapSettings>
+                        <GridEditSettings Mode="EditMode.Normal" AllowAdding="true" AllowEditing="true" AllowDeleting="true"
+                                          NewRowPosition="NewRowPosition.Top">
+
+                        </GridEditSettings>
+                        <GridPageSettings PageSize="25"></GridPageSettings>
+                                               
+                        <GridSearchSettings Fields=@InitSearch1 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+                        <GridColumns>
+                            <GridColumn Field="@nameof(HolidayTypeListMaster.holidayTypeId)" HeaderText="Holiday Id" Width="40" AllowEditing="false"
+                                        TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(HolidayTypeListMaster.holidayType)" HeaderText="Holiday Type" AllowEditing="true" Width="80" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(HolidayTypeListMaster.holidayDescriptionEnglish)" HeaderText="Description English" AllowEditing="true" Width="150" AllowGrouping="true" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(HolidayTypeListMaster.holidayDescriptionHindi)" HeaderText="Description Hindi" AllowEditing="true" Width="150" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(HolidayTypeListMaster.createdDate)" HeaderText="Created On" AllowEditing="false" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(HolidayTypeListMaster.updatedDate)" HeaderText="Updated On" AllowEditing="false" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+
+                        </GridColumns>
+                        <SfToolbar>
+                            <ToolbarItems>
+                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>
+
+                                <ToolbarItem Text="Search" Align="ItemAlign.Right"></ToolbarItem>
+                                <ToolbarItem Text="Settings" Align="ItemAlign.Right"></ToolbarItem>
+                            </ToolbarItems>
+                        </SfToolbar>
+                    </SfGrid>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+
+</MudGrid>

@@ -1,0 +1,190 @@
+﻿@page "/MasterConfiguration/SubjectMaster"
+@using AdminDashboard.Server.Models.MasterConfiguration.SubjectMaster;
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@inherits SubjectMasterBase
+
+@using Syncfusion.Blazor.Grids
+
+@{
+    var InitSearch = (new string[] { "subjectName" });
+    var Tool = (new List<string>() { "Search" });
+   
+
+    var Initmapclasswithsubject = (new string[] { "subjectName", "className" });
+}
+
+
+ 
+
+<MudGrid>
+    <MudItem xs="12" sm="8" md="12">
+        <MudCard Elevation="25">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText>Subject Details</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <SfAccordion>
+                    <AccordionItems>
+                        <AccordionItem Header="Subject Master" IconCss="e-athletics e-acrdn-icons" Expanded=true>
+                            <ContentTemplate>
+                                <MudGrid>
+                                    <MudItem xs="12">
+                                        <MudCard>
+
+                                            @if (masterSubjectListModels.Count == 0)
+                                            {
+                                                <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                                            }
+                                            else
+                                            {
+                                                <SfGrid DataSource="@masterSubjectListModels"
+                                                        AllowTextWrap="false"
+                                                        RowHeight="38" EnableVirtualMaskRow="true" EnableVirtualization="true"
+                                                        Height="410" AllowResizing="true" AllowGrouping="false"
+                                                        AllowFiltering="true" ShowColumnMenu="true"
+                                                        AllowExcelExport="true" AllowPdfExport="true"
+                                                        ContextMenuItems="@(new List<object>() {"PdfExport", "ExcelExport", "CsvExport"})"
+                                                        Toolbar=@Tool>
+
+                                                    <GridSearchSettings Fields=@InitSearch Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                                        IgnoreCase="true"></GridSearchSettings>
+
+                                                    <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+
+                                                    <GridGroupSettings ShowGroupedColumn="true"></GridGroupSettings>
+
+                                                    <GridPageSettings PageSize="30"></GridPageSettings>
+
+                                                    <GridColumns>
+                                                        <GridColumn Field=@nameof(MasterSubjectListModel.masterSubjectId) IsPrimaryKey="true"
+                                                                    HeaderText="Subject Id" TextAlign="TextAlign.Left" Width="60"></GridColumn>
+                                                        <GridColumn Field=@nameof(MasterSubjectListModel.subjectName) HeaderText="Subject Name" Width="80"></GridColumn>
+                                                        <GridColumn Field=@nameof(MasterSubjectListModel.subjectCode) HeaderText="Subject Code" Width="80"
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(MasterSubjectListModel.marksType) HeaderText="Marks Type" Width="80"
+                                                                    AllowGrouping="true"></GridColumn>
+                                                        <GridColumn Field=@nameof(MasterSubjectListModel.marksTypeDescription) HeaderText="Marks Type Description"
+                                                                    Width="80" AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(MasterSubjectListModel.subjectType)
+                                                                    HeaderText="Subject Type"
+                                                                    Width="80" AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(MasterSubjectListModel.subjectTypeDescription)
+                                                                    HeaderText="Description"
+                                                                    Width="80" AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(MasterSubjectListModel.DisplayOrder)
+                                                                    HeaderText="DisplayOrder"
+                                                                    Width="80" AllowGrouping="true"></GridColumn>
+                                                        <GridColumn Field=@nameof(MasterSubjectListModel.activeStatusDetails)
+                                                                    HeaderText="Status"
+                                                                    Width="80" AllowGrouping="true"></GridColumn>
+                                                        <GridColumn Field=@nameof(MasterSubjectListModel.createdDate)
+                                                                    HeaderText="Created Date"
+                                                                    Width="80" AllowGrouping="false"></GridColumn>
+
+
+                                                    </GridColumns>
+                                                </SfGrid>
+
+                                            }
+                                        </MudCard>
+                                    </MudItem>
+                                </MudGrid>
+
+
+
+
+
+                            </ContentTemplate>
+                        </AccordionItem>
+
+                        <AccordionItem Header="Map subject with class">
+
+                            <ContentTemplate>
+                                <MudGrid>
+                                    <MudItem xs="12">
+                                        <MudCard>
+
+                                            @if (mapsubjectwithClassModels.Count == 0)
+                                            {
+                                                <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                                            }
+                                            else
+                                            {
+                                        <SfGrid DataSource="@mapsubjectwithClassModels"
+                                                AllowTextWrap="false"
+                                                RowHeight="38" EnableVirtualMaskRow="false" EnableVirtualization="false"
+                                                Height="410" AllowResizing="true" AllowGrouping="true"
+                                                AllowFiltering="true" ShowColumnMenu="true"
+                                                AllowExcelExport="true" AllowPdfExport="true"
+                                                ContextMenuItems="@(new List<object>() {"PdfExport", "ExcelExport", "CsvExport"})"
+                                                Toolbar="@(new string[] {"Search","Print","ColumnChooser" })">
+                                            <GridPageSettings PageCount="5" PageSizes="true"></GridPageSettings>
+                                            <GridSearchSettings Fields=@Initmapclasswithsubject Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                                IgnoreCase="true"></GridSearchSettings>
+                                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                            <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+                                            <GridGroupSettings ShowGroupedColumn="true"></GridGroupSettings>
+
+
+
+                                            <GridColumns>
+                                                <GridColumn Field=@nameof(MapsubjectwithClassModel.mapsubjectwithclassId) IsPrimaryKey="true"
+                                                            HeaderText="Subject Id" TextAlign="TextAlign.Left" Width="60"></GridColumn>
+                                                <GridColumn Field=@nameof(MapsubjectwithClassModel.className) HeaderText="Class Name" Width="80"
+                                                            AllowGrouping="true">
+                                                </GridColumn>
+                                                <GridColumn Field=@nameof(MapsubjectwithClassModel.subjectName) HeaderText="Subject Name" Width="80"
+                                                            AllowGrouping="false"></GridColumn>
+                                                <GridColumn Field=@nameof(MapsubjectwithClassModel.subjectCode) HeaderText="Subject Code" Width="80"
+                                                            AllowGrouping="true"></GridColumn>
+                                                <GridColumn Field=@nameof(MapsubjectwithClassModel.marksType) HeaderText="Marks Type"
+                                                            Width="80" AllowGrouping="false"></GridColumn>
+                                                <GridColumn Field=@nameof(MapsubjectwithClassModel.marksTypeDescription)
+                                                            HeaderText="Marks Description"
+                                                            Width="80" AllowGrouping="false"></GridColumn>
+                                                <GridColumn Field=@nameof(MapsubjectwithClassModel.subjectType)
+                                                            HeaderText="Subject Type"
+                                                            Width="80" AllowGrouping="false"></GridColumn>
+                                                <GridColumn Field=@nameof(MapsubjectwithClassModel.subjectTypeDescription)
+                                                            HeaderText="Description"
+                                                            Width="80" AllowGrouping="true"></GridColumn>
+                                                <GridColumn Field=@nameof(MapsubjectwithClassModel.displayOrder)
+                                                            HeaderText="Display Order"
+                                                            Width="80" AllowGrouping="true"></GridColumn>
+                                                <GridColumn Field=@nameof(MapsubjectwithClassModel.activeStatusDetails)
+                                                            HeaderText="Status"
+                                                            Width="80" AllowGrouping="false"></GridColumn>
+                                                <GridColumn Field=@nameof(MapsubjectwithClassModel.createdDate)
+                                                            HeaderText="Created Date"
+                                                            Width="80" AllowGrouping="false"></GridColumn>
+
+
+
+                                            </GridColumns>
+                                        </SfGrid>
+
+                                            }
+                                        </MudCard>
+                                    </MudItem>
+                                </MudGrid>
+
+
+
+
+
+                            </ContentTemplate>
+
+                        </AccordionItem>
+
+
+                    </AccordionItems>
+                    </SfAccordion>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</MudGrid>

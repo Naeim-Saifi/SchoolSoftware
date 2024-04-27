@@ -1,0 +1,152 @@
+﻿@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@using AdminDashboard.Server.Models.MasterConfiguration.UnitMaster;
+@using AdminDashboard.Server.Models.MasterConfiguration.SubjectMaster;
+@using AIS.Model.MasterData;
+@using AdminDashboard.Server.Models.Enquiry
+
+@page "/Enquiry/AddEnquiry"
+@inherits AddEnquiryBase
+
+
+<MudGrid>
+    <MudItem xs="12" sm="3" md="6">
+        <SfCard ID="HugeImage">
+            <CardHeader Title="Add New Question"></CardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="12" sm="3" md="12">
+                        <EditForm Model="enquiryViewModel" OnValidSubmit="OnValidSubmit">
+                            <DataAnnotationsValidator />
+                            <MudCardContent>
+                                <MudGrid>
+                                    <MudItem xs="12" md="12" sm="3">
+                                        <SfTextBox CssClass="e-outline" Placeholder="Student Name" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@enquiryViewModel.studentName"
+                                                   FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                        <ValidationMessage For="() => enquiryViewModel.studentName" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="3">
+                                        <SfTextBox CssClass="e-outline" Placeholder="Father Name" @bind-Value="@enquiryViewModel.fatherName"
+                                                   FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                        <ValidationMessage For="() => enquiryViewModel.fatherName" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="3">
+                                        <SfMaskedTextBox Mask="(000)-000-0000" Placeholder="Father Mobile No" @bind-Value="@enquiryViewModel.fMobileNo"></SfMaskedTextBox>
+                                        <ValidationMessage For="() => enquiryViewModel.fMobileNo" />
+
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="3">
+                                        <SfTextBox CssClass="e-outline" Placeholder="Mother Name" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@enquiryViewModel.motherName" FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                        <ValidationMessage For="() => enquiryViewModel.motherName" />
+                                    </MudItem>
+
+                                    <MudItem xs="12" md="6" sm="3">
+                                        <SfMaskedTextBox Mask="(000)-000-0000" Placeholder="Mother Mobile No" @bind-Value="@enquiryViewModel.mMobileNo"></SfMaskedTextBox>
+                                        <ValidationMessage For="() => enquiryViewModel.mMobileNo" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="4" sm="3">
+                                        <SfDropDownList ID="gender"
+                                                        CssClass="e-outline"
+                                                        Placeholder="Select a Gender"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@enquiryViewModel.Gender"
+                                                        DataSource="@genderDetails">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => enquiryViewModel.Gender)"></ValidationMessage>
+                                        </SfDropDownList>
+                                    </MudItem>
+                                    <MudItem xs="12" sm="3" md="4">
+                                        <SfDatePicker TValue="DateTime?" Format="yyyy-MM-dd" Placeholder="Date Of Birth" @bind-Value="@enquiryViewModel.DOB"></SfDatePicker>
+                                    </MudItem>
+                                    <MudItem xs="12" md="4" sm="3">
+                                        <SfTextBox CssClass="e-outline" Placeholder="Email Id" @bind-Value="@enquiryViewModel.EmailId" FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                        <ValidationMessage For="() => enquiryViewModel.EmailId" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="12" sm="3">
+                                        <SfTextBox CssClass="e-outline" Placeholder="Prevoius School Details" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@enquiryViewModel.PreviousSchoolDetails" FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                        <ValidationMessage For="() => enquiryViewModel.PreviousSchoolDetails" />
+                                    </MudItem>
+
+                                    <MudItem xs="12" md="6" sm="3">
+                                        <SfDropDownList ID="ClassId" TValue="string" TItem="MasterClassListModel"
+                                                        CssClass="e-outline" Placeholder="Select a Current Class"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="enquiryViewModel.CurrentClass"
+                                                        DataSource="@masterClassListModels">
+                                            <DropDownListFieldSettings Text="name" Value="masterClassId" />
+                                            <ValidationMessage For="() => enquiryViewModel.CurrentClass" />
+                                        </SfDropDownList>
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="3">
+                                        <SfDropDownList ID="ClassId" TValue="string" TItem="MasterClassListModel"
+                                                        CssClass="e-outline" Placeholder="Select a Next Class"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="false"
+                                                        @bind-Value="@enquiryViewModel.NextClass"
+                                                        DataSource="@masterClassListModels">
+                                            <DropDownListFieldSettings Text="name" Value="masterClassId" />
+
+                                            <ValidationMessage For="() => enquiryViewModel.NextClass" />
+                                        </SfDropDownList>
+                                    </MudItem>
+
+
+
+
+                                    <MudItem xs="12" sm="3" md="6">
+                                        <SfDropDownList ID="visitingStatus"
+                                                        CssClass="e-outline"
+                                                        Placeholder="Select Visiting Status"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@enquiryViewModel.VisitingStatus"
+                                                        DataSource="@visitingStatus">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => enquiryViewModel.VisitingStatus)"></ValidationMessage>
+                                        </SfDropDownList>
+
+                                    </MudItem>
+                                    <MudItem xs="12" sm="3" md="6">
+                                        <SfDropDownList ID="visitingType"
+                                                        CssClass="e-outline"
+                                                        Placeholder="Select Visiting Type"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@enquiryViewModel.VisitingType"
+                                                        DataSource="@visitingTypes">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => enquiryViewModel.VisitingType)"></ValidationMessage>
+                                        </SfDropDownList>
+                                    </MudItem>
+                                    <MudItem xs="12" sm="3" md="6">
+                                        <SfTextBox ID="visitingRemarks" @bind-Value="@(enquiryViewModel.VisitingRemarks)"
+                                                   Multiline="true" FloatLabelType="FloatLabelType.Never" Placeholder="Visiting Remarks"></SfTextBox>
+                                    </MudItem>
+                                    <MudItem xs="12" sm="3" md="6">
+                                        <SfTextBox ID="address" @bind-Value="@(enquiryViewModel.Address)"
+                                                   Multiline="true" FloatLabelType="FloatLabelType.Never" Placeholder="Address"></SfTextBox>
+                                    </MudItem>
+                                    <MudItem xs="12" md="4" sm="3">
+                                        <SfButton CssClass="e-outline" type="submit" IsPrimary="true">Save</SfButton>
+                                    </MudItem>
+                                </MudGrid>
+                            </MudCardContent>
+                        </EditForm>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+        </SfCard>
+    </MudItem>
+</MudGrid>

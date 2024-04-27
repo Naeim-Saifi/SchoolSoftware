@@ -1,0 +1,205 @@
+﻿@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using AdminDashboard.Server.Models.MasterConfiguration.UnitMaster;
+@using AdminDashboard.Server.Models.MasterConfiguration.SubjectMaster;
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
+@using AIS.Data.RequestResponseModel.ExamMasterSetup;
+@using AIS.Data.RequestResponseModel.Syllabus;
+@using AIS.Data.RequestResponseModel.QuestionSetUp;
+@using AIS.Model.MasterData;
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Popups;
+@using Syncfusion.Blazor.Layouts
+@using AIS.Data.RequestResponseModel.School;
+
+@page "/User_Pages/SchoolDetails/SchoolDetails"
+
+@inherits SchoolDetailsBase
+ 
+
+
+<MudGrid>
+    <MudItem xs="12" md="6" sm="12"> 
+        <SfAccordion>
+            <AccordionItems>
+                <AccordionItem Expanded="true">
+                    <HeaderTemplate>
+                    School Details
+                    </HeaderTemplate>
+                    <ContentTemplate>
+                        <EditForm Model="schoolDetailsViewModel" OnValidSubmit="OnValidSubmit">
+                        <DataAnnotationsValidator />
+                            <MudCardContent>
+                                <MudGrid>
+                                    <MudItem xs="12" md="6" sm="6">
+                                            <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="Enter School Name"
+                                        @bind-Value="@schoolDetailsViewModel.schoolName"
+                                                        FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                        <ValidationMessage For="() => schoolDetailsViewModel.schoolName" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="6">
+                                            <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="Enter School Recognize Details"
+                                                          
+                                            @bind-Value="@schoolDetailsViewModel.schoolRecognizeDetails"
+                                                        FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                            <ValidationMessage For="() => schoolDetailsViewModel.schoolRecognizeDetails" />                                                        
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="6">
+                                            <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="Chairman Name"
+                                                          
+                                            @bind-Value="@schoolDetailsViewModel.chairmanName"
+                                                        FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                        <ValidationMessage For="() => schoolDetailsViewModel.chairmanName" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="6">
+                                        <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="Chairman Contact No "
+                                        @bind-Value="@schoolDetailsViewModel.chairmanContactNo"
+                                                   FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                        <ValidationMessage For="() => schoolDetailsViewModel.chairmanContactNo" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="6">
+                                        <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="School Mail ID "
+                                        @bind-Value="@schoolDetailsViewModel.mailID"
+                                                   FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                        <ValidationMessage For="() => schoolDetailsViewModel.chairmanContactNo" />
+                                    </MudItem>
+
+                             
+                                    <MudItem xs="12" md="6" sm="6">
+                                        <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="Online Payment Link "
+                                        @bind-Value="@schoolDetailsViewModel.onlinePaymentLink"
+                                                   FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                        <ValidationMessage For="() => schoolDetailsViewModel.onlinePaymentLink" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="6">
+                                        <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="School Address-1 "
+                                        @bind-Value="@schoolDetailsViewModel.schoolAddress1"
+                                                   FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                        <ValidationMessage For="() => schoolDetailsViewModel.schoolAddress1" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="6">
+                                        <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="School Address-2 "
+                                        @bind-Value="@schoolDetailsViewModel.schoolAddress2"
+                                                   FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                        <ValidationMessage For="() => schoolDetailsViewModel.schoolAddress2" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="6">
+                                        <SfDropDownList ID="chapterId" TValue="string" TItem="StateMaster"
+                                                        CssClass="e-outline" Placeholder="Select State"
+                                                        FloatLabelType="@FloatLabelType.Auto" AllowFiltering="true"
+                                        @bind-Value="@schoolDetailsViewModel.stateId"                                                      
+                                                        DataSource="@stateMaster">
+                                            <DropDownListFieldSettings Text="Text" Value="Id" />
+                                            <ValidationMessage For="() => schoolDetailsViewModel.stateId" />
+                                        </SfDropDownList>
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="6">
+                                        <SfTextBox CssClass="e-outline" Placeholder="Pin Code "
+                                        @bind-Value="@schoolDetailsViewModel.pinCode"
+                                                   FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                        <ValidationMessage For="() => schoolDetailsViewModel.pinCode" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="6">
+                                        <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="Bank Name "
+                                        @bind-Value="@schoolDetailsViewModel.bankName"
+                                                   FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                        <ValidationMessage For="() => schoolDetailsViewModel.bankName" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="6">
+                                        <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="IFSC Code "
+                                        @bind-Value="@schoolDetailsViewModel.iFSCCode"
+                                                   FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                        <ValidationMessage For="() => schoolDetailsViewModel.iFSCCode" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="6">
+                                        <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="Bank Account No "
+                                        @bind-Value="@schoolDetailsViewModel.accountNo"
+                                                   FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                        <ValidationMessage For="() => schoolDetailsViewModel.accountNo" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="6">
+                                        <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="Bank Address "
+                                        @bind-Value="@schoolDetailsViewModel.bankAddress"
+                                                   FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                        <ValidationMessage For="() => schoolDetailsViewModel.bankAddress" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="6">
+                                        <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="From Mail ID "
+                                        @bind-Value="@schoolDetailsViewModel.fromMailId"
+                                                   FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                        <ValidationMessage For="() => schoolDetailsViewModel.fromMailId" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="6">
+                                        <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="Mail ID Password "
+                                        @bind-Value="@schoolDetailsViewModel.fromMailIDPassword"
+                                                   FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                        <ValidationMessage For="() => schoolDetailsViewModel.fromMailIDPassword" />
+                                    </MudItem>
+
+
+                                <MudItem xs="12" md="6" sm="6">
+                                    <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="SMS Sender ID"
+                                    @bind-Value="@schoolDetailsViewModel.sMSSenderID"
+                                               FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                    <ValidationMessage For="() => schoolDetailsViewModel.sMSSenderID" />
+                                </MudItem>
+                                <MudItem xs="12" md="6" sm="6">
+                                    <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="SMS User ID"
+                                    @bind-Value="@schoolDetailsViewModel.sMSUSERID"
+                                               FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                    <ValidationMessage For="() => schoolDetailsViewModel.sMSUSERID" />
+                                </MudItem>
+                                <MudItem xs="12" md="6" sm="6">
+                                    <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="SMS Password"
+                                    @bind-Value="@schoolDetailsViewModel.sMSPassword"
+                                               FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                    <ValidationMessage For="() => schoolDetailsViewModel.sMSPassword" />
+                                </MudItem>
+                                <MudItem xs="12" md="6" sm="6">
+                                    <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="SMS API Key "
+                                    @bind-Value="@schoolDetailsViewModel.sMSAPIKey"
+                                               FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                    <ValidationMessage For="() => schoolDetailsViewModel.sMSAPIKey" />
+                                </MudItem>
+
+                                
+                                    <MudItem xs="12" md="6" sm="6">
+                                        <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="What's App User ID' "
+                                        @bind-Value="@schoolDetailsViewModel.whatsApp_UserID"
+                                                   FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                        <ValidationMessage For="() => schoolDetailsViewModel.whatsApp_UserID" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="6">
+                                        <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="what's App Password "
+                                        @bind-Value="@schoolDetailsViewModel.whatsApp_Password"
+                                                   FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                        <ValidationMessage For="() => schoolDetailsViewModel.whatsApp_Password" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="6">
+                                        <SfTextBox CssClass="e-outline" Multiline="false" Placeholder="what's App API Key "
+                                        @bind-Value="@schoolDetailsViewModel.whatsApp_APIKey"
+                                                   FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                                        <ValidationMessage For="() => schoolDetailsViewModel.whatsApp_APIKey" />
+                                    </MudItem>
+
+                                
+                            </MudGrid>
+                        </MudCardContent>
+                            <MudItem xs="12" md="6" sm="6">
+                                <SfButton CssClass=e-outline type="submit" IsPrimary="true">Save</SfButton>
+                                @*  <SfButton CssClass="e-outline" OnClick="@CloseDialog">Cancel</SfButton>*@
+                                @* <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton> *@
+                            </MudItem>
+                        </EditForm>                        
+                    </ContentTemplate>
+                </AccordionItem>
+            </AccordionItems>
+            
+        </SfAccordion>
+    </MudItem>
+</MudGrid>
+

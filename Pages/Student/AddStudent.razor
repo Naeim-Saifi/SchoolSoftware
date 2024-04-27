@@ -1,0 +1,371 @@
+﻿@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@using AdminDashboard.Server.Models.MasterConfiguration.UnitMaster;
+@using AdminDashboard.Server.Models.MasterConfiguration.SubjectMaster;
+@using AIS.Model.MasterData;
+ 
+
+@page "/Student/AddStudent"
+@inherits AddStudentBase
+
+<MudGrid>
+    <MudItem xs="12" sm="3" md="6">
+        <SfCard ID="HugeImage">
+            <CardHeader Title="Add New Student"></CardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="12" sm="3" md="12">
+                        <EditForm Model="AddStudentViewModel" OnValidSubmit="OnValidSubmit">
+                            <DataAnnotationsValidator />
+                            <MudCardContent>
+                                <MudGrid>
+                                    <MudItem xs="12" md="6" sm="3">
+                                        <SfTextBox CssClass="e-outline" Placeholder="Withdrawal Number" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                        @bind-Value="@AddStudentViewModel.WithdrawalNumber"
+                                                   FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                        <ValidationMessage For="() => AddStudentViewModel.WithdrawalNumber" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="3">
+                                        <SfTextBox CssClass="e-outline" Placeholder="Admission Number" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                        @bind-Value="@AddStudentViewModel.AdmissionNumber"
+                                                   FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                        <ValidationMessage For="() => AddStudentViewModel.AdmissionNumber" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="12" sm="3">
+                                        <SfTextBox CssClass="e-outline" Placeholder="Student Name" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                        @bind-Value="@AddStudentViewModel.StudentName"
+                                                   FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                        <ValidationMessage For="() => AddStudentViewModel.StudentName" />
+                                    </MudItem>
+                                     <MudItem xs="12" md="3" sm="3">
+                                        <SfDropDownList ID="gender"
+                                                        CssClass="e-outline"
+                                                        Placeholder="Select a Gender"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@AddStudentViewModel.Gender"
+                                                        DataSource="@genderDetails">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => AddStudentViewModel.Gender)"></ValidationMessage>
+                                        </SfDropDownList>
+                                    </MudItem>
+                                     <MudItem xs="12" sm="3" md="3">
+                                        <SfDatePicker TValue="DateTime?" Format="yyyy-MM-dd" Placeholder="Date Of Birth" @bind-Value="@AddStudentViewModel.DOB"></SfDatePicker>
+                                    </MudItem>
+                                     <MudItem xs="12" md="3" sm="3">
+                                        <SfDropDownList ID="gender"
+                                                        CssClass="e-outline"
+                                                        Placeholder="Select a Categry"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@AddStudentViewModel.CastCategory"
+                                                        DataSource="@casteCategory">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => AddStudentViewModel.CastCategory)"></ValidationMessage>
+                                        </SfDropDownList>
+                                    </MudItem>
+                                    <MudItem xs="12" md="3" sm="3">
+                                        <SfDropDownList ID="Religion"
+                                                        CssClass="e-outline"
+                                                        Placeholder="Select a Religion"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@AddStudentViewModel.Religion"
+                                                        DataSource="@religion">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => AddStudentViewModel.Religion)"></ValidationMessage>
+                                        </SfDropDownList>
+                                    </MudItem>
+                                     <MudItem xs="12" md="3" sm="3">
+                                        <SfDropDownList ID="gender"
+                                                        CssClass="e-outline"
+                                                        Placeholder="Select a Student Type"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@AddStudentViewModel.StudentType"
+                                                        DataSource="@studentType">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => AddStudentViewModel.StudentType)"></ValidationMessage>
+                                        </SfDropDownList>
+                                    </MudItem>
+                                    <MudItem xs="12" md="3" sm="3">
+                                        <SfDropDownList ID="gender"
+                                                        CssClass="e-outline"
+                                                        Placeholder="Select a Addmission Type"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@AddStudentViewModel.AdmissionType"
+                                                        DataSource="@admissionType">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => AddStudentViewModel.AdmissionType)"></ValidationMessage>
+                                        </SfDropDownList>
+                                    </MudItem>
+                             
+                                     <MudItem xs="12" sm="3" md="3">
+                                        <SfDatePicker TValue="DateTime?" Format="yyyy-MM-dd" Placeholder="Admission Date" @bind-Value="@AddStudentViewModel.DOB"></SfDatePicker>
+                                    </MudItem>
+                                     <MudItem xs="12" md="3" sm="3">
+                                        <SfDropDownList ID="gender"
+                                                        CssClass="e-outline"
+                                                        Placeholder="Select a House"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@AddStudentViewModel.House"
+                                                        DataSource="@house">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => AddStudentViewModel.House)"></ValidationMessage>
+                                        </SfDropDownList>
+                                    </MudItem>
+                                    <MudItem xs="12" md="3" sm="3">
+                                        <SfDropDownList ID="gender"
+                                                        CssClass="e-outline"
+                                                        Placeholder="Select a Class Name"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@AddStudentViewModel.ClassName"
+                                                        DataSource="@className">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => AddStudentViewModel.ClassName)"></ValidationMessage>
+                                        </SfDropDownList>
+                                    </MudItem>
+                                     <MudItem xs="12" md="3" sm="3">
+                                        <SfDropDownList ID="gender"
+                                                        CssClass="e-outline"
+                                                        Placeholder="Select a Section Name"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@AddStudentViewModel.SectionName"
+                                                        DataSource="@sectionName">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => AddStudentViewModel.SectionName)"></ValidationMessage>
+                                        </SfDropDownList>
+                                    </MudItem>
+                                     <MudItem xs="12" md="3" sm="3">
+                                        <SfTextBox CssClass="e-outline" Placeholder="Roll No" @bind-Value="@AddStudentViewModel.RollNo"
+                                                   FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                        <ValidationMessage For="() => AddStudentViewModel.RollNo" />
+                                    </MudItem>
+                                     <MudItem xs="12" md="3" sm="3">
+                                        <SfDropDownList ID="gender"
+                                                        CssClass="e-outline"
+                                                        Placeholder="Select a Fee Category"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@AddStudentViewModel.FeeCategory"
+                                                        DataSource="@feeCategory">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => AddStudentViewModel.FeeCategory)"></ValidationMessage>
+                                        </SfDropDownList>
+                                    </MudItem>
+                                     <MudItem xs="12" md="6" sm="3">
+                                        <SfDropDownList ID="gender" 
+                                                        CssClass="e-outline"
+                                                        Placeholder="Select a Transport Mode"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@AddStudentViewModel.TransportMode"
+                                                        DataSource="@transportMode">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => AddStudentViewModel.TransportMode)"></ValidationMessage>
+                                        </SfDropDownList>
+                                    </MudItem>
+                                     <MudItem xs="12" md="6" sm="3">
+                                        <SfDropDownList ID="gender"
+                                                        CssClass="e-outline"
+                                                        Placeholder="Select Bus stop"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@AddStudentViewModel.BusStop"
+                                                        DataSource="@busStop">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => AddStudentViewModel.BusStop)"></ValidationMessage>
+                                        </SfDropDownList>
+                                    </MudItem>
+                                   
+
+                                    <MudItem xs="12" md="6" sm="3">
+                                        <SfTextBox CssClass="e-outline" Placeholder="Father Name" @bind-Value="@AddStudentViewModel.FatherName"
+                                                   FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                        <ValidationMessage For="() => AddStudentViewModel.FatherName" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="3">
+                                        <SfMaskedTextBox Mask="(000)-000-0000" Placeholder="Father Mobile No"
+                                        @bind-Value="@AddStudentViewModel.FatherMobileNo"></SfMaskedTextBox>
+                                        <ValidationMessage For="() => AddStudentViewModel.FatherMobileNo" />
+
+                                    </MudItem>
+                                    <MudItem xs="12" md="6" sm="3">
+                                        <SfTextBox CssClass="e-outline" Placeholder="Mother Name" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                        @bind-Value="@AddStudentViewModel.MotherName" FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                        <ValidationMessage For="() => AddStudentViewModel.MotherName" />
+                                    </MudItem>
+
+                                    <MudItem xs="12" md="6" sm="3">
+                                        <SfMaskedTextBox Mask="(000)-000-0000" Placeholder="Mother Mobile No" 
+                                        @bind-Value="@AddStudentViewModel.MothermobileNo"></SfMaskedTextBox>
+                                        <ValidationMessage For="() => AddStudentViewModel.MothermobileNo" />
+                                    </MudItem>
+                                   
+                                    <MudItem xs="12" sm="3" md="6">
+                                        <SfTextBox ID="SRN" @bind-Value="@(AddStudentViewModel.SRNNumber)"
+                                                   Multiline="false" FloatLabelType="FloatLabelType.Never" Placeholder="SRN"></SfTextBox>
+                                                   <ValidationMessage For="@(() => AddStudentViewModel.SRNNumber)"></ValidationMessage>
+                                    </MudItem>
+                                     <MudItem xs="12" sm="3" md="6">
+                                        <SfTextBox ID="Aadhar" @bind-Value="@(AddStudentViewModel.UIDNumber)"
+                                                   Multiline="false" FloatLabelType="FloatLabelType.Never" Placeholder="Aadhar Number"></SfTextBox>
+                                                    <ValidationMessage For="() => AddStudentViewModel.UIDNumber" />
+                                    </MudItem>
+                                      <MudItem xs="12" sm="3" md="6">
+                                        <SfTextBox ID="whatsApp"
+                                                   Multiline="false" FloatLabelType="FloatLabelType.Never" Placeholder="WhatsApp Number"></SfTextBox>
+                                    </MudItem>
+                                     <MudItem xs="12" md="6" sm="3">
+                                        <SfDropDownList ID="gender"
+                                                       CssClass="e-outline"
+                                                        Placeholder="Select a Blood"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@AddStudentViewModel.BloodGroup"
+                                                        DataSource="@bloodGroup">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => AddStudentViewModel.BloodGroup)"></ValidationMessage>
+                                        </SfDropDownList>
+                                    </MudItem>
+                                    <MudItem xs="12" sm="3" md="6">
+                                        <SfTextBox ID="EmailId" @bind-Value="@(AddStudentViewModel.EmailId)"
+                                                   Multiline="false" FloatLabelType="FloatLabelType.Never" Placeholder="Email Id"></SfTextBox>
+                                        <ValidationMessage For="@(() => AddStudentViewModel.EmailId)"></ValidationMessage>
+                                    </MudItem>
+
+                                    <MudItem xs="12" sm="3" md="6">
+                                        <SfTextBox ID="address" @bind-Value="@(AddStudentViewModel.Address)"
+                                                   Multiline="true" FloatLabelType="FloatLabelType.Never" Placeholder="Address"></SfTextBox>
+                                        <ValidationMessage For="@(() => AddStudentViewModel.Address)"></ValidationMessage>
+                                    </MudItem>
+                                    <MudItem xs="12" md="4" sm="3">
+                                        <SfDropDownList ID="gender"
+                                                        CssClass="e-outline"
+                                                        Placeholder="Select a State"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@AddStudentViewModel.State"
+                                                        DataSource="@state">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => AddStudentViewModel.State)"></ValidationMessage>
+                                        </SfDropDownList>
+                                    </MudItem>
+                                     <MudItem xs="12" md="4" sm="3">
+                                       <SfDropDownList ID="gender"
+                                                       CssClass="e-outline"
+                                                         Placeholder="Select a City"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@AddStudentViewModel.City"
+                                                        DataSource="@city">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => AddStudentViewModel.City)"></ValidationMessage>
+                                        </SfDropDownList>
+                                    </MudItem>
+                                     <MudItem xs="12" sm="3" md="4">
+                                       <SfTextBox ID="Pin Code" @bind-Value="@(AddStudentViewModel.PinCode)"
+                                                   Multiline="false" FloatLabelType="FloatLabelType.Never" Placeholder="Pin Code"></SfTextBox>
+                                        <ValidationMessage For="@(() => AddStudentViewModel.PinCode)"></ValidationMessage>
+                                    </MudItem>
+                                   @* <MudItem xs="12" md="6" sm="3">
+                                        <SfDropDownList ID="gender"
+                                                        CssClass="e-outline"
+                                                          Placeholder="Select a Please Select Admission Cancle Remarks."
+                                                       FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@AddStudentViewModel.PleaseSelect"
+                                                        DataSource="@genderDetails">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => AddStudentViewModel.PleaseSelect)"></ValidationMessage>
+                                        </SfDropDownList>
+                                    </MudItem>
+                                    <MudItem xs="12" sm="3" md="3">
+                                        <SfTextBox ID="New Admission" @bind-Value="@(AddStudentViewModel.UIDNumber)"
+                                                   Multiline="false" FloatLabelType="FloatLabelType.Never" Placeholder="New Admission SMS alert:-"></SfTextBox>
+                                    </MudItem><br />*@
+                                    <MudItem xs="12" md="12" sm="3">
+                                        <SfButton CssClass="e-outline" type="submit" IsPrimary="true">Save</SfButton>
+                                    </MudItem>
+                                  
+                                </MudGrid>
+
+                            </MudCardContent>
+                        </EditForm>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+        </SfCard>
+    </MudItem>
+    <MudItem xs="12" sm="3" md="6">
+        <SfCard ID ="center">
+            <CardHeader Title="Admission Register "></CardHeader>
+            <MudCardContent>
+                <MudGrid>
+                <MudItem xs="12" sm="3" md="12">
+                        <EditForm Model="AddStudentViewModel" OnValidSubmit="OnValidSubmit">
+                            <DataAnnotationsValidator />
+                            <MudCardContent>
+                                <MudGrid>
+                                    <MudItem xs="12" md="6" sm="3">
+                                        <SfDropDownList ID="gender"
+                                                        CssClass="e-outline"
+                                                        Placeholder="Select a Class"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@AddStudentViewModel.Class"
+                                                        DataSource="@classs">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => AddStudentViewModel.Class)"></ValidationMessage>
+                                        </SfDropDownList>
+                                    </MudItem>
+
+                                    <MudItem xs="12" md="6" sm="3">
+                                        <SfDropDownList ID="sectionName"
+                                                        CssClass="e-outline"
+                                                        Placeholder="Select a Section"
+                                                        FloatLabelType="@FloatLabelType.Never"
+                                                        AllowFiltering="true"
+                                                        @bind-Value="@AddStudentViewModel.SectionName"
+                                                        DataSource="@sectionName">
+                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                            <ValidationMessage For="@(() => AddStudentViewModel.SectionName)"></ValidationMessage>
+                                        </SfDropDownList>
+                                    </MudItem>
+
+                                    <MudItem xs="12" sm="6" md="12">
+                                        <span>Search By Student Name,Father Name,Mobile No</span>
+                                        <SfTextBox ID="EmailId" @bind-Value="@(AddStudentViewModel.EmailId)"
+                                                  Multiline="false" FloatLabelType="FloatLabelType.Never" Placeholder=""></SfTextBox>
+                                        <ValidationMessage For="@(() => AddStudentViewModel.EmailId)"></ValidationMessage>
+                                    </MudItem>
+
+                                </MudGrid>
+
+                            </MudCardContent>
+                        </EditForm>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+        </SfCard>
+    </MudItem>
+</MudGrid>
+
+
+
+
+

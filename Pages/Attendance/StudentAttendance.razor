@@ -1,0 +1,61 @@
+﻿@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@page "/Attendance/StudentAttendance"
+
+@inherits StudentAttendanceBase
+@{
+
+    var InitSearch1 = (new string[] { "studentName", "fatherName", "motherName" });
+    var Tool = (new List<string>() { "Search" });
+}
+<MudGrid>
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="9" CellAspectRatio="2" AllowResizing="false">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Attendance Register</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@studentDetailsLists" EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="410"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            ContextMenuItems="MenuItems"
+                            Toolbar="ToolBarItems"
+                            @ref="sfStudentAttendanceRegester">
+                        @*<GridEvents CommandClicked="OnCommandClicked" TValue="StudentRegisterList"></GridEvents>*@
+                        <GridEvents OnToolbarClick="ToolbarClickHandler" RowSelected="GetSelectedRecords" TValue="StudentDetailsList"></GridEvents>
+                        <GridSelectionSettings CheckboxOnly="true" PersistSelection="true"></GridSelectionSettings>
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        <GridSearchSettings Fields=@InitSearch1 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+                        <GridPageSettings PageCount="30" PageSizes="true"></GridPageSettings>
+
+                        <GridColumns>
+                            <GridColumn Field=@nameof(StudentDetailsList.studentId) HeaderText="StudentID" AutoFit="true"> </GridColumn>
+                            <GridColumn Field=@nameof(StudentDetailsList.studentName) HeaderText="Student's' Name" AutoFit="true"></GridColumn>
+                            <GridColumn Field=@nameof(StudentDetailsList.fatherName) HeaderText="Father's Name" AutoFit="true"></GridColumn>
+                            <GridColumn Field=@nameof(StudentDetailsList.motherName) HeaderText="Mother's Name" AutoFit="true"></GridColumn>
+                            <GridColumn Field=@nameof(StudentDetailsList.rollNo) HeaderText="Roll No" TextAlign="TextAlign.Center" AutoFit="true"> </GridColumn>
+                            <GridColumn Type="ColumnType.CheckBox" AutoFit="true"></GridColumn>
+                        </GridColumns>
+                    </SfGrid>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+</MudGrid>
+
+
+

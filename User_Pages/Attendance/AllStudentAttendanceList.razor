@@ -1,0 +1,80 @@
+﻿@using Syncfusion.Blazor.Grids
+@using AIS.Data.RequestResponseModel.TransactionSetUp;
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Popups
+@using System.Globalization;
+@using AIS.Data.RequestResponseModel.Attendance;
+
+@page "/User_Pages/Attendance/AllStudentAttendanceList"
+@inherits AllStudentAttendanceListBase
+@{
+
+    // var InitSearch1 = (new string[] { "periodName" });
+    // var InitSearchpaymentMode = (new string[] { "paymentMode" });
+    var InitSearchreceiptBy = (new string[] { "firstName" });
+    // var InitialGroupreceiptBy = (new string[] { "receiptBy" });
+    var transGroupBy = (new string[] { "monthDetails" });
+}
+
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="6">
+        <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+            <DashboardLayoutPanels>
+                <DashboardLayoutPanel SizeX=7 SizeY="2">
+                    <HeaderTemplate>Attendance Details</HeaderTemplate>
+                    <ContentTemplate>
+                        <SfGrid DataSource="@_studentAttendanceList"
+                        @ref="sfgridUserIDWise"
+                                EnableVirtualMaskRow="true"
+                                RowHeight="38" Height="710"
+                                Width="auto" EnableVirtualization="false"
+                                AllowResizing="true" AllowExcelExport="true"
+                                EnableAutoFill="true" AllowReordering="true"
+                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                Toolbar="@toolBarItems">
+                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                            <GridGroupSettings Columns="@transGroupBy"></GridGroupSettings>
+                            <GridPageSettings PageSize="50" PageSizes="true"></GridPageSettings>
+                            <GridSearchSettings Fields=@InitSearchreceiptBy Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                IgnoreCase="true"></GridSearchSettings>
+                            <GridEvents OnToolbarClick="toolBarItemsClick" TValue=StudentAttendanceList_MonthWise></GridEvents>
+
+                            <GridColumns>
+                                <GridColumn Field=@nameof(StudentAttendanceList_MonthWise.className) HeaderText="Class Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(StudentAttendanceList_MonthWise.sectionName) HeaderText="Student Name" TextAlign="TextAlign.Right"  AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(StudentAttendanceList_MonthWise.firstName) HeaderText="Student Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                      
+                                <GridColumn Field=@nameof(StudentAttendanceList_MonthWise.fatherName) HeaderText="Father Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(StudentAttendanceList_MonthWise.rollNo) HeaderText="Roll No" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(StudentAttendanceList_MonthWise.present) HeaderText="Present" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(StudentAttendanceList_MonthWise.absent) HeaderText="Absent" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(StudentAttendanceList_MonthWise.leave) HeaderText="Leave" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(StudentAttendanceList_MonthWise.holiday) HeaderText="Holiday" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(StudentAttendanceList_MonthWise.monthDetails) HeaderText="Month" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+
+
+                            </GridColumns>
+                            @* <SfToolbar>
+                            <ToolbarItems>
+                            <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel_PaymentModeCollection" Align="ItemAlign.Left"></ToolbarItem>
+                            </ToolbarItems>
+                            </SfToolbar> *@
+                        </SfGrid>
+
+
+                    </ContentTemplate>
+                </DashboardLayoutPanel>
+            </DashboardLayoutPanels>
+        </SfDashboardLayout>
+    </MudItem>
+</MudGrid>

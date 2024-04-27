@@ -1,0 +1,53 @@
+﻿@page "/"
+@page "/pages/authentication/login"
+@layout LoginLayout
+@inherits LoginBase
+@using AIS.Model.UserLogin
+@using Syncfusion.Blazor.DropDowns
+
+
+<MudText Typo="Typo.h4" GutterBottom="true">Sign In</MudText>
+
+<MudText>Don't have an account? <MudLink Href="/pages/authentication/register">Sign Up</MudLink></MudText>
+
+@*<MudTextField T="string" Value="@("staff@mudblazor.com")" Label="E-mail" Variant="Variant.Outlined" Class="my-6"></MudTextField>
+
+    <MudTextField @bind-Value="@Password" Label="Password" Variant="Variant.Outlined" InputType="@PasswordInput"
+                  Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibility" />*@
+<EditForm Model="@userLogin" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <MudTextField @bind-Value="@userLogin.UserId"  
+                  Variant="Variant.Outlined" Class="my-6" 
+                   Placeholder="SchoolCode_UserId"
+                  For="@(() =>userLogin.UserId)">
+    </MudTextField>
+
+    <MudTextField @bind-Value="@userLogin.UserPassword"   Variant="Variant.Outlined"
+                  Placeholder="Password"
+                  InputType="@PasswordInput"
+                  Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
+                  OnAdornmentClick="TogglePasswordVisibility"
+                  For="@(() =>userLogin.UserPassword)" />
+
+    <SfDropDownList ID="country" @bind-Value="@userLogin.FinancialYear"
+                    Placeholder="Select a Financial Year" DataSource="@financialYear">
+        <DropDownListFieldSettings Text="Text" Value="ID" />
+        <ValidationMessage For="() => userLogin.FinancialYear" />
+    </SfDropDownList>
+    @*<ValidationMessage For="@(() => employeeviewModel.DropdwonGender)"></ValidationMessage>*@
+
+    <div Class="d-flex justify-space-between align-center">
+        <MudCheckBox T="bool" Label="Remember me?" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
+        @*<MudLink Href="/pages/authentication/forgot-password">Forgot pwd?</MudLink>*@
+    </div>
+
+
+    @*<MudButton Variant="Variant.Filled" Color="Color.Primary" Link="/personal/dashboard" Size="Size.Large"
+        @*ButtonType="ButtonType.Submit" FullWidth="true">Sign In</MudButton>*@
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large"
+               ButtonType="ButtonType.Submit" FullWidth="true">Sign In</MudButton>
+
+               @*Naeim*@
+    <MudText>Sign in with google <MudLink Href="#">Google</MudLink></MudText>
+</EditForm>
+@code { }

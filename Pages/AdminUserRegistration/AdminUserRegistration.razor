@@ -1,0 +1,189 @@
+﻿@page "/AdminUserRegistration/AdminUserRegistration"
+@inject IDialogService DialogService
+@inherits AdminUserRegistrationBase
+@using AIS.Model.GeneralConversion
+@using AdminDashboard.Server.Models.UserRegistraion
+
+
+
+<MudGrid>
+    <MudItem xs="12" sm="3" md="12">
+        <MudItem xs="12" sm="3" md="12">
+            <MudCard Elevation="25">
+                <MudExpansionPanels MultiExpansion="true">
+                    <MudExpansionPanel Text="Add User Detail">
+
+                        <MudCardContent>
+                            <div class="d-flex justify-center mb-4">
+                                <EditForm Model="@userRegistrationModel" OnValidSubmit="OnValidSubmit">
+                                    <DataAnnotationsValidator />
+                                    <MudCard Elevation="5">
+                                        <MudCardContent>
+                                            <MudGrid>
+                                                <MudItem xs="12" md="3" sm="3">
+                                                    <MudSelect xs="12" md="3" sm="3" Label="Select Status" @bind-Value="StatusValue1" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-1">
+                                                        @*@foreach (GenericClass.Status status in Enum.GetValues(typeof(GenericClass.Status)))
+                                                            {
+                                                                <MudSelectItem T="GenericClass.Status?" Value="@status">@status</MudSelectItem>
+                                                            }*@
+                                                        @foreach (var status in GenericClass.StatusDetails)
+                                                        {
+                                                            <MudSelectItem Value="@status">@status</MudSelectItem>
+                                                        }
+                                                    </MudSelect>
+                                                </MudItem>
+                                                @*<MudItem xs="12" md="3" sm="3">
+                                                        <MudCheckBox Label="Active Status" @bind-Checked="userRegistrationModel.ActiveStatus" Color="Color.Primary"
+                                                                     For="@(() => userRegistrationModel.ActiveStatus)"></MudCheckBox>
+                                                    </MudItem>*@
+                                                @*<MudItem xs="12" md="3">
+                                                        <MudTextField Label="Login User Id" Class="mt-1" @bind-Value="userRegistrationModel.UserId" For="@(() =>userRegistrationModel.UserId)"
+                                                                      Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                                    </MudItem>*@
+                                                <MudItem xs="12" md="3">
+                                                    <MudTextField Label="User Name" Class="mt-1" @bind-Value="userRegistrationModel.UserName" For="@(() =>userRegistrationModel.UserName)"
+                                                                  Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                                </MudItem>
+                                                @*<MudItem xs="12" md="3">
+                                                        <MudTextField Label="Role Name" Class="mt-1" @bind-Value="userRegistrationModel.UserRoleId" For="@(() =>userRegistrationModel.UserRoleId)"
+                                                                      Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                                    </MudItem>*@
+                                                <MudItem xs="12" md="3">
+                                                    <MudSelect Label="Select User Role" @bind-Value="userRole"
+                                                               Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                               HelperText="Status any one Admin,Management Role">
+                                                        @foreach (var role in GenericClass.UserRole)
+                                                        {
+                                                            <MudSelectItem Value="@role">@role</MudSelectItem>
+                                                        }
+                                                    </MudSelect>
+                                                </MudItem>
+
+                                                <MudItem xs="12" md="3">
+                                                    <MudTextField Label="First Name" Class="mt-1" @bind-Value="userRegistrationModel.FirstName" For="@(() =>userRegistrationModel.FirstName)"
+                                                                  Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                                </MudItem>
+                                                <MudItem xs="12" md="3">
+                                                    @*<MudTextField @bind-Value="employeeModel.Gender" Label="Gender"
+                                                        Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                        For="@(() => employeeModel.Gender)" />*@
+                                                    <MudTextField Label="Middle Name" Class="mt-1" @bind-Value="userRegistrationModel.MiddleName" For="@(() =>userRegistrationModel.MiddleName)"
+                                                                  Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                                </MudItem>
+                                                <MudItem xs="12" md="3">
+
+                                                    <MudTextField Label="Last Name" Class="mt-1" @bind-Value="userRegistrationModel.LastName" For="@(() =>userRegistrationModel.LastName)"
+                                                                  Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                                </MudItem>
+                                                <MudItem xs="12" md="3">
+
+                                                    <MudTextField Label="E-mail Id" Class="mt-1" @bind-Value="userRegistrationModel.Email" For="@(() =>userRegistrationModel.Email)"
+                                                                  Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                                </MudItem>
+                                                <MudItem xs="12" md="3">
+
+                                                    <MudTextField Label="Password" Class="mt-1" @bind-Value="userRegistrationModel.Password" For="@(() =>userRegistrationModel.Password)"
+                                                                  Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                                </MudItem>
+                                                <MudItem xs="12" md="3">
+
+                                                    @*<MudTextField Label="Profile Image" Class="mt-1" @bind-Value="userRegistrationModel.ProfileImage" For="@(() =>userRegistrationModel.ProfileImage)"
+                                                        Variant="Variant.Outlined" Margin="Margin.Dense" />*@
+                                                    <InputFile OnChange="OnInputFileChange" Class="mt-1" id="imgprofile" />
+                                                </MudItem>
+
+
+                                            </MudGrid>
+                                        </MudCardContent>
+                                        <MudCardActions Class="d-flex justify-space-between align-center">
+
+                                            <MudButton @onclick="@(()=>Cancel())" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Cancel" Color="Color.Warning" Size="Size.Medium" Class="ml-n1 my-3">Cancel</MudButton>
+                                            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Size="Size.Medium">Save</MudButton>
+
+                                        </MudCardActions>
+                                    </MudCard>
+                                </EditForm>
+                            </div>
+
+                        </MudCardContent>
+                    </MudExpansionPanel>
+
+
+                    <MudExpansionPanel Text="View User List">
+                        <MudCardContent>
+                            <MudGrid>
+                                <MudItem xs="12" md="12" sm="3">
+                                    <MudCard>
+
+                                        @if (adminUserRegistrationListModel.Count == 0)
+                                        {
+                                            <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                                            <MudBadge Color="Color.Error" Overlap="true" Bordered="true" Class="mx-6 my-4">
+                                                <MudButton Color="Color.Error" Variant="Variant.Filled" DisableElevation="true">No Data Found</MudButton>
+                                            </MudBadge><MudProgressCircular Color="Color.Secondary" Indeterminate="false" />
+                                        }
+                                        else
+                                        {
+                                            <MudTable Items="@adminUserList()" Dense="true" Hover="true" Bordered="true" Striped="true"
+                                                      @bind-SelectedItem="selectedItem" FixedHeader="true" Height="@(true || false ?"300px":"")"
+                                                      SortLabel="Sort By">
+                                                <ToolBarContent>
+                                                    <MudToolBarSpacer />
+                                                    <MudTextField @bind-Value="_searchTerm" Placeholder="Search" Adornment="Adornment.End"
+                                                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"
+                                                                  Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true"></MudTextField>
+                                                </ToolBarContent>
+                                                <HeaderContent>
+                                                    <MudTh><MudTableSortLabel SortBy="new Func<AdminUserRegistrationListModel, object>(x=>x.id)">Id</MudTableSortLabel></MudTh>
+                                                    <MudTh><MudTableSortLabel SortBy="new Func<AdminUserRegistrationListModel, object>(x=>x.activeStatusDetails)">Status</MudTableSortLabel></MudTh>
+                                                    <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<AdminUserRegistrationListModel, object>(x=>x.loginUserId)">Login Id</MudTableSortLabel></MudTh>
+                                                    <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<AdminUserRegistrationListModel, object>(x=>x.firstName)">First Name</MudTableSortLabel></MudTh>
+                                                    <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<AdminUserRegistrationListModel, object>(x=>x.middleName)">Middle Name</MudTableSortLabel></MudTh>
+                                                    <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<AdminUserRegistrationListModel, object>(x=>x.lastName)">Last Name</MudTableSortLabel></MudTh>
+                                                    <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<AdminUserRegistrationListModel, object>(x=>x.userRoleName)">Role Name</MudTableSortLabel></MudTh>
+                                                    <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<AdminUserRegistrationListModel, object>(x=>x.email)">Email</MudTableSortLabel></MudTh>
+                                                    <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<AdminUserRegistrationListModel, object>(x=>x.createdByUser)">Created By</MudTableSortLabel></MudTh>
+                                                    <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<AdminUserRegistrationListModel, object>(x=>x.createdDate)">Created Date</MudTableSortLabel></MudTh>
+                                                    <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<AdminUserRegistrationListModel, object>(x=>x.id)">Action</MudTableSortLabel></MudTh>
+
+                                                </HeaderContent>
+                                                <RowTemplate>
+                                                    @*<MudTd DataLabel="loginUserId">
+                                                            <MudHighlighter Text="@context.loginUserId" HighlightedText="@_searchTerm" />
+                                                        </MudTd>*@
+                                                    <MudTd DataLabel="Id">@context.id</MudTd>
+                                                    <MudTd DataLabel="activeStatusDetails">@context.activeStatusDetails</MudTd>
+                                                    <MudTd DataLabel="loginUserId">@context.loginUserId</MudTd>
+                                                    <MudTd DataLabel="firstName">@context.firstName</MudTd>
+
+                                                    <MudTd DataLabel="middleName">@context.middleName</MudTd>
+                                                    <MudTd DataLabel="lastName">@context.lastName</MudTd>
+                                                    <MudTd DataLabel="userRoleName">@context.userRoleName</MudTd>
+                                                    <MudTd DataLabel="email">@context.email</MudTd>
+                                                    <MudTd DataLabel="createdByUser">@context.createdByUser</MudTd>
+                                                    <MudTd DataLabel="createdDate">@context.createdDate</MudTd>
+
+                                                    <MudTd DataLabel="Action">
+                                                        <MudIconButton @onclick="@(()=>Edit(@context.id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2"></MudIconButton>
+                                                        @*<MudIconButton OnClick="@(()=>DeleteRecord(@context.Id))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2"></MudIconButton>*@
+                                                    </MudTd>
+                                                </RowTemplate>
+                                                <PagerContent>
+                                                    <MudTablePager />
+                                                </PagerContent>
+                                            </MudTable>
+                                        }
+                                    </MudCard>
+                                </MudItem>
+                            </MudGrid>
+                        </MudCardContent>
+                    </MudExpansionPanel>
+
+                </MudExpansionPanels>
+            </MudCard>
+        </MudItem>
+    </MudItem>
+</MudGrid>
+
+
+

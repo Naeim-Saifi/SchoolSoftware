@@ -1,0 +1,12 @@
+﻿@page "/Razorpay/Payment1"
+@inherits Payment1Base
+@inject IJSRuntime js
+
+<button id="RzP_btn" hidden>Pay</button>
+
+
+<form action="CompleteOrderProcess" method="post" asp-antiforgery="true">
+    <input type="hidden" id="rzp_paymentid" name="rzp_paymentid" />
+    <input type="hidden" id="rzp_orderid" name="rzp_orderid" />
+    <button type="submit" id="rzp-paymentresponse" class="btn btn-primary" hidden>Submit</button>
+</form>

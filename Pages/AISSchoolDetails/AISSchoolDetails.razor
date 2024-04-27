@@ -1,0 +1,162 @@
+﻿@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Calendars
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Layouts
+@using AdminDashboard.Server.Models.Enquiry;
+@using AIS.Model.MasterData;
+@using AIS.Data.RequestResponseModel.AISSchoolDetails;
+@using System.ComponentModel.DataAnnotations;
+ 
+
+@page "/AISSchoolDetails/AISSchoolDetails"
+
+@inherits AISSchoolDetailsBase
+@{
+
+    var InitSearch1 = (new string[] { "periodName" });
+    //var Tool = (new List<string>() { "Search" });
+}
+
+<MudGrid>
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="12" CellAspectRatio="2" AllowResizing="false">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>School Details</HeaderTemplate>
+                <ContentTemplate>
+                    @if (schoolDetailsListModels.Count > 0)
+                    {
+                        <SfGrid DataSource="@schoolDetailsListModels"
+                                EnableVirtualMaskRow="true"
+                                RowHeight="38" Height="410"
+                                Width="auto" EnableVirtualization="false"
+                                AllowResizing="true" AllowExcelExport="true"
+                                EnableAutoFill="true" AllowReordering="true"
+                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                @ref="Grid"
+                                Toolbar="@(new string[] {"Add", "Edit" ,"Delete","Update","Cancel","Search", "Print", "ColumnChooser" })">
+                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                            <GridSearchSettings Fields=@InitSearch1 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                IgnoreCase="true"></GridSearchSettings>
+
+                            <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+                            <GridEvents OnActionBegin="ActionBeginHandler" OnActionComplete="ActionCompleteHandler" TValue="SchoolDetailsListModel"></GridEvents>
+                            <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true" Mode="@EditMode.Dialog" Dialog="DialogParams">
+
+                                <Template>
+
+                                    @{
+                                        var enquiryView = (context as SchoolDetailsListModel);
+                                    }
+
+                                    <MudGrid>
+                                        <DataAnnotationsValidator />
+                                        <MudItem xs="12" sm="3" md="12">
+                                            <SfTextBox ID="school_Name" @bind-Value="@(enquiryView.school_Name)"
+                                                       FloatLabelType="FloatLabelType.Never" Placeholder="School Name">
+                                                <ValidationMessage For="@(() => enquiryView.school_Name)"></ValidationMessage>
+                                            </SfTextBox>
+                                        </MudItem>
+                                        <MudItem xs="12" sm="3" md="6">
+                                            <SfTextBox ID="address" @bind-Value="@(enquiryView.address)"
+                                                       Multiline="true" FloatLabelType="FloatLabelType.Never" Placeholder="Address Details">
+
+                                                <ValidationMessage For="@(() => enquiryView.address)"></ValidationMessage>
+                                            </SfTextBox>
+                                        </MudItem>
+                                        <MudItem xs="12" sm="3" md="6">
+                                            <SfTextBox ID="location" @bind-Value="@(enquiryView.location)"
+                                                       Multiline="true" FloatLabelType="FloatLabelType.Never" Placeholder="Location Details"></SfTextBox>
+                                        </MudItem>
+                                        <MudItem xs="12" sm="3" md="6">
+                                            <SfTextBox ID="director_Name" @bind-Value="@(enquiryView.director_Name)"
+                                                       FloatLabelType="FloatLabelType.Never" Placeholder="Director Name">
+                                            </SfTextBox>
+                                        </MudItem>
+                                        <MudItem xs="12" sm="3" md="6">
+                                            <SfTextBox ID="directore_MobileNo" @bind-Value="@(enquiryView.directore_MobileNo)"
+                                                       FloatLabelType="FloatLabelType.Never" Placeholder="Directore Mobile No"></SfTextBox>
+                                        </MudItem>
+                                        <MudItem xs="12" sm="3" md="6">
+                                            <SfTextBox ID="principal_Name" @bind-Value="@(enquiryView.principal_Name)"
+                                                       FloatLabelType="FloatLabelType.Never" Placeholder="Principal Name"></SfTextBox>
+                                        </MudItem>
+                                        <MudItem xs="12" sm="3" md="6">
+                                            @*<SfTextBox ID="principal_MobileNo" @bind-Value="@(enquiryView.principal_MobileNo)"
+                   Placeholder="Principal Mobile No">
+        </SfTextBox>*@
+                                            @*<SfNumericTextBox ID="pMobileNo" FloatLabelType="FloatLabelType.Never"
+                                                              @bind-Value="@(enquiryView.principal_MobileNo)"
+                                                              Placeholder="Principal Mobile No"></SfNumericTextBox>*@
+                                            <SfMaskedTextBox Mask="(000)-000-0000" EnableLiterals="@IncludeLiterals" 
+                                                             @bind-Value="@(enquiryView.principal_MobileNo)"
+                                                             Placeholder="Principal Mobile No"
+                                                             ></SfMaskedTextBox>
+                                        </MudItem>
+                                        <MudItem xs="12" sm="3" md="6">
+                                            <SfTextBox ID="principal_MobileNo" @bind-Value="@(enquiryView.emailID)"
+                                                       FloatLabelType="FloatLabelType.Never" Placeholder="Email ID">
+                                            </SfTextBox>
+                                        </MudItem>
+                                        <MudItem xs="12" sm="3" md="6">
+                                            <SfDropDownList ID="ClassId" TValue="string" TItem="VisitingStatus"
+                                                            CssClass="e-outline" Placeholder="Select Visiting Status"
+                                                            FloatLabelType="@FloatLabelType.Never"
+                                                            AllowFiltering="false"
+                                                            @bind-Value="@enquiryView.visitingRemarks"
+                                                            DataSource="@visitingStatus">
+                                                <DropDownListFieldSettings Text="Value" Value="id" />
+
+                                                <ValidationMessage For="() => enquiryView.visitingRemarks" />
+                                            </SfDropDownList>
+                                        </MudItem>
+                                        <MudItem xs="12" sm="3" md="6">
+                                            <SfTextBox ID="visitingRemarks" @bind-Value="@(enquiryView.visitingRemarks)"
+                                                       Multiline="true" FloatLabelType="FloatLabelType.Never" Placeholder="Visiting Remarks"></SfTextBox>
+                                        </MudItem>
+                                    </MudGrid>
+
+                                </Template>
+                            </GridEditSettings>
+                            <GridColumns>
+                                @*<GridColumn Field=@nameof(OrdersDetails.OrderID) HeaderText="Order ID" IsPrimaryKey="true" ValidationRules="@(new ValidationRules{ Required=true, Number=true})" TextAlign="@TextAlign.Center" HeaderTextAlign="@TextAlign.Center" Width="140"></GridColumn>
+        <GridColumn Field=@nameof(OrdersDetails.CustomerID) HeaderText="Customer ID" ValidationRules="@(new ValidationRules{ Required=true})" Width="150"></GridColumn>
+        <GridColumn Field=@nameof(OrdersDetails.Freight) Format="C2" Width="140" TextAlign="@TextAlign.Right" ValidationRules="@(new ValidationRules{ Required=true, Range = new object[]{1, 1000}})" HeaderTextAlign="@TextAlign.Right"></GridColumn>
+        <GridColumn Field=@nameof(OrdersDetails.OrderDate) HeaderText="Order Date" Format="d" TextAlign="TextAlign.Right" Type="ColumnType.Date" Width="160"></GridColumn>*@
+                                <GridColumn Field=@nameof(SchoolDetailsListModel.id) HeaderText="Schoo Id" Width="20" AllowEditing="true" AllowAdding="false"></GridColumn>
+
+                                <GridColumn Field=@nameof(SchoolDetailsListModel.school_Name) HeaderText="School Name" Width="40" AllowEditing="true" AllowAdding="false"></GridColumn>
+                                <GridColumn Field=@nameof(SchoolDetailsListModel.address) HeaderText="Address" Width="40" AllowEditing="true" AllowAdding="false"></GridColumn>
+                                <GridColumn Field=@nameof(SchoolDetailsListModel.location) HeaderText="Location" Width="40" AllowEditing="true" AllowAdding="false"></GridColumn>
+                                <GridColumn Field=@nameof(SchoolDetailsListModel.director_Name) HeaderText="Director" Width="40" AllowEditing="true" AllowAdding="false"></GridColumn>
+                                <GridColumn Field=@nameof(SchoolDetailsListModel.directore_MobileNo) HeaderText="Director Mobile No" Width="40" AllowEditing="true" AllowAdding="false"></GridColumn>
+                                <GridColumn Field=@nameof(SchoolDetailsListModel.principal_Name) HeaderText="Principal Name" Width="40" AllowEditing="true" AllowAdding="false"></GridColumn>
+                                <GridColumn Field=@nameof(SchoolDetailsListModel.principal_MobileNo) HeaderText="Principal Mobile No" Width="40" AllowEditing="true" AllowAdding="false"></GridColumn>
+                                @*<GridColumn Field=@nameof(SchoolDetailsListModel.address) HeaderText="Address" Width="40" AllowEditing="true" AllowAdding="false"></GridColumn>*@
+                                <GridColumn Field=@nameof(SchoolDetailsListModel.emailID) HeaderText="Email ID " Width="40" AllowEditing="true" AllowAdding="false"></GridColumn>
+
+                                <GridColumn Field=@nameof(SchoolDetailsListModel.visitingRemarks) HeaderText="Visiting Remarks" Width="40" AllowEditing="true" AllowAdding="false"></GridColumn>
+
+                            </GridColumns>
+                            <SfToolbar>
+                                <ToolbarItems>
+                                    <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>
+                                    @*<ToolbarItem Text="Map Subject & Class Section" Align="ItemAlign.Center"
+                                        SuffixIcon="e-outline e-icons e-plus-icon"
+                                        OnClick="@OpenDialog"></ToolbarItem>*@
+                                    @*<ToolbarItem Text="Add Time Table" OnClick="@ShowDialog" CssClass="e-flat" Align="ItemAlign.Right"></ToolbarItem>
+                                        <ToolbarItem Text="Settings" Align="ItemAlign.Right"></ToolbarItem>*@
+                                </ToolbarItems>
+                            </SfToolbar>
+                        </SfGrid>
+                    }
+
+
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+</MudGrid>

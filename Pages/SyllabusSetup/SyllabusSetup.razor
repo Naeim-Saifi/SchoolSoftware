@@ -1,0 +1,152 @@
+﻿@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using AdminDashboard.Server.Models.Holiday;
+@using AdminDashboard.Server.Models.SyllabusSetup;
+@using AdminDashboard.Server.Models.MasterConfiguration.SubjectMaster;
+@using AdminDashboard.Server.Models.MasterConfiguration.UnitMaster;
+@using AIS.Model.MasterData;
+@*@page "/Syllabus/SyllabusSetup"*@
+@inherits SyllabusSetupBase
+
+
+@{
+
+    var InitSearch1 = (new string[] { "MonthName", "name", "unitTitle" });
+    //var Tool = (new List<string>() { "Search" });
+}
+
+<MudGrid>
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="9" CellAspectRatio="2" AllowResizing="true">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Syllabus Master Setup</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@syllabusSetupListModels" 
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="410"
+                            Width="auto" EnableVirtualization="true"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="false"
+                            ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            @ref="Grid"
+                            AllowTextWrap="true" GridLines="GridLine.Both"
+                            Toolbar="@(new string[] {"Add","Delete","Update","Cancel","Search","Print","ColumnChooser"  })">
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox">
+                        </GridFilterSettings>
+                        <GridTextWrapSettings WrapMode="WrapMode.Content"></GridTextWrapSettings>
+                        <GridEditSettings   AllowAdding="true" AllowEditing="false" AllowDeleting="true"Mode="EditMode.Dialog"Dialog="DialogParams"/>       
+                         
+                        <GridPageSettings PageSize="25"></GridPageSettings>
+                        <GridEvents OnActionBegin="ActionBegin" TValue="SyllabusSetupListModel"></GridEvents>                       
+                        <GridSearchSettings Fields=@InitSearch1 Operator=Syncfusion.Blazor.Operator.Contains Key=""IgnoreCase="true"></GridSearchSettings>
+                        <GridColumns>
+                            <GridColumn Field="@nameof(SyllabusSetupListModel.syllabusId)" HeaderText="Id" Width="50" AllowEditing="false"
+                                        TextAlign="TextAlign.Center" IsPrimaryKey="true"></GridColumn>
+
+                            <MudItem xs="12" md="6" sm="12">
+                                <SfDateRangePicker TValue="DateTime?" Placeholder="Select a FromDate and  EndDate" StartDate="@fromDate"
+                                                   EndDate="@toDate"
+                                                   FloatLabelType="@FloatLabelType.Never">
+                                    @*<ValidationMessage For="@(() => _unitWiseMarksEntryViewModel.StartDate)"></ValidationMessage>*@
+                                </SfDateRangePicker>
+                            </MudItem>
+                            <GridColumn Field=@nameof(SyllabusSetupListModel.monthNameDetails) HeaderText="Month Name"
+                                        EditType="EditType.DropDownEdit" AllowAdding="true" AllowEditing="false"
+                                        ValidationRules="@(new ValidationRules{ Required= true })" Width="150">
+                                <EditTemplate>
+                                    <SfDropDownList ID="MonthId" Placeholder="Select a Month Name"
+                                                    @bind-Value="@((context as SyllabusSetupListModel).monthNameDetails)"
+                                                    DataSource="@monthNameLists">
+                                        <DropDownListFieldSettings Text="MonthName" Value="MonthId"></DropDownListFieldSettings>
+                                    </SfDropDownList>
+                                </EditTemplate>
+                            </GridColumn>
+
+
+                            <GridColumn Field=@nameof(SyllabusSetupListModel.className) HeaderText="Class Name"
+                                        AllowAdding="true" AllowEditing="true"
+                                        EditType="EditType.DropDownEdit" Width="150" ValidationRules="@(new ValidationRules{ Required= true })">
+                                <EditTemplate>
+                                    <SfDropDownList ID="classid" Placeholder="Select a Class" TItem="MasterClassListModel" TValue="string"
+                                                    @bind-Value="@((context as SyllabusSetupListModel).className)" DataSource="@masterClassListModels">
+                                        <DropDownListEvents TValue="string" TItem="MasterClassListModel" ValueChange="OnChangeClass"></DropDownListEvents>
+                                        <DropDownListFieldSettings Text="name" Value="masterClassId"></DropDownListFieldSettings>
+                                    </SfDropDownList>
+                                </EditTemplate>
+                            </GridColumn>
+
+
+                            <GridColumn Field=@nameof(SyllabusSetupListModel.subjectName) AllowAdding="true" AllowEditing="false"
+                                        HeaderText="Subject Name" ValidationRules="@(new ValidationRules{ Required= true })"
+                                        EditType="EditType.DropDownEdit" Width="150">
+                                <EditTemplate>
+                                    <SfDropDownList ID="SubjectId" Placeholder="Select a Subject" TItem="MapsubjectwithClassModel" TValue="string"
+                                                    @bind-Value="@((context as SyllabusSetupListModel).subjectName)" DataSource="@_mapSubjectList">
+                                        <DropDownListEvents TValue="string" TItem="MapsubjectwithClassModel" ValueChange="OnChangeSubject"></DropDownListEvents>
+                                        <DropDownListFieldSettings Text="subjectName" Value="masterSubjectId"></DropDownListFieldSettings>
+                                    </SfDropDownList>
+                                </EditTemplate>
+                            </GridColumn>
+
+
+                            <GridColumn Field=@nameof(SyllabusSetupListModel.unitName) AllowAdding="true" AllowEditing="false"
+                                        HeaderText="Unit Name" ValidationRules="@(new ValidationRules{ Required= true })"
+                                        EditType="EditType.DropDownEdit" Width="150">
+                                <EditTemplate>
+                                    <SfDropDownList ID="SubjecunittId" Placeholder="Select a Unit" TItem="TopicMasterListModel" TValue="string"
+                                                    @bind-Value="@((context as SyllabusSetupListModel).unitName)" DataSource="@_unitList">
+                                        <DropDownListEvents TValue="string" TItem="TopicMasterListModel" ValueChange="OnChangeUnit"></DropDownListEvents>
+                                        <DropDownListFieldSettings Text="unitTitle" Value="subjectUnitId"></DropDownListFieldSettings>
+                                    </SfDropDownList>
+                                </EditTemplate>
+                            </GridColumn>
+
+                            <GridColumn Field=@nameof(SyllabusSetupListModel.chapterName) AllowAdding="true"
+                                        AllowEditing="true" HeaderText="Chapter Name"
+                                        ValidationRules="@(new ValidationRules{ Required= true })"
+                                        EditType="EditType.DropDownEdit" Width="150">
+                                <EditTemplate>
+                                    <SfDropDownList ID="SubjecunittId" Placeholder="Select a Clapter" TItem="TopicMasterListModel" TValue="string"
+                                                    @bind-Value="@((context as SyllabusSetupListModel).chapterName)" DataSource="@_chapterList">
+                                        <DropDownListEvents TValue="string" TItem="TopicMasterListModel" ValueChange="OnChangeChapter"></DropDownListEvents>
+                                        <DropDownListFieldSettings Text="chapterTitle" Value="subjectChapterId"></DropDownListFieldSettings>
+                                    </SfDropDownList>
+                                </EditTemplate>
+                            </GridColumn>
+
+                            <GridColumn Field=@nameof(SyllabusSetupListModel.topicName) AllowAdding="true"
+                                        AllowEditing="false" HeaderText="Topic Name"
+                                        ValidationRules="@(new ValidationRules{ Required= true })"
+                                        EditType="EditType.DropDownEdit" Width="150">
+                                <EditTemplate>
+                                    <SfDropDownList ID="SubjecunittId" Placeholder="Select a Clapter" TItem="TopicMasterListModel" TValue="string"
+                                                    @bind-Value="@((context as SyllabusSetupListModel).topicName)" DataSource="@_topicList">
+                                        <DropDownListFieldSettings Text="topicTitle" Value="subjectTopicId"></DropDownListFieldSettings>
+                                    </SfDropDownList>
+                                </EditTemplate>
+                            </GridColumn>
+
+                        </GridColumns>
+                        <SfToolbar>
+                            <ToolbarItems>
+                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>
+
+                                <ToolbarItem Text="Search" Align="ItemAlign.Right"></ToolbarItem>
+                                <ToolbarItem Text="Settings" Align="ItemAlign.Right"></ToolbarItem>
+                            </ToolbarItems>
+                        </SfToolbar>
+                    </SfGrid>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+
+</MudGrid>

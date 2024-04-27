@@ -1,0 +1,482 @@
+﻿@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@using Microsoft.AspNetCore.Components.Forms
+@using AIS.Data.RequestResponseModel.TransactionSetUp;
+@page "/User_Pages/Transaction/PendingFee/PendingFee"
+@inherits PendingFeeBase
+
+
+@{
+
+    var InitSearchStudentName = (new string[] { "studentName", "fatherName", "fatherContactNumber", "busStopName" });
+}
+<MudGrid>
+    <MudItem xs="12" sm="12" md="11">
+        <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+            <DashboardLayoutPanels>
+                <DashboardLayoutPanel SizeX=7 SizeY="2">
+            <HeaderTemplate>Student Pending Fee List</HeaderTemplate>
+            <ContentTemplate>
+
+                <SfGrid DataSource="@allStudentPendingFees"
+                                EnableVirtualMaskRow="true"
+                                RowHeight="38" Height="710"
+                                Width="auto" EnableVirtualization="false"
+                                AllowResizing="true" AllowExcelExport="true"
+                                EnableAutoFill="true" AllowReordering="true"
+                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                @ref="_pendingFee"
+                                Toolbar=toolBarPendingFee>
+                     
+                    <GridPageSettings PageCount="50" PageSizes="true"></GridPageSettings>
+                    <GridGroupSettings EnableLazyLoading="true"></GridGroupSettings>
+
+                            <GridEvents CommandClicked="EditFlowUp" OnToolbarClick="ToolBarClick" QueryCellInfo="CustomizeCell" TValue=Pending_Fee_List_Output_Model></GridEvents>
+                    <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+                    <GridPageSettings PageSize="15" PageSizes="true"></GridPageSettings>
+                    <GridSearchSettings Fields=@InitSearchStudentName Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                        IgnoreCase="true"></GridSearchSettings>
+                    <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+
+
+
+                    <GridAggregates>
+                        <GridAggregate>
+                            <GridAggregateColumns>
+                                <GridAggregateColumn Field=@nameof(Pending_Fee_List_Output_Model.netDueAmount) Type="AggregateType.Sum">
+                                    <GroupFooterTemplate>
+                                        @{
+                                            var Unit = (context as AggregateTemplateContext);
+                                            <div>
+                                                Total: @Unit.Sum
+                                            </div>
+                                        }
+                                    </GroupFooterTemplate>
+                                </GridAggregateColumn>
+                            </GridAggregateColumns>
+                        </GridAggregate>
+                    </GridAggregates>
+
+                    <GridColumns>
+                        <GridColumn Field=@nameof(Pending_Fee_List_Output_Model.pendingFeeId) IsPrimaryKey="true"
+                                    HeaderText="PendingFee Id" TextAlign="TextAlign.Left" Width="60" Visible="false">
+                        </GridColumn>
+
+                        <GridColumn Field=@nameof(Pending_Fee_List_Output_Model.accountId) IsPrimaryKey="true"
+                                    HeaderText="User Id" TextAlign="TextAlign.Left" Width="60" Visible="false">
+                        </GridColumn>
+                        <GridColumn Field=@nameof(Pending_Fee_List_Output_Model.className)
+                                    HeaderText="Class" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true>
+                        </GridColumn>
+                        <GridColumn Field=@nameof(Pending_Fee_List_Output_Model.sectionName)
+                                    HeaderText="Section" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true>
+                        </GridColumn>
+                        <GridColumn Field=@nameof(Pending_Fee_List_Output_Model.studentName)
+                                    HeaderText="student Name" TextAlign="TextAlign.Right" AllowGrouping=false AutoFit=true>
+                        </GridColumn>
+                        <GridColumn Field=@nameof(Pending_Fee_List_Output_Model.fatherName)
+                                    HeaderText="Father Name" TextAlign="TextAlign.Right" AllowGrouping=false AutoFit=true>
+                        </GridColumn>
+                        <GridColumn Field=@nameof(Pending_Fee_List_Output_Model.fatherContactNumber)
+                                    HeaderText="Father Number" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true>
+                        </GridColumn>
+                        <GridColumn Field=@nameof(Pending_Fee_List_Output_Model.motherName)
+                                    HeaderText="Mother Name" TextAlign="TextAlign.Right" AllowGrouping=false AutoFit=true>
+                        </GridColumn>
+                        <GridColumn Field=@nameof(Pending_Fee_List_Output_Model.motherContactNumber)
+                                    HeaderText="Mother Number" TextAlign="TextAlign.Right" AllowGrouping=false AutoFit=true>
+                        </GridColumn> 
+                        <GridColumn Field=@nameof(Pending_Fee_List_Output_Model.busStopName)
+                                            HeaderText="BusStop" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true>
+                        </GridColumn>
+                        <GridColumn Field=@nameof(Pending_Fee_List_Output_Model.monthName)
+                                            HeaderText="Month" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true>
+                        </GridColumn>
+                        <GridColumn Field=@nameof(Pending_Fee_List_Output_Model.feeCategory)
+                                            HeaderText="Fee Category" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true Visible="false">
+                        </GridColumn>
+
+                        <GridColumn Field=@nameof(Pending_Fee_List_Output_Model.flowupStatus)
+                                            HeaderText="Flowup Status" TextAlign="TextAlign.Right" AllowGrouping=false AutoFit=true>
+                        </GridColumn>
+                                <GridColumn Field=@nameof(Pending_Fee_List_Output_Model.flowupCount)
+                                            HeaderText="Flowup Count" TextAlign="TextAlign.Right" AllowGrouping=false AutoFit=true>
+                                </GridColumn>
+                        
+                        <GridColumn Field=@nameof(Pending_Fee_List_Output_Model.netDueAmount)
+                                    HeaderText="Total Due" TextAlign="TextAlign.Right" AllowGrouping=false AutoFit=true>
+                        </GridColumn>
+                                <GridColumn HeaderText="Action" TextAlign="TextAlign.Center" AutoFit=true>
+                                    <GridCommandColumns>
+                                        @* <GridCommandColumn ButtonOption="@(new CommandButtonOptions() { Content = "Delete", CssClass = "e-flat" })" Title="Call"></GridCommandColumn> *@
+                                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="FlowUp", IconCss = "e-icons e-add e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                        @*<GridCommandColumn ButtonOption="@(new CommandButtonOptions() { Content = "Active", CssClass = "e-flat" })" Title="Active"></GridCommandColumn>*@
+                                    </GridCommandColumns>
+                                </GridColumn>
+                        <GridColumn Field=@nameof(Pending_Fee_List_Output_Model.listGenratedDate)
+                                    HeaderText="GeneratedDate" TextAlign="TextAlign.Right" AllowGrouping=false AutoFit=true Format="d" Type="ColumnType.Date">
+                        </GridColumn>
+                        <GridColumn Field=@nameof(Pending_Fee_List_Output_Model.lastDueDate)
+                                    HeaderText="lastDueDate" TextAlign="TextAlign.Left" Width="60" Visible="false">
+                        </GridColumn>
+                        
+                    </GridColumns>                    
+                 
+                </SfGrid>
+            </ContentTemplate>
+        </DashboardLayoutPanel>
+    </DashboardLayoutPanels>
+</SfDashboardLayout>
+</MudItem>
+</MudGrid>
+
+
+             
+<MudGrid>
+     
+    <MudItem xs="12" sm="12" md="12">
+        <SfDialog @ref="@DialogRef" Width="1450px" AllowDragging="true" Height="" IsModal="true" ShowCloseIcon="true" @bind-Visible="@IsEditVisible">
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>
+                    <Header>@DialogHeaderName </Header>
+                    <Content>
+                        <MudGrid>
+                            <MudItem xs="12" md="4" sm="12">
+                            <EditForm Model="pendingFeeFollowUpDetailsViewModel" OnValidSubmit="OnValidSubmit">
+                                     <DataAnnotationsValidator />
+                                    <MudCardContent>
+                                        <MudGrid>
+                                      
+                                       
+                                            <MudItem xs="12" sm="12" md="6">
+                                            <label>Student's Name-@studentName</label><br />
+                                        </MudItem>
+                                            <MudItem xs="12" sm="12" md="6">
+                                                <label>Father's Name-@fatherName</label><br />
+                                            </MudItem>
+                                            <MudItem xs="12" sm="12" md="6">
+                                                <label>Contact No-@fatherMobileNo</label><br />
+                                            </MudItem>
+                                            
+                                            <MudItem xs="12" sm="12" md="6">
+                                                <b><label>Net Due Amount-@netDueAmount</label><br /></b>
+                                            </MudItem>
+                                            <MudItem xs="12" sm="12" md="12">
+                                               <b> <label>Pending month-@pendingFeeMonth</label></b>
+                                            </MudItem>
+                                        
+
+                                            <MudItem xs="12" md="6" sm="3">
+                                            <label>Flowup Date:</label>
+                                            <SfTextBox CssClass="e-outline" Placeholder="FollowUp Date" Multiline=false Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                            @bind-Value="@pendingFeeFollowUpDetailsViewModel.FollowUpDate" Enabled=false
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                            <ValidationMessage For="() => pendingFeeFollowUpDetailsViewModel.FollowUpDate" />
+                                             
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <label>Flowup Time:</label>
+                                            <SfTextBox CssClass="e-outline" Placeholder="FollowUp Date" Multiline=false Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                            @bind-Value="@pendingFeeFollowUpDetailsViewModel.FollowUptime" Enabled=false
+                                                       FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                            <ValidationMessage For="() => pendingFeeFollowUpDetailsViewModel.FollowUptime" />
+
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <label>Call Status:</label>
+                                                <SfDropDownList TValue="string" TItem="CallStatus" CssClass="e-outline"
+                                                                Placeholder="Select call status" FloatLabelType="@FloatLabelType.Never"
+                                                            AllowFiltering="true" FilterType="Syncfusion.Blazor.DropDowns.FilterType.Contains"
+                                                            @bind-Value="@pendingFeeFollowUpDetailsViewModel.CallStatus"
+                                                            DataSource="@callStatusList">
+                                                <DropDownListFieldSettings Text="Text" Value="ID" />
+                                                <ValidationMessage For="() => pendingFeeFollowUpDetailsViewModel.CallStatus" />
+                                                </SfDropDownList>
+                                            </MudItem>
+                                        <MudItem xs="12" md="6" sm="6">
+                                            <label>Next flowup Date:</label>
+                                            <SfDatePicker TValue="DateTime?" Value="@DateValue" Placeholder="Next flowup date" >
+                                                <DatePickerEvents TValue="DateTime?" ValueChange="@onChange" ></DatePickerEvents>
+                                            </SfDatePicker>
+                                        </MudItem>
+                                        <MudItem xs="12" md="12" sm="3">
+                                            <SfTextBox CssClass="e-outline" Placeholder="FollowUp  Description" Multiline=true Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                            @bind-Value="@pendingFeeFollowUpDetailsViewModel.FollowUpRemarks"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                            <ValidationMessage For="() => pendingFeeFollowUpDetailsViewModel.FollowUpRemarks" />
+                                             
+                                        </MudItem>
+
+                                        
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfButton CssClass=@btncss type="submit" IsPrimary="true">@HeaderText</SfButton>
+                                             
+                                                <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>
+                                            </MudItem>
+                                        </MudGrid>
+                                    </MudCardContent> 
+                                </EditForm>
+                            </MudItem>
+                            @*Time Table details*@
+                                <MudItem xs="12" md="8" sm="12">
+                                            <SfTab ID="Ej2Tab" Height="100%">
+                                                <TabItems>
+                                                    <TabItem>
+                                                        <HeaderTemplate>
+                                                               Student Transaction Details
+                                                        </HeaderTemplate>
+                                                        <ContentTemplate>
+                                                        <MudItem xs="12" md="12" sm="12">
+                                                <SfGrid DataSource="@_transaction_List"
+                                                @ref="_sfgridTransaction"
+                                                        EnableVirtualMaskRow="true"
+                                                        RowHeight="38" Height="450"
+                                                        Width="auto" EnableVirtualization="false"
+                                                        AllowResizing="true" AllowExcelExport="true"
+                                                        EnableAutoFill="true" AllowReordering="true"
+                                                        ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
+                                                        AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                                       >
+
+                                                    <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                                    <GridPageSettings PageSize="30"></GridPageSettings>
+                                                    @* <GridGroupSettings Columns="@GroupedColumn"></GridGroupSettings>*@
+                                                    <GridTemplates>
+                                                        <DetailTemplate>
+                                                            @{
+                                                                var employee = (context as Transaction_List_Output_Model);
+                                                                <SfGrid DataSource="@_transaction_Header_List" AllowExcelExport="true" AllowPdfExport="true"
+                                                                        Query="@(new Query().Where("receiptId", "equal", employee.receiptId))">
+                                                                    <GridColumns>
+                                                                        <GridColumn Field=@nameof(Transaction_Header_List_Output_Model.feeHeaderName) HeaderText="Header Name" AutoFit=true> </GridColumn>
+                                                                        <GridColumn Field=@nameof(Transaction_Header_List_Output_Model.amount) HeaderText="Amount" AutoFit=true></GridColumn>
+                                                                        <GridColumn Field=@nameof(Transaction_Header_List_Output_Model.discountAmount) HeaderText="Discount" AutoFit=true></GridColumn>
+                                                                        <GridColumn Field=@nameof(Transaction_Header_List_Output_Model.receivedAmount) HeaderText="Received" AutoFit=true></GridColumn>
+                                                                        <GridColumn Field=@nameof(Transaction_Header_List_Output_Model.feeReceivedDate) HeaderText="Date" AutoFit=true></GridColumn>
+                                                                    </GridColumns>
+                                                                </SfGrid>
+                                                            }
+                                                        </DetailTemplate>
+                                                    </GridTemplates>
+
+                                                    <GridEditSettings AllowDeleting="true" Mode="EditMode.Normal"></GridEditSettings>
+                                                    <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                                    <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+                                                  @*   <GridEvents OnToolbarClick="ToolbarClickHandler" TValue="Transaction_List_Output_Model"></GridEvents> *@
+
+
+                                                    <GridColumns>
+                                                        <GridColumn Field=@nameof(Transaction_List_Output_Model.receiptId) HeaderText="Receipt Id" AutoFit=true
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(Transaction_List_Output_Model.paymentMode) HeaderText="Payment Mode" AutoFit=true
+                                                                    AllowGrouping="true"></GridColumn>
+                                                        <GridColumn Field=@nameof(Transaction_List_Output_Model.monthName) HeaderText="Month Name" AutoFit=true
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(Transaction_List_Output_Model.totalAmount) HeaderText="Total Amount" AutoFit=true
+                                                                    AllowGrouping="false">
+                                                        </GridColumn>
+                                                        <GridColumn Field=@nameof(Transaction_List_Output_Model.discount) HeaderText="Discount" AutoFit=true
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(Transaction_List_Output_Model.netAmount) HeaderText="Net Amount" AutoFit=true
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(Transaction_List_Output_Model.paidAmount) HeaderText="Paid Amount" AutoFit=true
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(Transaction_List_Output_Model.dueAmount) HeaderText="Due Amount" AutoFit=true
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(Transaction_List_Output_Model.advanceAmount) HeaderText="Advance" AutoFit=true
+                                                                    AllowGrouping="false"></GridColumn>
+
+                                                        <GridColumn Field=@nameof(Transaction_List_Output_Model.bankName) HeaderText="Bank Name" AutoFit=true
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(Transaction_List_Output_Model.chequeNoTransactionN) HeaderText="Cheque or Transaction " AutoFit=true
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(Transaction_List_Output_Model.cheqDate) HeaderText="Date" AutoFit=true
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(Transaction_List_Output_Model.branchName) HeaderText="Branch Name" AutoFit=true
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(Transaction_List_Output_Model.receiptBy) HeaderText="Receipt By" AutoFit=true
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(Transaction_List_Output_Model.paymentDate) HeaderText="Payment Date" AutoFit=true
+                                                                    AllowGrouping="false"></GridColumn>
+                                                        <GridColumn Field=@nameof(Transaction_List_Output_Model.remarks) HeaderText="Remark" AutoFit=true
+                                                                    AllowGrouping="false" Visible="false"></GridColumn>
+                                                    </GridColumns>
+
+                                                </SfGrid>
+                                                        </MudItem>
+                                                    </ContentTemplate>
+                                                    </TabItem>
+                                                    @*Table Formate Time Table*@
+                                    <TabItem>
+                                        <HeaderTemplate>
+                                            Flow up history
+                                        </HeaderTemplate>
+                                        <ContentTemplate>
+                                            <MudItem xs="12" md="12" sm="12">
+                                               
+                                            </MudItem>
+                                        </ContentTemplate>
+                                    </TabItem>
+                                                </TabItems>
+                                            </SfTab>
+                     </MudItem>
+                            @*End TimeTable*@
+                        </MudGrid>
+                    </Content>
+                </DialogTemplates>
+                <DialogAnimationSettings Delay="400" Effect="DialogEffect.Zoom">
+                </DialogAnimationSettings>
+                <DialogPositionData X="center" Y="center"></DialogPositionData>
+            </SfDialog>
+        
+        </MudItem>
+        
+    
+</MudGrid>
+
+
+@code {
+    private string Xvalue = "center";
+    private string Yvalue = "center";
+
+     /*
+     * Gets or sets the name of the animation that should be used when opening and closing the SfDialog.
+     * The following are the list of animation effects available to configure to the dialog:
+
+    Fade
+    FadeZoom
+    FlipLeftDown
+    FlipLeftUp
+    FlipRightDown
+    FlipRightUp
+    FlipXDown
+    FlipXUp
+    FlipYLeft
+    FlipYRight
+    SlideBottom
+    SlideLeft
+    SlideRight
+     SlideTop
+     Zoom
+    None.
+    */
+
+}
+
+
+
+
+
+
+
+
+
+<style>
+
+
+    .below-No {
+        background-color: orangered;
+    }
+
+    .below-3 {
+        background-color: yellow;
+    }
+
+    .below-0 {
+        background-color: orange;
+    }
+
+    .below-1 {
+        background-color: cornflowerblue;
+    }
+
+    .above-Yes {
+        background-color: greenyellow
+    }
+
+    .e-toolbar-item .e-tbar-btn {
+        background-color: orange;
+    }
+
+    .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+
+    .e-dialog .e-dlg-header {
+        color: cornflowerblue;
+        font-size: 20px;
+        font-weight: normal;
+    }
+
+
+
+    html,
+    body,
+    #container {
+        height: 100%;
+        overflow: hidden;
+        width: 100%;
+        position: relative;
+        min-height: 400px;
+    }
+
+    .text {
+        text-transform: capitalize;
+    }
+
+    #customization {
+        display: table;
+        margin: 0 auto;
+    }
+
+    .animate {
+        display: table-cell;
+        padding-left: 20px;
+    }
+
+    @@media only screen and (max-width: 360px) {
+        #customization {
+            display: inline-block;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .animate {
+            display: inline-block;
+            padding: 10px;
+        }
+    }
+    /*  .e-rowcell.e-attr {
+                        background-color: lightgrey;
+                    }*/
+
+    /* .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+                        position: fixed;
+                    }*/
+
+    /*
+
+                    .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
+                        transition: none;
+                    }*/
+    /*.e-content .e-item {
+                        font-size: 12px;
+                        padding: 10px;
+                        text-align: justify;
+                    }*/
+</style>

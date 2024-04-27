@@ -1,0 +1,143 @@
+﻿
+@page "/Mapping/MapTeacherWithSubject"
+@inherits MapTeacherWithSubjectBase
+@using AIS.Model.Mapping
+@using AIS.Model.GeneralConversion
+
+<MudGrid>
+    <MudItem xs="12" sm="4" md="4">
+        <MudItem xs="12" sm="3" md="12">
+            <MudCard Elevation="25">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText>Map Teacher With Subject</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    @*<div class="d-flex justify-center mb-4">*@
+                    <EditForm Model="@mapSubjectWithTeacherModel" OnValidSubmit="OnValidSubmit">
+                        <DataAnnotationsValidator />
+                        <MudCard Elevation="5">
+                            <MudCardContent>
+                                <MudGrid>
+                                    <MudItem xs="12" md="6" sm="3">
+                                        <MudSelect Label="Select Status" @bind-Value="SelectClass"
+                                                   Variant="Variant.Outlined"
+                                                   Margin="Margin.Dense" Class="mt-4">
+
+                                            @foreach (var className in masterClassListModel)
+                                            {
+                                                <MudSelectItem Value="@className.name">@className.name</MudSelectItem>
+                                            }
+                                        </MudSelect>
+                                    </MudItem>
+
+                                    <MudItem xs="12" md="6" sm="3">
+                                        <MudSelect Label="Select Status" @bind-Value="SelectSection"
+                                                   Variant="Variant.Outlined"
+                                                   Margin="Margin.Dense" Class="mt-4">
+
+                                            @foreach (var sectionName in masterSectionListModel)
+                                            {
+                                                <MudSelectItem Value="@sectionName.name">@sectionName.name</MudSelectItem>
+                                            }
+                                        </MudSelect>
+                                    </MudItem>
+
+
+                                </MudGrid>
+                            </MudCardContent>
+                            <MudCardActions Class="d-flex justify-space-between align-center">
+
+                                <MudButton @onclick="@(()=>Cancel())" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Cancel" Color="Color.Warning" Size="Size.Small" Class="ml-n1 my-3">Cancel</MudButton>
+                                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Size="Size.Small">Save</MudButton>
+
+                            </MudCardActions>
+                        </MudCard>
+                    </EditForm>
+                    @*</div>*@
+
+                </MudCardContent>
+
+            </MudCard>
+        </MudItem>
+    </MudItem>
+
+    <MudItem xs="12" sm="8" md="8">
+        <MudItem xs="12" sm="3" md="12">
+            <MudCard Elevation="25">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText>Class With Subject Details</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem xs="12">
+                            <MudCard>
+
+                                @if (subjectWithTeacherList.Count == 0)
+                                {
+                                    <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                                }
+                                else
+                                {
+                                    <MudTable Items="@SubjectWithTeacherList()" Dense="true" Hover="true" Bordered="true" Striped="true"
+                                              @bind-SelectedItem="selectedItem" FixedHeader="true" Height="@(true || false ?"300px":"")"
+                                              SortLabel="Sort By">
+                                        <ToolBarContent>
+                                            <MudToolBarSpacer />
+                                            <MudTextField @bind-Value="_searchTerm" Placeholder="Search with TeacherName,Subjecct Name,ClassName" Adornment="Adornment.End"
+                                                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"
+                                                          Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true"></MudTextField>
+                                        </ToolBarContent>
+                                        <HeaderContent>
+                                            <MudTh><MudTableSortLabel SortBy="new Func<MapSubjectWithTeacherList, object>(x=>x.subjectTeacherMappingId)">MapId</MudTableSortLabel></MudTh>
+                                            <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<MapSubjectWithTeacherList, object>(x=>x.teacherName)">TeacherName</MudTableSortLabel></MudTh>
+                                            <MudTh><MudTableSortLabel SortBy="new Func<MapSubjectWithTeacherList, object>(x=>x.classname)">ClassName</MudTableSortLabel></MudTh>
+                                            <MudTh><MudTableSortLabel SortBy="new Func<MapSubjectWithTeacherList, object>(x=>x.sectionName)">SectionName</MudTableSortLabel></MudTh>
+                                            <MudTh><MudTableSortLabel SortBy="new Func<MapSubjectWithTeacherList, object>(x=>x.subjectName)">SubjectName</MudTableSortLabel></MudTh>
+                                            <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<MapSubjectWithTeacherList, object>(x=>x.activeStatusDetails)">Status</MudTableSortLabel></MudTh>
+                                            <MudTh><MudTableSortLabel SortBy="new Func<MapSubjectWithTeacherList, object>(x=>x.createdByUser)">CreatedBy</MudTableSortLabel></MudTh>
+                                            <MudTh><MudTableSortLabel SortBy="new Func<MapSubjectWithTeacherList, object>(x=>x.createdDate)">CreatedDate</MudTableSortLabel></MudTh>
+                                            <MudTh>Action</MudTh>
+                                        </HeaderContent>
+                                        <RowTemplate>
+                                            <MudTd DataLabel="MapId">@context.subjectTeacherMappingId</MudTd>
+                                            <MudTd DataLabel="Teacher Name">
+                                                <MudHighlighter Text="@context.teacherName" HighlightedText="@_searchTerm" />
+                                            </MudTd>
+                                            <MudTd DataLabel="Class Name">
+                                                <MudHighlighter Text="@context.classname" HighlightedText="@_searchTerm" />
+                                            </MudTd>
+                                            <MudTd DataLabel="Section Name">
+                                                <MudHighlighter Text="@context.sectionName" HighlightedText="@_searchTerm" />
+                                            </MudTd>
+                                            <MudTd DataLabel="Subject Name">
+                                                <MudHighlighter Text="@context.subjectName" HighlightedText="@_searchTerm" />
+                                            </MudTd>
+                                            <MudTd DataLabel="Active Status">@context.activeStatusDetails</MudTd>
+                                            <MudTd DataLabel="Created By">@context.createdByUser</MudTd>
+                                            <MudTd DataLabel="Created Date">@context.createdDate</MudTd>
+                                            <MudTd DataLabel="Action">
+                                                @*<MudIconButton @onclick="@(()=>Edit(@context.masterBatchId))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2"></MudIconButton>*@
+                                                @*<MudIconButton OnClick="@(()=>DeleteRecord(@context.subjectId))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2"></MudIconButton>*@
+                                            </MudTd>
+                                        </RowTemplate>
+                                        <PagerContent>
+                                            <MudTablePager />
+                                        </PagerContent>
+                                    </MudTable>
+                                }
+                            </MudCard>
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+                @*<MudCardActions Class="pb-4 pl-4">
+
+                    </MudCardActions>*@
+            </MudCard>
+        </MudItem>
+    </MudItem>
+
+</MudGrid>

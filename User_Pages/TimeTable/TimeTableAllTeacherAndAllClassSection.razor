@@ -1,0 +1,168 @@
+﻿@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@using AIS.Data.RequestResponseModel.MasterData;
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
+@using AIS.Data.RequestResponseModel.TimeTableSetUp;
+@using AIS.Model.Employee;
+@using AIS.Data.RequestResponseModel.Employee;
+@using Microsoft.AspNetCore.Components.Forms
+@page "/User_Pages/TimeTable/TimeTableAllTeacherAndAllClassSection"
+
+@inherits TimeTableAllTeacherAndAllClassSectionBase
+
+@{
+
+ var initialGroupbyTeacher = (new string[] { "teacherName" });
+    var initialGroupbyClassSection = (new string[] { "className", "sectionName" });
+ }
+
+<MudGrid>
+                            
+    @* @* @*Time Table Teacher Wise details*@
+    <MudItem xs="12" md="8" sm="12">
+            <SfTab ID="Ej2Tab" Height="100%">
+    <TabItems>
+        <TabItem>
+        <HeaderTemplate>
+        Teacher Tabular Format
+        </HeaderTemplate>
+    <ContentTemplate>
+    <MudItem xs="12" md="12" sm="12">
+    <SfGrid DataSource="@_timeTableForAllTeacher"
+                @ref="sfTeacherFormat"
+                                    EnableVirtualMaskRow="true"
+                                    RowHeight="38" Height="710"
+                                    Width="auto" EnableVirtualization="false"
+                                    AllowResizing="true" AllowExcelExport="true"
+                                    EnableAutoFill="true" AllowReordering="true"
+                                    ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                    AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                                Toolbar=toolBarItems>
+                <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                <GridPageSettings PageSize="50" PageSizes="true"></GridPageSettings>
+                <GridEvents OnToolbarClick="TeacherFormatToolBarClick" TValue="TimeTableTabularFormate"></GridEvents>
+                <GridGroupSettings Columns=@initialGroupbyTeacher>
+                <CaptionTemplate>
+                @{
+                var UnitDetails = (context as CaptionTemplateContext);
+                <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                }
+                </CaptionTemplate>
+                </GridGroupSettings>
+                 <GridAggregates>
+                            <GridAggregate>
+                                <GridAggregateColumns>
+                                            <GridAggregateColumn Field=@nameof(TimeTableTabularFormate.totalPeriod) Type="AggregateType.Sum">
+                                        <GroupFooterTemplate>
+                                            @{
+                                                var Unit = (context as AggregateTemplateContext);
+                                                <div>
+                                                            TotalPeriod:@Unit.Sum
+                                                </div>
+                                            }
+                                        </GroupFooterTemplate>
+                                    </GridAggregateColumn>                                     
+                                     </GridAggregateColumns>
+                                     </GridAggregate>
+                                </GridAggregates>
+                               
+            <GridColumns>
+                    <GridColumn Field=@nameof(TimeTableTabularFormate.teacherName) HeaderText="Teacher Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                     <GridColumn Field=@nameof(TimeTableTabularFormate.dayName) HeaderText="Day Name" TextAlign="TextAlign.Left" Width="40"></GridColumn> 
+                    <GridColumn Field=@nameof(TimeTableTabularFormate.period1) HeaderText="Period-1" TextAlign="TextAlign.Right" Width="40"></GridColumn>
+                    <GridColumn Field=@nameof(TimeTableTabularFormate.period2) HeaderText="Period-2" TextAlign="TextAlign.Center" Width="40"></GridColumn>
+                    <GridColumn Field=@nameof(TimeTableTabularFormate.period3) HeaderText="Period-3" TextAlign="TextAlign.Right"Width="40"></GridColumn>
+                    <GridColumn Field=@nameof(TimeTableTabularFormate.period4) HeaderText="Period-4" TextAlign="TextAlign.Left" Width="40"></GridColumn>
+                    <GridColumn Field=@nameof(TimeTableTabularFormate.period5) HeaderText="Period-5" TextAlign="TextAlign.Right"Width="40"></GridColumn>
+                    <GridColumn Field=@nameof(TimeTableTabularFormate.period6) HeaderText="Period-6" TextAlign="TextAlign.Left" Width="40"></GridColumn>
+                    <GridColumn Field=@nameof(TimeTableTabularFormate.period7) HeaderText="Period-7" TextAlign="TextAlign.Right"Width="40"></GridColumn>
+                    <GridColumn Field=@nameof(TimeTableTabularFormate.period8) HeaderText="Period-8" TextAlign="TextAlign.Left" Width="40"></GridColumn>
+                    <GridColumn Field=@nameof(TimeTableTabularFormate.period9) HeaderText="Period-9" TextAlign="TextAlign.Left" Width="40"></GridColumn>
+                    <GridColumn Field=@nameof(TimeTableTabularFormate.totalPeriod) HeaderText="Total Period" TextAlign="TextAlign.Left" Width="40"></GridColumn>
+            </GridColumns>
+
+    </SfGrid>
+    </MudItem>
+    </ContentTemplate>
+    </TabItem>
+    @*Table Formate Time Table*@
+    <TabItem>
+            <HeaderTemplate>
+            Class Section tabluar format
+            </HeaderTemplate>
+            <ContentTemplate>
+            <MudItem xs="12" md="12" sm="12">
+                            <SfGrid DataSource="@_timeTableForAllClassSection"
+                            @ref="sfclassSectionFormat"
+                                    
+                                    EnableVirtualMaskRow="true"
+                                    RowHeight="38" Height="710"
+                                    Width="auto" EnableVirtualization="false"
+                                    AllowResizing="true" AllowExcelExport="true"
+                                    EnableAutoFill="true" AllowReordering="true"
+                                    ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                    AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                    Toolbar=toolBarItems>
+                                <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                <GridPageSettings PageSize="50" PageSizes="true"></GridPageSettings>
+                                <GridEvents OnToolbarClick="ClassSectionFormatToolBarClick" TValue="TimeTableTabularFormate"></GridEvents>
+                                <GridGroupSettings Columns=@initialGroupbyClassSection>
+                                    <CaptionTemplate>
+                                        @{
+                                            var UnitDetails = (context as CaptionTemplateContext);
+                                            <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                        }
+                                    </CaptionTemplate>
+                                </GridGroupSettings>
+                                <GridAggregates>
+                                    <GridAggregate>
+                                        <GridAggregateColumns>
+                                            <GridAggregateColumn Field=@nameof(TimeTableTabularFormate.totalPeriod) Type="AggregateType.Sum">
+                                                <GroupFooterTemplate>
+                                                    @{
+                                                        var Unit = (context as AggregateTemplateContext);
+                                                        <div>
+                                                            TotalPeriod:@Unit.Sum
+                                                        </div>
+                                                    }
+                                                </GroupFooterTemplate>
+                                            </GridAggregateColumn>
+                                        </GridAggregateColumns>
+                                    </GridAggregate>
+                                </GridAggregates>
+
+                                <GridColumns>
+                                    <GridColumn Field=@nameof(TimeTableTabularFormate.className) HeaderText="Class" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                    <GridColumn Field=@nameof(TimeTableTabularFormate.sectionName) HeaderText="Section" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                    <GridColumn Field=@nameof(TimeTableTabularFormate.dayName) HeaderText="Day Name" TextAlign="TextAlign.Left" Width="40"></GridColumn>
+                                    <GridColumn Field=@nameof(TimeTableTabularFormate.period1) HeaderText="Period-1" TextAlign="TextAlign.Right" Width="40"></GridColumn>
+                                    <GridColumn Field=@nameof(TimeTableTabularFormate.period2) HeaderText="Period-2" TextAlign="TextAlign.Center" Width="40"></GridColumn>
+                                    <GridColumn Field=@nameof(TimeTableTabularFormate.period3) HeaderText="Period-3" TextAlign="TextAlign.Right" Width="40"></GridColumn>
+                                    <GridColumn Field=@nameof(TimeTableTabularFormate.period4) HeaderText="Period-4" TextAlign="TextAlign.Left" Width="40"></GridColumn>
+                                    <GridColumn Field=@nameof(TimeTableTabularFormate.period5) HeaderText="Period-5" TextAlign="TextAlign.Right" Width="40"></GridColumn>
+                                    <GridColumn Field=@nameof(TimeTableTabularFormate.period6) HeaderText="Period-6" TextAlign="TextAlign.Left" Width="40"></GridColumn>
+                                    <GridColumn Field=@nameof(TimeTableTabularFormate.period7) HeaderText="Period-7" TextAlign="TextAlign.Right" Width="40"></GridColumn>
+                                    <GridColumn Field=@nameof(TimeTableTabularFormate.period8) HeaderText="Period-8" TextAlign="TextAlign.Left" Width="40"></GridColumn>
+                                    <GridColumn Field=@nameof(TimeTableTabularFormate.period9) HeaderText="Period-9" TextAlign="TextAlign.Left" Width="40"></GridColumn>
+                                    <GridColumn Field=@nameof(TimeTableTabularFormate.totalPeriod) HeaderText="Total Period" TextAlign="TextAlign.Left" Width="40"></GridColumn>
+                                </GridColumns>
+
+                            </SfGrid>
+            </MudItem>
+            </ContentTemplate>
+            </TabItem>
+    </TabItems>
+    </SfTab>
+    </MudItem>
+    @*End TimeTable*@
+    </MudGrid> 

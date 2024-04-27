@@ -1,0 +1,158 @@
+﻿@using Syncfusion.Blazor.Grids
+@using AIS.Data.RequestResponseModel.StudentSetUp;
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Charts
+@page "/User_Pages/Student/StudentList"
+@inherits StudentListBase
+@{
+
+    var InitSearch2 = (new string[] { "firstName", "sdmissionNumber", "emailID", "feeCategoryID", "busStopID", "fatherContactNo", "motherContactNo"});
+    var InitialGroupColumn = (new string[] { "className", "sectionName" });
+}
+
+
+
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+            <DashboardLayoutPanels>
+                <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Student List</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@_studentList" 
+                            @ref="_sfgridstudent"
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="710"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            ContextMenuItems="MenuItems" 
+                            Toolbar="toolBarItems">
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                            <GridPageSettings PageSizes="@(new string[] { "25", "50","100", "150", "200",  "All" })" PageSize="@pageSize"></GridPageSettings>
+                        <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
+                        <GridGroupSettings Columns=@InitialGroupColumn>
+                            <CaptionTemplate>
+                                @{
+                                    var UnitDetails = (context as CaptionTemplateContext);
+                                    <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                }
+                            </CaptionTemplate>
+                        </GridGroupSettings>
+
+                           
+                        <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+                        <GridEvents OnToolbarClick="ToolbarClick" TValue="Student_List_Output_Model"></GridEvents>
+                        <GridColumns>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.accountID) HeaderText="AccountID" TextAlign="TextAlign.Right"  Visible=true AllowGrouping=true AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Student_List_Output_Model.className) HeaderText="Class Name" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.sectionName) HeaderText="Section Name"   TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Student_List_Output_Model.firstName) HeaderText="First Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.middleName) HeaderText="MiddleName"  TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            
+                                <GridColumn Field=@nameof(Student_List_Output_Model.lastName) HeaderText="Last Name"  TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.emailID) HeaderText="Email ID" TextAlign="TextAlign.Right" Visible=true AllowGrouping=true AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Student_List_Output_Model.userId) HeaderText="User Id" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.withdrawalNumber) HeaderText="Withdrawal Number" TextAlign="TextAlign.Right" Visible=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.sdmissionNumber) HeaderText="Admission ID" TextAlign="TextAlign.Right" Visible=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.aadharNumber) HeaderText="Aadhar Number" TextAlign="TextAlign.Right" Visible=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.sRNNumber) HeaderText="SRN Number" TextAlign="TextAlign.Right" Visible=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.admissionDate) HeaderText="Admission Date" TextAlign="TextAlign.Right" Visible=true AllowGrouping=true AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Student_List_Output_Model.rollNo) HeaderText="Roll No" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.dob) HeaderText="DOB" TextAlign="TextAlign.Right" Visible=true AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Student_List_Output_Model.gender) HeaderText="Gender" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.religion) HeaderText="Religion" TextAlign="TextAlign.Right" Visible=true AutoFit =true></GridColumn>
+                            <GridColumn Field=@nameof(Student_List_Output_Model.fatherName) HeaderText="Father Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Student_List_Output_Model.motherName) HeaderText="Mother Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Student_List_Output_Model.fatherContactNo) HeaderText="Father ContactNo" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Student_List_Output_Model.motherContactNo) HeaderText="MotherContact No" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.bloodGroup) HeaderText="Blood Group" Visible=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.feeCategoryID) HeaderText="FeeCategory ID" Visible=true TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.gender) HeaderText="Gender" TextAlign="TextAlign.Right" Visible=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.busStopID) HeaderText="BusStop" TextAlign="TextAlign.Right" Visible=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.address1) HeaderText="Address1" TextAlign="TextAlign.Right" Visible=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.address2) HeaderText="Address2" TextAlign="TextAlign.Right" Visible=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.stateName) HeaderText="StateName" TextAlign="TextAlign.Right" Visible=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.city) HeaderText="City" TextAlign="TextAlign.Right" Visible=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Student_List_Output_Model.pinCode) HeaderText="PinCode"  TextAlign="TextAlign.Right" Visible=true AutoFit=true></GridColumn>
+                            
+                        </GridColumns>
+                        
+                    </SfGrid>
+
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+
+
+            </DashboardLayoutPanels>
+    </SfDashboardLayout>
+    </MudItem>
+</MudGrid>
+
+<style>
+    .e-toolbar-item .e-tbar-btn {
+        background-color: orange;
+    }
+
+    .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+
+    .e-dialog .e-dlg-header {
+        color: cornflowerblue;
+        font-size: 20px;
+        font-weight: normal;
+    }
+
+    .detailtable td {
+        font-weight: normal;
+        font-size: 14px;
+        padding: 4px;
+        max-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .photo {
+        width: 100px;
+        height: 100px;
+        border-radius: 50px;
+        box-shadow: inset 0 0 1px #e0e0e0, inset 0 0 14px rgba(0,0,0,0.2);
+    }
+
+    /*  .e-rowcell.e-attr {
+                        background-color: lightgrey;
+                    }*/
+
+    /* .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+                        position: fixed;
+                    }*/
+
+    /*
+
+                    .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
+                        transition: none;
+                    }*/
+    /*.e-content .e-item {
+                        font-size: 12px;
+                        padding: 10px;
+                        text-align: justify;
+                    }*/
+</style>
+

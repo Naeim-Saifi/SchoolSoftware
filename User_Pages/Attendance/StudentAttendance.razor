@@ -1,0 +1,371 @@
+﻿@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@using AIS.Data.RequestResponseModel.RemarksTypeMaster;
+@using AIS.Data.RequestResponseModel.MasterData;
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
+@using Syncfusion.Blazor.Grids
+@using AIS.Data.RequestResponseModel.StudentSetUp;
+@using AdminDashboard.Server.API_Service.Service.Attendance;
+@using AIS.Data.RequestResponseModel.Attendance
+@page "/User_Pages/Attendance/StudentAttendance"
+@using Syncfusion.Blazor.Grids
+@inherits StudentAttendanceBase
+
+@{
+
+
+    var InitSearch2 = (new string[] { "holidayType" });
+    var Tool = (new List<string>() { "Search" });
+    var InitialGroupColumn = (new string[] { "className" });
+}
+ 
+<MudGrid>
+    <MudItem xs="12" sm="12" md="6">
+        <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+            <DashboardLayoutPanels>
+                <DashboardLayoutPanel SizeX=7 SizeY="2">
+                    <HeaderTemplate>Student Attendance List</HeaderTemplate>
+                    <ContentTemplate>
+                        <SfGrid DataSource="@_todayAttendanceLists"
+                                EnableVirtualMaskRow="true"
+                                RowHeight="38" Height="710"
+                                Width="auto" EnableVirtualization="false"
+                                AllowResizing="true" AllowExcelExport="true"
+                                EnableAutoFill="true" AllowReordering="true"
+                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                ContextMenuItems="MenuItems"
+                        @ref="sfTodayAttendanceList"
+                                Toolbar="toolBarItems">
+                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                            <GridPageSettings PageSizes="@(new string[] { "All","25", "50","100", "150", "200"   })" PageSize="@pageSize"></GridPageSettings>
+                            @* <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>*@
+                            <GridGroupSettings Columns=@InitialGroupColumn>
+                                <CaptionTemplate>
+                                    @{
+                                        var UnitDetails = (context as CaptionTemplateContext);
+                                        <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                    }
+                                </CaptionTemplate>
+                            </GridGroupSettings>
+
+                            <GridEvents OnToolbarClick="toolBarItemsClick" CommandClicked="EditCommandClick" TValue=TodayAttendanceList></GridEvents>
+                            <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                IgnoreCase="true"></GridSearchSettings>
+                            <GridColumns>
+                                <GridColumn Field=@nameof(TodayAttendanceList.className) HeaderText="Class" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TodayAttendanceList.sectionName) HeaderText="Section" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TodayAttendanceList.present) HeaderText="Present" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                           
+                                <GridColumn Field=@nameof(TodayAttendanceList.absent) HeaderText="Absent" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TodayAttendanceList.leave) HeaderText="Leave" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TodayAttendanceList.holiday) HeaderText="Holiday" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TodayAttendanceList.attendanceDate) HeaderText="attendanceDate" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                
+                                <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                    <GridCommandColumns>
+                                        <GridCommandColumn Type="CommandButtonType.None" ButtonOption="@(new CommandButtonOptions() { Content="View", IconCss = "e-icons e-view e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                    </GridCommandColumns>
+                                </GridColumn>
+                                @* <GridColumn Field=@nameof(TodayAttendanceList.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TodayAttendanceList.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn> *@
+                                <GridColumn Field=@nameof(TodayAttendanceList.createdByUser) HeaderText="CreatedBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TodayAttendanceList.updatedByUser) HeaderText="UpdateBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            </GridColumns>
+                        </SfGrid>
+                    </ContentTemplate>
+                </DashboardLayoutPanel>
+            </DashboardLayoutPanels>
+        </SfDashboardLayout>
+    </MudItem>
+</MudGrid>
+
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        <MudItem xs="12" sm="12" md="12">
+            <SfDialog @ref="@DialogRef" Width="1450px" AllowDragging="true" IsModal="false" ShowCloseIcon="true" @bind-Visible="@IsVisible">
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>
+                    <Header>
+                        @DialogHeaderName
+                    </Header>
+                    <Content>
+                        <MudGrid>
+                            <MudItem xs="12" md="4" sm="4">
+                                <EditForm Model="_studentAttendanceViewModel" OnValidSubmit="OnValidSubmit">
+                                    <DataAnnotationsValidator />
+                                    <MudCardContent>
+                                        <MudGrid>                                         
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfDropDownList ID="ClassId" TValue="string" TItem="Master_CLass_List_Output_Model"
+                                                                CssClass="e-outline" Placeholder="Select a Class"
+                                                                FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                                Enabled="ddEnable"
+                                                @bind-Value="@_studentAttendanceViewModel.classId"
+                                                                DataSource="@_classList">
+                                                    <DropDownListFieldSettings Text="className" Value="classId" />
+                                                        <DropDownListEvents TItem="Master_CLass_List_Output_Model" TValue="string"
+                                                                            ValueChange="OnChangeClass" />
+                                                    <ValidationMessage For="() => _studentAttendanceViewModel.classId" />
+                                                </SfDropDownList>
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfDropDownList ID="SectionId" TValue="string" TItem="Master_Section_List_Output_Model"
+                                                                CssClass="e-outline" Placeholder="Select a Section"
+                                                                FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                                Enabled="ddEnable"
+                                                @bind-Value="@_studentAttendanceViewModel.sectionId"
+                                                                DataSource="@_sectionList">
+                                                    <DropDownListFieldSettings Text="sectionName" Value="sectionId" />
+                                                    <DropDownListEvents TItem="Master_Section_List_Output_Model" TValue="string"
+                                                                        ValueChange="OnChangeSection" />
+                                                    <ValidationMessage For="() => _studentAttendanceViewModel.sectionId" />
+                                                </SfDropDownList>
+                                            </MudItem>
+
+                                           <MudItem xs="12" md="6" sm="6">
+                                               @*  <SfDatePicker TValue="DateTime?"  ></SfDatePicker>
+                                                <DatePickerEvents TValue="DateTime?" ValueChange="onChange"></DatePickerEvents> *@
+                                                <SfDatePicker TValue="DateTime?" Value="DateValue">
+                                                    <DatePickerEvents TValue="DateTime?" ValueChange="onChange"></DatePickerEvents>
+                                                </SfDatePicker>
+                                           </MudItem>
+
+                                            
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                              @*   <SfButton CssClass=@btncss type="submit" IsPrimary="true">@HeaderText</SfButton> *@
+                                                @*<SfButton CssClass="e-outline" OnClick="@CloseDialog">Cancel</SfButton>*@
+                                                <SfButton Type="button" CssClass=@btncss IsToggle="false " IsPrimary="false" Content="Save Attendance" OnClick="@SaveStudentAttendanceAsync"></SfButton>
+                                                <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>
+                                               
+                                            </MudItem>
+                                         
+                                         </MudGrid>
+                                        
+                                         
+                                    </MudCardContent>
+                                </EditForm>
+                                <label>Total Student @_totalStudent</label><br />
+                                <label>Total Student Present-@_presentStudent</label><br />
+                                <label>Total Student Absent-@_absentStudent</label><br />
+                                <label>Total Student Leave-@_leaveStudent</label><br />
+                                
+                            </MudItem>
+                           <MudItem xs="12" md="8" sm="8">
+                                <SfGrid DataSource="@_studentAttendanceList"
+                                        AllowTextWrap="true"
+                                        EnableVirtualMaskRow="true"
+                                        RowHeight="38" Height="510"
+                                        Width="auto" EnableVirtualization="false"
+                                        AllowResizing="true" AllowExcelExport="true"
+                                        EnableAutoFill="true" AllowReordering="true"
+                                        ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
+                                        AllowFiltering="false" AllowPaging="true" ShowColumnMenu="false"
+                                    @ref="sfstudentDetails" Toolbar="@(new List<string>() { "Edit",  "Cancel", "Update" })">
+                                    <GridPageSettings PageCount="100" PageSizes="true"></GridPageSettings>
+                                     <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true" Mode="EditMode.Normal">                                   
+                                    </GridEditSettings>
+                                    <GridEvents QueryCellInfo="CustomizeCell" TValue="StudentAttendanceListModel"></GridEvents>
+                                    <GridColumns>
+                                        <GridColumn Field="@nameof(StudentAttendanceListModel.studentID)" HeaderText="Student ID" IsPrimaryKey="true" TextAlign="TextAlign.Center" AutoFit=true></GridColumn>
+                                        <GridColumn Field="@nameof(StudentAttendanceListModel.firstName)" HeaderText="First Name" AllowEditing="false" TextAlign="TextAlign.Center" AutoFit=true></GridColumn>
+                                        <GridColumn Field="@nameof(StudentAttendanceListModel.fatherName)" HeaderText="Father Name" AllowEditing="false" TextAlign="TextAlign.Center" AutoFit=true></GridColumn>
+                                        <GridColumn Field="@nameof(StudentAttendanceListModel.rollNo)" HeaderText="Roll No" AllowEditing="false" TextAlign="TextAlign.Center" AutoFit=true></GridColumn>
+                                        <GridColumn Field="@nameof(StudentAttendanceListModel.status)" HeaderText="Status" Type="ColumnType.Number" AutoFit=true>
+                                            <EditTemplate>
+                                                @{
+                                                    var Order = (context as StudentAttendanceListModel);
+                                                    <SfDropDownList @ref="DropDownList" ID="Edge" DataSource="@DropDownEnumValue" @bind-Value="@((context as StudentAttendanceListModel).status)"
+                                                                    TValue="AttendanceStatus" TItem="string" Placeholder="Feedback Detail" FloatLabelType="FloatLabelType.Always">
+                                                    </SfDropDownList>
+                                                }
+                                            </EditTemplate>
+                                        </GridColumn>
+                                    </GridColumns>
+                                </SfGrid>
+                           </MudItem>
+                        </MudGrid>
+
+                    </Content>
+                </DialogTemplates>
+                <DialogAnimationSettings Effect="@AnimationEffect" Duration=400 />
+                <DialogPositionData X="center" Y="center"></DialogPositionData>
+            </SfDialog>
+        </MudItem>
+    </MudItem>
+</MudGrid>
+
+
+<style>
+
+    .absent {
+        background-color: orangered;
+    }
+
+    .leave {
+        background-color: yellow;
+    }
+
+    .holiday {
+        background-color: orange;
+    }
+
+
+
+    .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+
+    .e-dialog .e-dlg-header {
+        color: cornflowerblue;
+        font-size: 20px;
+        font-weight: normal;
+    }
+
+
+
+    html,
+    body,
+    #container {
+        height: 100%;
+        overflow: hidden;
+        width: 100%;
+        position: relative;
+        min-height: 400px;
+    }
+
+    .text {
+        text-transform: capitalize;
+    }
+
+    #customization {
+        display: table;
+        margin: 0 auto;
+    }
+
+    .animate {
+        display: table-cell;
+        padding-left: 20px;
+    }
+
+    @@media only screen and (max-width: 360px) {
+        #customization {
+            display: inline-block;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .animate {
+            display: inline-block;
+            padding: 10px;
+        }
+    }
+    /*  .e-rowcell.e-attr {
+                                background-color: lightgrey;
+                            }*/
+
+    /* .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+                                position: fixed;
+                            }*/
+
+    /*
+
+                            .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
+                                transition: none;
+                            }*/
+    /*.e-content .e-item {
+                                font-size: 12px;
+                                padding: 10px;
+                                text-align: justify;
+                            }*/
+</style>
+
+@* <SfGrid DataSource="@Orders" AllowSelection="false" EnableHover="false" Height="315">
+    <GridEvents QueryCellInfo="CustomizeCell" TValue="OrderData"></GridEvents>
+    <GridColumns>
+        <GridColumn Field=@nameof(OrderData.OrderID) HeaderText="Order ID" TextAlign="TextAlign.Right" Width="140"></GridColumn>
+        <GridColumn Field=@nameof(OrderData.CustomerID) HeaderText="Customer ID" Width="120"></GridColumn>
+        <GridColumn Field=@nameof(OrderData.Freight) HeaderText="Freight" Format="C2" Width="100"></GridColumn>
+        <GridColumn Field=@nameof(OrderData.ShipCity) HeaderText="Ship City" Width="100"></GridColumn>
+    </GridColumns>
+</SfGrid>
+@code {
+    public List<OrderData> Orders { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Orders = Enumerable.Range(1, 75).Select(x => new OrderData()
+            {
+                OrderID = 1000 + x,
+                CustomerID = (new string[] { "ALFKI", "ANANTR", "ANTON", "BLONP", "BOLID" })[new Random().Next(5)],
+                ShipCity = (new string[] { "Berlin", "Madrid", "Cholchester", "Marseille", "Tsawassen" })[new Random().Next(5)],
+                Freight = 2.1 * x,
+
+            }).ToList();
+    }
+
+    public void GetAllRecords()
+    {
+       
+    }
+
+    public void CustomizeCell(QueryCellInfoEventArgs<OrderData> args)
+    {
+        if (args.Column.Field == "Freight")
+        {
+            if (args.Data.Freight < 30)
+            {
+                args.Cell.AddClass(new string[] { "below-30" });
+            }
+            else if (args.Data.Freight < 80)
+            {
+                args.Cell.AddClass(new string[] { "below-80" });
+            }
+            else
+            {
+                args.Cell.AddClass(new string[] { "above-80" });
+            }
+        }
+    }
+
+    public class OrderData
+    {
+        public int OrderID { get; set; }
+        public string CustomerID { get; set; }
+        public double Freight { get; set; }
+        public string ShipCity { get; set; }
+    }
+
+}
+<style>
+    .below-30 {
+        background-color: orangered;
+    }
+
+    .below-80 {
+        background-color: yellow;
+    }
+
+    .above-80 {
+        background-color: greenyellow
+    }
+</style> *@

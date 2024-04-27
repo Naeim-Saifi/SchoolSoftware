@@ -1,0 +1,74 @@
+﻿@page "/FeeConfigurationDetails/FeeConfigurationList"
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Buttons;
+@using AdminDashboard.Server.Models.FeeConfigurationList;
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Notifications
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Navigations
+
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Buttons
+
+@inherits FeeConfigurationListBase
+
+<MudGrid>
+    @if (feeConfigurationListModel.Count == 0)
+    {
+        <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+    }
+    else
+    {
+
+        <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+            <DashboardLayoutPanels>
+                <DashboardLayoutPanel SizeX=5 SizeY="2">
+                    <HeaderTemplate>Fee Configuration Details</HeaderTemplate>
+                    <ContentTemplate>
+                        <SfGrid DataSource="@feeConfigurationListModel"
+                                EnableVirtualMaskRow="true"
+                                RowHeight="38" Height="410"
+                                Width="auto" EnableVirtualization="false"
+                                AllowResizing="true" AllowExcelExport="true"
+                                EnableAutoFill="true" AllowReordering="true"
+                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                @ref="Grid"
+                                Toolbar="@(new string[] {"Search","Print","ColumnChooser" })">
+                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                            @*<GridEvents OnActionBegin="ActionBeginHandler" TValue="UnitMasterListModel"></GridEvents>*@
+                            <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+                            <GridPageSettings PageCount="5" PageSizes="true"></GridPageSettings>
+
+
+                            <GridColumns>
+
+                                <GridColumn Field=@nameof(FeeConfigurationModel.className) HeaderText="Class Name" Width="60"></GridColumn>
+                                <GridColumn Field=@nameof(FeeConfigurationModel.categoryDetails) HeaderText="Category Details" Width="60"></GridColumn>
+                                <GridColumn Field=@nameof(FeeConfigurationModel.headerDetails) HeaderText="Header Details" AllowGrouping="false" Width="120"></GridColumn>
+                                <GridColumn Field=@nameof(FeeConfigurationModel.amount) HeaderText="Amount" Width="60" ></GridColumn> 
+                                <GridColumn Field=@nameof(FeeConfigurationModel.feeHeaderEditable) HeaderText="EditMode" Width="60"></GridColumn>
+                                <GridColumn Field=@nameof(FeeConfigurationModel.monthDetails) HeaderText="Month Details" AllowGrouping="false" Width="120"></GridColumn>
+
+
+
+                            </GridColumns>
+                            <SfToolbar>
+                                <ToolbarItems>
+                                    <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>
+
+                                    <ToolbarItem Text="Search" Align="ItemAlign.Right"></ToolbarItem>
+                                    <ToolbarItem Text="Settings" Align="ItemAlign.Right"></ToolbarItem>
+                                </ToolbarItems>
+                            </SfToolbar>
+                        </SfGrid>
+
+                    </ContentTemplate>
+
+                </DashboardLayoutPanel>
+            </DashboardLayoutPanels>
+        </SfDashboardLayout>
+
+    }
+</MudGrid>

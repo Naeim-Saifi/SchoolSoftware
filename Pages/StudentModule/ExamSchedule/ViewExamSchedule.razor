@@ -1,0 +1,74 @@
+﻿@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Buttons;
+@using AIS.Model.Employee
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Notifications
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Navigations
+@using AIS.Model.MasterData;
+@using Syncfusion.Blazor.Popups
+@using AdminDashboard.Server.Models.MasterConfiguration.SubjectMaster;
+@using AdminDashboard.Server.Models.MasterConfiguration.UnitMaster;
+@using AdminDashboard.Server.Models.ExamSchedule;
+
+
+@page "/StudentModule/ExamSchedule/ViewExamSchedule"
+
+
+@inherits ViewExamScheduleBase
+<MudGrid>
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="9" CellAspectRatio="2" AllowResizing="true">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Exam Schedule</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@examScheduleListModels"
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="410"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            Toolbar="@(new string[] {"Search","Print","ColumnChooser" })">
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        <GridPageSettings PageSize="12"></GridPageSettings>
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        <GridPageSettings PageSize="12"></GridPageSettings>
+                        <GridColumns>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.examTypeName)" HeaderText="examTypeName" Width="40" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.monthNameDetails)" HeaderText="Month Name" Width="80" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.className)" HeaderText="Class Name" Width="50" AllowGrouping="true" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.subjectName)" HeaderText="Subject" Width="50" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.unitTitle)" HeaderText="Unit Details" Width="80" TextAlign="TextAlign.Left"></GridColumn>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.examScheduleDate)" HeaderText="Exam Date" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.startTime)" HeaderText="Start Time" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.endTime)" HeaderText="TEnd Timee" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.createdDate)" HeaderText="Created On" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn Field="@nameof(ExamScheduleListModel.updatedDate)" HeaderText="Updated On" Width="50" TextAlign="TextAlign.Center"></GridColumn>
+                            <GridColumn HeaderText="Action" TextAlign="TextAlign.Center" Width="80">
+                                @*<GridCommandColumns>
+                                        <GridCommandColumn ButtonOption="@(new CommandButtonOptions() { Content = "Delete", CssClass = "e-flat" })" Title="Delete"></GridCommandColumn>
+                                        <GridCommandColumn ButtonOption="@(new CommandButtonOptions() { Content = "Active", CssClass = "e-flat" })" Title="Active"></GridCommandColumn>
+                                    </GridCommandColumns>*@
+                            </GridColumn>
+                        </GridColumns>
+
+                        <SfToolbar>
+                            <ToolbarItems>
+                                @*<ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>*@
+                                @*<ToolbarItem Text="Map Subject & Class Section" Align="ItemAlign.Center"
+                                    SuffixIcon="e-outline e-icons e-plus-icon"
+                                    OnClick="@OpenDialog"></ToolbarItem>*@
+                                <ToolbarItem Text="Search" Align="ItemAlign.Right"></ToolbarItem>
+                                <ToolbarItem Text="Settings" Align="ItemAlign.Right"></ToolbarItem>
+                            </ToolbarItems>
+                        </SfToolbar>
+                    </SfGrid>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+
+</MudGrid>

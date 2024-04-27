@@ -1,0 +1,129 @@
+﻿@page "/MasterSetting/MasterSection"
+
+@inject IDialogService DialogService
+@inherits MasterSectionListBase
+@using AIS.Model.MasterData
+@using AIS.Model.GeneralConversion
+
+
+<MudGrid>
+    <MudItem xs="12" sm="4" md="3">
+        <MudCard Elevation="25">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText>Add/Update Section</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <div class="d-flex justify-center mb-4">
+                    <EditForm Model="@masterSectionModel" OnValidSubmit="OnValidSubmit">
+                        <DataAnnotationsValidator />
+                        <MudCard Elevation="5">
+                            <MudCardContent>
+                                <MudTextField Label="Section Name" HelperText="Max. 8 characters"
+                                              @bind-Value="masterSectionModel.Name" For="@(() => masterSectionModel.Name)"
+                                              Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                <MudTextField Label="Section Code" class="mt-4" HelperText="Section Code"
+                                              @bind-Value="masterSectionModel.Code" For="@(() =>masterSectionModel.Code)"
+                                              Variant="Variant.Outlined" Margin="Margin.Dense" />
+
+                                <MudTextField Label="Display Order" class="mt-4" HelperText="Display order only number"
+                                              @bind-Value="masterSectionModel.DisplayOrder" For="@(() =>masterSectionModel.DisplayOrder)"
+                                              Variant="Variant.Outlined" Margin="Margin.Dense" />
+
+                                <MudSelect Label="Select Status" @bind-Value="StatusValue" HelperText="Select any one status" Variant="Variant.Outlined" Margin="Margin.Dense" Section="mt-4">
+                                    @foreach (var status in GenericClass.StatusDetails)
+                                    {
+                                        <MudSelectItem Value="@status">@status</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudCardContent>
+                            <MudCardActions class="d-flex justify-space-between align-center">
+
+                                <MudButton @onclick="@(()=>Cancel())" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Cancel" Color="Color.Warning" Size="Size.Small" Section="ml-n1 my-3">Cancel</MudButton>
+                                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Size="Size.Small">@ActionName</MudButton>
+
+                            </MudCardActions>
+                        </MudCard>
+                    </EditForm>
+                </div>
+
+            </MudCardContent>
+
+        </MudCard>
+    </MudItem>
+    <MudItem xs="12" sm="8" md="9">
+        <MudCard Elevation="25">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText>Section Details</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudCard>
+
+                            @if (masterSectionListModel.Count == 0)
+                            {
+                                <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                            }
+                            else
+                            {
+                                <MudTable Items="@MasterSectionList()" Dense="true" Hover="true" Bordered="true" Striped="true"
+                                          @bind-SelectedItem="selectedItem" FixedHeader="true" Height="@(true || false ?"300px":"")"
+                                          SortLabel="Sort By">
+                                    <ToolBarContent>
+                                        <MudToolBarSpacer />
+                                        <MudTextField @bind-Value="_searchTerm" Placeholder="Search" Adornment="Adornment.End"
+                                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" class="mt-0"
+                                                      Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true"></MudTextField>
+                                    </ToolBarContent>
+                                    <HeaderContent>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<MasterSectionListModel, object>(x=>x.masterSectionId)">SectionId</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<MasterSectionListModel, object>(x=>x.name)">Name</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<MasterSectionListModel, object>(x=>x.code)">Code</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<MasterSectionListModel, object>(x=>x.activeStatusDetails)">Active Status</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<MasterSectionListModel, object>(x=>x.displayOrder)">Order</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<MasterSectionListModel, object>(x=>x.createdByUser)">Created By</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<MasterSectionListModel, object>(x=>x.createdDate)">Created Date</MudTableSortLabel></MudTh>
+                                        <MudTh>Action</MudTh>
+                                    </HeaderContent>
+                                    <RowTemplate>
+                                        <MudTd DataLabel="SectionId">@context.masterSectionId</MudTd>
+                                        <MudTd DataLabel="Section Name">
+                                            <MudHighlighter Text="@context.name" HighlightedText="@_searchTerm" />
+                                        </MudTd>
+                                        <MudTd DataLabel="Code">@context.code</MudTd>
+                                        <MudTd DataLabel="Active Status">@context.activeStatusDetails</MudTd>
+                                        <MudTd DataLabel="Order">@context.displayOrder</MudTd>
+                                        <MudTd DataLabel="Created By">@context.createdByUser</MudTd>
+                                        <MudTd DataLabel="Created Date">@context.createdDate</MudTd>
+                                        <MudTd DataLabel="Action">
+                                            <MudIconButton @onclick="@(()=>Edit(@context.masterSectionId))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Size="Size.Small" Section="ma-2"></MudIconButton>
+                                            <MudIconButton OnClick="@(()=>DeleteRecord(@context.masterSectionId))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Size="Size.Small" Section="ma-2"></MudIconButton>
+                                        </MudTd>
+                                    </RowTemplate>
+                                    <PagerContent>
+                                        <MudTablePager />
+                                    </PagerContent>
+                                </MudTable>
+                            }
+                        </MudCard>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+            @*<MudCardActions Section="pb-4 pl-4">
+
+                </MudCardActions>*@
+        </MudCard>
+    </MudItem>>
+</MudGrid>
+<MudMessageBox @ref="mbox" Title="Warning" CancelText="Cancel">
+    <MessageContent>
+        Deleting can <b><i>not</i></b> be undone!
+    </MessageContent>
+    <YesButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Delete!</MudButton>
+    </YesButton>
+</MudMessageBox>

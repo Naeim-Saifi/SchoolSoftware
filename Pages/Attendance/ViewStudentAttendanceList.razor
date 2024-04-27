@@ -1,0 +1,118 @@
+﻿@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@page "/Attendance/ViewStudentAttendanceList"
+
+@inherits ViewStudentAttendanceListBase
+@{
+
+    var InitSearch1 = (new string[] { "studentName", "fatherName", "motherName" });
+    var Tool = (new List<string>() { "Search" });
+}
+<MudGrid>
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="9" CellAspectRatio="2" AllowResizing="false">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Attendance Register</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@studentRegisterLists" EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="410"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            ContextMenuItems="MenuItems"
+                            Toolbar="ToolBarItems"
+                            @ref="sfStudentRegester">
+                        @*<GridEvents CommandClicked="OnCommandClicked" TValue="StudentRegisterList"></GridEvents>*@
+                        <GridEvents OnToolbarClick="ToolbarClickHandler" TValue="StudentRegisterList"></GridEvents>
+
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        <GridSearchSettings Fields=@InitSearch1 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+                        <GridPageSettings PageCount="30" PageSizes="true"></GridPageSettings>
+                        <GridTemplates>
+                            <DetailTemplate>
+                                @{
+                                    var studentId = (context as StudentRegisterList);
+                                    var chartQuery = new Query().Where("studentId", "equal", studentId.studentId, false);
+                                }
+                                <SfGrid DataSource="@studentAttendanceStatusLists" AllowPaging="true" Query="@(new Query().Where("studentId", "equal", studentId.studentId))">
+                                    <GridPageSettings PageSize="6"></GridPageSettings>
+                                    <GridColumns>
+                                        <GridColumn Field=@nameof(StudentAttendanceStatusList.studentId) HeaderText="Student ID" Visible="false" TextAlign="TextAlign.Right" Width="110"> </GridColumn>
+                                        <GridColumn Field=@nameof(StudentAttendanceStatusList.Date) HeaderText="Date" Width="10"></GridColumn>
+                                        <GridColumn Field=@nameof(StudentAttendanceStatusList.status) HeaderText="Status" TextAlign="TextAlign.Right" Width="10"></GridColumn>
+
+                                    </GridColumns>
+                                </SfGrid>
+                            </DetailTemplate>
+                        </GridTemplates>
+                        <GridColumns>
+                            <GridColumn Field=@nameof(StudentRegisterList.studentId) HeaderText="StudentID" Width="10"> </GridColumn>
+                            <GridColumn Field=@nameof(StudentRegisterList.studentName) HeaderText="Student's' Name" AutoFit="true"></GridColumn>
+                            <GridColumn Field=@nameof(StudentRegisterList.fatherName) HeaderText="Father's Name" AutoFit="true"></GridColumn>
+                            <GridColumn Field=@nameof(StudentRegisterList.motherName) HeaderText="Mother's Name" AutoFit="true"></GridColumn>
+                            <GridColumn Field=@nameof(StudentRegisterList.rollNo) HeaderText="Roll No" TextAlign="TextAlign.Center" AutoFit="true"> </GridColumn>
+                            <GridColumn Field=@nameof(StudentRegisterList.present) HeaderText="Present" TextAlign="TextAlign.Center" AutoFit="true"></GridColumn>
+                            <GridColumn Field=@nameof(StudentRegisterList.absent) HeaderText="Absent" TextAlign="TextAlign.Center" AutoFit="true"></GridColumn>
+                            <GridColumn Field=@nameof(StudentRegisterList.leave) HeaderText="Leave" TextAlign="TextAlign.Center" AutoFit="true"></GridColumn>
+                            <GridColumn Field=@nameof(StudentRegisterList.totalWorkingDays) HeaderText="Working Days" TextAlign="TextAlign.Center" AutoFit="true"></GridColumn>
+                            <GridColumn Field=@nameof(StudentRegisterList.sunday) HeaderText="Sunday" TextAlign="TextAlign.Center" AutoFit="true"></GridColumn>
+                            <GridColumn Field=@nameof(StudentRegisterList.holiday) HeaderText="Holiday" TextAlign="TextAlign.Center" AutoFit="true"></GridColumn>
+                        </GridColumns>
+                    </SfGrid>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+</MudGrid>
+
+
+@*</SfCard>*@
+
+<style>
+    /*to remove the edit button alone*/
+    .e-removeEditcommand .e-unboundcell .e-unboundcelldiv button.e-Editbutton {
+        display: none;
+    }
+
+    /*to remove the delete button alone*/
+    .e-removeDeletecommand .e-unboundcell .e-unboundcelldiv button.e-Deletebutton {
+        display: none;
+    }
+
+    .e-toolbar-item .e-tbar-btn {
+        background-color: powderblue;
+    }
+
+    /*  .e-grid .e-rowcell.e-selectionbackground {
+                            background-color: darkgrey !important;
+                        }*/
+
+    /* .e-rowcell.e-attr {
+                            background-color: lightgrey;
+                        }*/
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        position: fixed;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+
+    .disablerow {
+        background-color: red;
+    }
+</style>

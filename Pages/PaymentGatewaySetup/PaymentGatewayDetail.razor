@@ -1,0 +1,175 @@
+﻿@page "/PaymentGatewaySetup/PaymentGatewayDetail"
+@inject IDialogService DialogService
+@inherits PaymentGatewayDetailBase
+@using AIS.Model.GeneralConversion
+@using AIS.Model.PaymentGatewaySetup
+
+
+<MudGrid>
+    <MudItem xs="12" sm="3" md="12">
+        <MudItem xs="12" sm="3" md="12">
+            <MudCard Elevation="25">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText>Add/Update Gateway Details</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <div class="d-flex justify-center mb-4">
+                        <EditForm Model="@paymentGatewayModel" OnValidSubmit="OnValidSubmit">
+                            <DataAnnotationsValidator />
+                            <MudCard Elevation="5">
+                                <MudCardContent>
+                                    <MudGrid>
+                                        <MudItem xs="12" md="3" sm="3">
+                                            <MudSelect xs="12" md="3" sm="3" Label="Select Status" @bind-Value="StatusValue1" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-1">
+                                                @*@foreach (GenericClass.Status status in Enum.GetValues(typeof(GenericClass.Status)))
+                                                    {
+                                                        <MudSelectItem T="GenericClass.Status?" Value="@status">@status</MudSelectItem>
+                                                    }*@
+                                                @foreach (var status in GenericClass.StatusDetails)
+                                                {
+                                                    <MudSelectItem Value="@status">@status</MudSelectItem>
+                                                }
+                                            </MudSelect>
+                                        </MudItem>
+                                        @*<MudItem xs="12" md="3" sm="3">
+                                                <MudCheckBox Label="Active Status" @bind-Checked="paymentGatewayModel.ActiveStatus" Color="Color.Primary"
+                                                             For="@(() => paymentGatewayModel.ActiveStatus)"></MudCheckBox>
+                                            </MudItem>*@
+                                        <MudItem xs="12" md="3">
+                                            <MudTextField Label="Business Name" Class="mt-1" @bind-Value="paymentGatewayModel.BusinessName" For="@(() =>paymentGatewayModel.BusinessName)"
+                                                          Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="3">
+                                            <MudTextField Label="Business Type" Class="mt-1" @bind-Value="paymentGatewayModel.BusinessType" For="@(() =>paymentGatewayModel.BusinessType)"
+                                                          Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="3">
+                                            <MudTextField Label="Contact Email" Class="mt-1" @bind-Value="paymentGatewayModel.ContactEmail" For="@(() =>paymentGatewayModel.ContactEmail)"
+                                                          Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="3">
+                                            <MudTextField Label="Contact Name" Class="mt-1" @bind-Value="paymentGatewayModel.ContactName" For="@(() =>paymentGatewayModel.ContactName)"
+                                                          Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="3">
+                                            <MudTextField Label="Contact No" Class="mt-1" @bind-Value="paymentGatewayModel.ContactNo" For="@(() =>paymentGatewayModel.ContactNo)"
+                                                          Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="3">
+                                            @*<MudTextField @bind-Value="employeeModel.Gender" Label="Gender"
+                                                Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                For="@(() => employeeModel.Gender)" />*@
+                                            <MudTextField Label="Secret Key" Class="mt-1" @bind-Value="paymentGatewayModel.Secret_Key" For="@(() =>paymentGatewayModel.Secret_Key)"
+                                                          Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="3">
+
+                                            <MudTextField Label="Api Key" Class="mt-1" @bind-Value="paymentGatewayModel.Api_Key" For="@(() =>paymentGatewayModel.Api_Key)"
+                                                          Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                        </MudItem>
+
+                                    </MudGrid>
+                                </MudCardContent>
+                                <MudCardActions Class="d-flex justify-space-between align-center">
+
+                                    <MudButton @onclick="@(()=>Cancel())" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Cancel" Color="Color.Warning" Size="Size.Medium" Class="ml-n1 my-3">Cancel</MudButton>
+                                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Size="Size.Medium">Save</MudButton>
+
+                                </MudCardActions>
+                            </MudCard>
+                        </EditForm>
+                    </div>
+
+                </MudCardContent>
+
+            </MudCard>
+        </MudItem>
+    </MudItem>
+</MudGrid>
+<MudGrid>
+    <MudItem xs="12" sm="3" md="12">
+        <MudCard Elevation="25">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText>Gateway Details</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="12" md="12" sm="3">
+                        <MudCard>
+
+                            @if (paymentGatewayListModel.Count == 0)
+                            {
+                                <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                                <MudBadge Color="Color.Error" Overlap="true" Bordered="true" Class="mx-6 my-4">
+                                    <MudButton Color="Color.Error" Variant="Variant.Filled" DisableElevation="true">No Data Found</MudButton>
+                                </MudBadge><MudProgressCircular Color="Color.Secondary" Indeterminate="false" />
+                            }
+                            else
+                            {
+                                <MudTable Items="@paymentGatewayList()" Dense="true" Hover="true" Bordered="true" Striped="true"
+                                          @bind-SelectedItem="selectedItem" FixedHeader="true" Height="@(true || false ?"300px":"")"
+                                          SortLabel="Sort By">
+                                    <ToolBarContent>
+                                        <MudToolBarSpacer />
+                                        <MudTextField @bind-Value="_searchTerm" Placeholder="Search" Adornment="Adornment.End"
+                                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"
+                                                      Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true"></MudTextField>
+                                    </ToolBarContent>
+                                    <HeaderContent>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<PaymentGatewayListModel, object>(x=>x.activeStatus)">Gateway Detail Id</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<PaymentGatewayListModel, object>(x=>x.api_Key)">Api Key</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<PaymentGatewayListModel, object>(x=>x.secret_Key)">Secret Key</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<PaymentGatewayListModel, object>(x=>x.contactName)">Contact Name</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<PaymentGatewayListModel, object>(x=>x.contactEmail)">Contact Email</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<PaymentGatewayListModel, object>(x=>x.contactNo)">Contact No</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<PaymentGatewayListModel, object>(x=>x.businessName)">Business Name</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<PaymentGatewayListModel, object>(x=>x.businessType)">Business Type</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<PaymentGatewayListModel, object>(x=>x.websiteUrl)">Website URL</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<PaymentGatewayListModel, object>(x=>x.activeStatusDetails)">Active Status</MudTableSortLabel></MudTh>
+
+                                        <MudTh><MudTableSortLabel SortBy="new Func<PaymentGatewayListModel, object>(x=>x.createdDate)">Created Date</MudTableSortLabel></MudTh>
+                                        <MudTh>Action</MudTh>
+                                    </HeaderContent>
+                                    <RowTemplate>
+
+                                        <MudTd DataLabel="Id">@context.id</MudTd>
+                                        <MudTd DataLabel="API Key">@context.api_Key</MudTd>
+                                        <MudTd DataLabel="Secret Key">@context.secret_Key</MudTd>
+                                        @*<MudTd DataLabel="Contact Name">
+                                            <MudHighlighter Text="@context.contactName" HighlightedText="@_searchTerm" />
+                                        </MudTd>*@
+                                        <MudTd DataLabel="Contact Email">@context.contactEmail</MudTd>
+                                        <MudTd DataLabel="Contact No">@context.contactNo</MudTd>
+                                        <MudTd DataLabel="Business Name">@context.businessName</MudTd>
+                                        <MudTd DataLabel="Business Type">@context.businessType</MudTd>
+                                        <MudTd DataLabel="Website Url">@context.websiteUrl</MudTd>
+                                        <MudTd DataLabel="Actvie status">@context.activeStatusDetails</MudTd>
+                                        <MudTd DataLabel="Create Date">@context.createdDate</MudTd>
+
+                                        <MudTd DataLabel="Action">
+                                            <MudIconButton @onclick="@(()=>Edit(@context.id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2"></MudIconButton>
+                                            @*<MudIconButton OnClick="@(()=>DeleteRecord(@context.Id))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Size="Size.Small" Class="ma-2"></MudIconButton>*@
+                                        </MudTd>
+                                    </RowTemplate>
+                                    <PagerContent>
+                                        <MudTablePager />
+                                    </PagerContent>
+                                </MudTable>
+                            }
+                        </MudCard>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+            @*<MudCardActions Class="pb-4 pl-4">
+
+                </MudCardActions>*@
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+
+

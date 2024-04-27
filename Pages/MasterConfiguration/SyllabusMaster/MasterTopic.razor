@@ -1,0 +1,231 @@
+﻿@page  "/MasterConfiguration/SyllabusMaster/MasterTopic"
+@*@using Syncfusion.Blazor.Charts*@
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using AdminDashboard.Server.Models.MasterConfiguration.UnitMaster;
+@using AdminDashboard.Server.Models.MasterConfiguration.SubjectMaster;
+@using AIS.Model.MasterData;
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Popups;
+@using Syncfusion.Blazor.Layouts
+
+@inherits MasterTopicBase
+@*@inherits ViewTimeTableSetupBase*@
+@{
+
+    var InitSearch1 = (new string[] { "className", "subjectName", "unitTitle", "unitDescription", "chapterTitle", "subjectTopicTitle"});
+    var Tool = (new List<string>() { "Search" });
+}
+
+
+<MudGrid>
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="9" CellAspectRatio="2" AllowResizing="false">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Topic Master</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@topicMasterListModels"
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="410"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            ContextMenuItems="MenuItems"
+                            @ref="sfTopicMaster"
+                            Toolbar="ToolBarItems">
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+                        <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+                        <GridEvents QueryCellInfo="QueryCellInfoHandler" OnActionBegin="OnActionBegin"
+                                    RowSelected="RowSelectHandler" OnToolbarClick="ToolClick" TValue="TopicMasterListModel"
+                                    RowDeselected="RowDeSelectHandler"></GridEvents>
+                        <GridEditSettings AllowEditing="true" AllowAdding="true" AllowEditOnDblClick="false" AllowDeleting="true"></GridEditSettings>
+                        @*<GridEvents OnToolbarClick="ToolbarClick" TValue="EmployeeViewModel"></GridEvents>*@
+
+
+                        <GridSearchSettings Fields=@InitSearch1 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+                        @*<GridEvents CommandClicked="OnCommandClicked" TValue="TimeTableListModel"> </GridEvents>*@
+                        @*<GridEvents OnActionBegin="OnActionBegin" RowSelected="RowSelectHandler" TValue="MapSubjectWithTeacherList"></GridEvents>*@
+                        @*<GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>*@
+
+                    <GridColumns>
+                        <GridColumn Field="@nameof(TopicMasterListModel.subjectUnitId)" Visible="false" IsPrimaryKey="true" HeaderText="ID" Width="40" TextAlign="TextAlign.Left"></GridColumn>
+                        <GridColumn Field="@nameof(TopicMasterListModel.className)" HeaderText="Class" Width="40" TextAlign="TextAlign.Left"></GridColumn>
+                        <GridColumn Field="@nameof(TopicMasterListModel.subjectName)" HeaderText="Subject" Width="80" TextAlign="TextAlign.Left"></GridColumn>
+                        <GridColumn Field="@nameof(TopicMasterListModel.unitTitle)" HeaderText="Unit Title" Width="80" AllowGrouping="true" TextAlign="TextAlign.Left"></GridColumn>
+                        <GridColumn Field="@nameof(TopicMasterListModel.unitDescription)" HeaderText="Description" Width="80" TextAlign="TextAlign.Left"></GridColumn>
+                        <GridColumn Field="@nameof(TopicMasterListModel.chapterTitle)" HeaderText="Chapter Title" Width="80" AllowGrouping="true" TextAlign="TextAlign.Left"></GridColumn>
+                        <GridColumn Field="@nameof(TopicMasterListModel.unitDescription)" HeaderText="Chapter Description" Width="80" TextAlign="TextAlign.Left"></GridColumn>
+                        <GridColumn Field="@nameof(TopicMasterListModel.topicTitle)" HeaderText="Topic Title" Width="80" AllowGrouping="true" TextAlign="TextAlign.Left"></GridColumn>
+                        <GridColumn Field="@nameof(TopicMasterListModel.topicDescription)" HeaderText="Topic Description" Width="80" TextAlign="TextAlign.Left"></GridColumn>
+                        <GridColumn Field="@nameof(TopicMasterListModel.createdDate)" HeaderText="Created Date" Width="80" TextAlign="TextAlign.Left"></GridColumn>
+                        <GridColumn HeaderText="Action" Width="40">
+                            <GridCommandColumns>
+                                @*<GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-edit", CssClass = "e-flat" })"></GridCommandColumn>*@
+                                <GridCommandColumn Type="CommandButtonType.Delete" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-delete", CssClass = "e-flat" })"></GridCommandColumn>
+                                @*<GridCommandColumn Type="CommandButtonType.Save" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-update", CssClass = "e-flat" })"></GridCommandColumn>
+                <GridCommandColumn Type="CommandButtonType.Cancel" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-cancel-icon", CssClass = "e-flat" })"></GridCommandColumn>
+                                *@
+                            </GridCommandColumns>
+                        </GridColumn>
+                    </GridColumns>
+
+                        <SfToolbar>
+                            <ToolbarItems>
+                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>
+                                @*<ToolbarItem Text="Map Subject & Class Section" Align="ItemAlign.Center"
+                                    SuffixIcon="e-outline e-icons e-plus-icon"
+                                    OnClick="@OpenDialog"></ToolbarItem>*@
+                                @*<ToolbarItem Text="Add Time Table" OnClick="@ShowDialog" CssClass="e-flat" Align="ItemAlign.Right"></ToolbarItem>
+                                    <ToolbarItem Text="Settings" Align="ItemAlign.Right"></ToolbarItem>*@
+                            </ToolbarItems>
+                        </SfToolbar>
+                    </SfGrid>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+
+</MudGrid>
+
+@* Confirmation Dialog*@
+<SfDialog @ref="Dialog" Width="250px" Visible="false" ShowCloseIcon="true" IsModal="true">
+    <DialogEvents Closed="Closed"></DialogEvents>
+    <DialogTemplates>
+        @*Here you can customize the Header and Content of delete confirmation dialog*@
+        <Header> Delete Record</Header>
+        <Content> You are about to Delete a Record @SelectedData ?</Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton OnClick="@OkClick" Content="OK" IsPrimary="true"></DialogButton>
+        <DialogButton OnClick="@CancelClick" Content="Cancel"></DialogButton>
+    </DialogButtons>
+</SfDialog>
+
+@* Setup Master Unit dialog details*@
+
+<MudGrid>
+    <MudItem xs="12" sm="3" md="12">
+        <MudItem xs="12" sm="3" md="12">
+            <SfDialog @ref="@DialogRef" Width="650px" AllowDragging="true" IsModal="false" ShowCloseIcon="true" @bind-Visible="IsVisible">
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>
+                    <Header>@DialogHeaderName </Header>
+                    <Content>
+                        <MudItem xs="12" md="12" sm="3">
+                            <EditForm Model="topicMasterViewModel" OnValidSubmit="OnValidSubmit">
+                                <DataAnnotationsValidator />
+                                <MudCardContent>
+                                    <MudGrid>
+                                        <MudItem xs="12" md="6" sm="3">
+
+                                            <SfDropDownList ID="ClassId" TValue="string" TItem="MasterClassListModel"
+                                                            CssClass="e-outline" Placeholder="Select a Class"
+                                                            FloatLabelType="@FloatLabelType.Never"
+                                                            AllowFiltering="true"
+                                                            Enabled="ddEnable"
+                                                            @bind-Value="@topicMasterViewModel.masterClassId"
+                                                            DataSource="@masterClassListModels">
+                                                <DropDownListFieldSettings Text="name" Value="masterClassId" />
+                                                <DropDownListEvents TItem="MasterClassListModel" TValue="string"
+                                                                    ValueChange="OnChangeClass" />
+                                                <ValidationMessage For="() => topicMasterViewModel.masterClassId" />
+                                            </SfDropDownList>
+
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="3">
+                                            <SfDropDownList ID="SubjectId" TValue="string" TItem="MapsubjectwithClassModel"
+                                                            CssClass="e-outline" Placeholder="Select a Subject"
+                                                            FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                            @bind-Value="@topicMasterViewModel.masterSubjectId"
+                                                            Enabled="ddEnable"
+                                                            DataSource="@_mapsubjectlistModel">
+                                                <DropDownListFieldSettings Text="subjectName" Value="masterSubjectId" />
+                                                <DropDownListEvents TItem="MapsubjectwithClassModel" TValue="string" ValueChange="OnChangeSubject" />
+                                                <ValidationMessage For="() => topicMasterViewModel.masterSubjectId" />
+                                            </SfDropDownList>
+                                        </MudItem>
+                                        <MudItem xs="12" md="12" sm="3">
+                                            <SfDropDownList ID="UnitId" TValue="string" TItem="TopicMasterListModel"
+                                                            CssClass="e-outline" Placeholder="Select a Unit"
+                                                            FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                            @bind-Value="@topicMasterViewModel.SubjectUnitId"
+                                                            Enabled="ddEnable"
+                                                            DataSource="@unitDetails">
+                                                <DropDownListEvents TItem="TopicMasterListModel" TValue="string" ValueChange="OnChangeUnit" />
+                                                <DropDownListFieldSettings Text="unitTitle" Value="subjectUnitId" />
+                                                <ValidationMessage For="() => topicMasterViewModel.SubjectUnitId" />
+                                            </SfDropDownList>
+                                        </MudItem>
+                                        <MudItem xs="12" md="12" sm="3">
+                                            <SfDropDownList ID="chapterId" TValue="string" TItem="TopicMasterListModel"
+                                                            CssClass="e-outline" Placeholder="Select a Chapter"
+                                                            FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                                            @bind-Value="@topicMasterViewModel.subjectChapterId"
+                                                            Enabled="ddEnable"
+                                                            DataSource="@chapterDetails">                                           
+                                                <DropDownListFieldSettings Text="chapterTitle" Value="subjectChapterId"/>
+                                                    <ValidationMessage For="() => topicMasterViewModel.subjectChapterId" />
+                                             </SfDropDownList>
+                                        </MudItem>
+
+                                        <MudItem xs="12" md="12" sm="4">
+                                        <SfTextBox CssClass="e-outline" Placeholder="Topic Title" @bind-Value="@topicMasterViewModel.subjectTopicTitle"
+                                                   FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                        <ValidationMessage For="() => topicMasterViewModel.subjectTopicTitle" />
+                                        </MudItem>
+
+                                        <MudItem xs="12" md="12" sm="4">
+                                            <SfTextBox CssClass="e-outline" Placeholder="Topic Description"
+                                                       @bind-Value="@topicMasterViewModel.subjectTopicDescription"
+                                                       FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                            <ValidationMessage For="() => topicMasterViewModel.subjectTopicDescription" />
+                                        </MudItem>
+
+                                        <MudItem xs="12" md="4" sm="3">
+                                            <SfButton CssClass="e-outline" type="submit" IsPrimary="true">Save</SfButton>
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudCardContent>
+                            </EditForm>
+
+                            <MudItem xs="12" md="4" sm="3">
+                                <SfButton CssClass="e-outline" OnClick="@CloseDialog">Cancel</SfButton>
+                            </MudItem>
+                        </MudItem>
+
+                    </Content>
+                </DialogTemplates>
+                <DialogAnimationSettings Effect="@AnimationEffect" Duration=400 />
+            </SfDialog>
+        </MudItem>
+    </MudItem>
+</MudGrid>
+<style>
+    .e-toolbar-item .e-tbar-btn {
+        background-color: powderblue;
+    }
+
+    .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }
+
+    .e-rowcell.e-attr {
+        background-color: lightgrey;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        position: fixed;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+</style>

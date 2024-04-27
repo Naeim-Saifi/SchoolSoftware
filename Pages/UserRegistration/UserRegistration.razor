@@ -1,0 +1,112 @@
+﻿
+@page "/UserRegistration/UserRegistration"
+@inject IDialogService DialogService
+@inherits UserRegistrationBase
+@using AIS.Model.MasterUserAccount
+@using AIS.Model.GeneralConversion
+
+
+
+<MudExpansionPanels MultiExpansion="true">
+    <MudExpansionPanel Text="Add User Detail">
+
+        <MudGrid>
+            <MudItem xs="12" sm="3" md="12">
+                <MudItem xs="12" sm="8" md="12">
+
+                    @*<MudCardHeader>
+                            <CardHeaderContent>
+                                <MudText>Add/Update User</MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>*@
+                    <MudCardContent>
+                        <div class="d-flex justify-center mb-12">
+                            <EditForm Model="@userRegistrationModel" OnValidSubmit="OnValidSubmit">
+                                <DataAnnotationsValidator />
+                                <MudCard Elevation="5">
+                                    <MudCardContent>
+
+                                        <MudGrid>
+                                            <MudItem xs="12" md="4">
+                                                <MudTextField @bind-Value="userRegistrationModel.SchoolCode" Label="School Code"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => userRegistrationModel.SchoolCode)"
+                                                              HelperText="School Code" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="4">
+                                                <MudTextField @bind-Value="userRegistrationModel.UserName" Label="User Account ID"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => userRegistrationModel.UserName)"
+                                                              HelperText="UserLogin AccountID" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="4">
+                                                <MudTextField @bind-Value="userRegistrationModel.FirstName" Label="First Name"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => userRegistrationModel.FirstName)"
+                                                              HelperText="Enter User First Name" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="4">
+                                                <MudTextField @bind-Value="userRegistrationModel.MiddleName" Label="Middle Name"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => userRegistrationModel.MiddleName)"
+                                                              HelperText="Enter User Middle Name" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="4">
+                                                <MudTextField @bind-Value="userRegistrationModel.LastName" Label="Last Name"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => userRegistrationModel.LastName)"
+                                                              HelperText="Enter User Last Name" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="4">
+                                                <MudTextField @bind-Value="userRegistrationModel.Email" Label="Email"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => userRegistrationModel.Email)"
+                                                              HelperText="Enter User Email" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="4">
+                                                <MudTextField @bind-Value="userRegistrationModel.Password" Label="Password"
+                                                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                              For="@(() => userRegistrationModel.Password)"
+                                                              HelperText="Enter User Password" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="4">
+                                                @* <MudSelect Label="Select Status" @bind-Value="StatusValue"
+                               Variant="Variant.Outlined" Margin="Margin.Dense"
+                               HelperText="Status any one status">
+                        @foreach (var status in GenericClass.StatusDetails)
+                        {
+                            <MudSelectItem Value="@status">@status</MudSelectItem>
+                        }
+                    </MudSelect>*@
+                                            </MudItem>
+                                            <MudItem xs="12" md="4">
+                                                @*<MudSelect Label="Select User Role" @bind-Value="userRole"
+                               Variant="Variant.Outlined" Margin="Margin.Dense"
+                               HelperText="Status any one Admin,Management Role">
+                        @foreach (var role in GenericClass.UserRole)
+                        {
+                            <MudSelectItem Value="@role">@role</MudSelectItem>
+                        }
+                    </MudSelect>*@
+                                            </MudItem>
+                                        </MudGrid>
+                                    </MudCardContent>
+                                    <MudCardActions Class="d-flex justify-space-between align-center">
+
+                                        <MudButton @onclick="@(()=>Cancel())" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Cancel" Color="Color.Warning" Size="Size.Small" Class="ml-n1 my-3">Cancel</MudButton>
+                                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Size="Size.Small">Save</MudButton>
+
+                                    </MudCardActions>
+                                </MudCard>
+                            </EditForm>
+                        </div>
+                    </MudCardContent>
+
+                </MudItem>
+            </MudItem>
+        </MudGrid>
+    </MudExpansionPanel>
+    <MudExpansionPanel Text="User List">
+        User List
+    </MudExpansionPanel>
+</MudExpansionPanels>

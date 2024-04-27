@@ -1,0 +1,81 @@
+﻿@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@using Microsoft.AspNetCore.Components.Forms
+@using AIS.Data.RequestResponseModel.ExamMasterSetup;
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
+@using AIS.Data.RequestResponseModel.Syllabus;
+
+@page "/User_Pages/ExamSetup/ExamScheduleForStudent"
+
+@inherits ExamScheduleForStudentBase
+
+
+@{
+    var InitialGroupColumn = (new string[] { "className", "examType" });
+    var InitSearchStudentName = (new string[] { "className", "subjectName" });
+}
+@* <SfButton Type="button" CssClass=@btncss IsToggle="false " IsPrimary="false" Content="Load Student Report" OnClick="@marksreportAsync"></SfButton>
+ *@
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="6">
+        <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+            <DashboardLayoutPanels>
+                <DashboardLayoutPanel SizeX=7 SizeY="2">
+                    <HeaderTemplate>All Exam Schedule Details</HeaderTemplate>
+                    <ContentTemplate>
+                        <SfGrid DataSource="@_allterWiseExamSetList"
+                                EnableVirtualMaskRow="true"
+                                RowHeight="38" Height="810"
+                                Width="auto" EnableVirtualization="false"
+                                AllowResizing="true" AllowExcelExport="true"
+                                EnableAutoFill="true" AllowReordering="true"
+                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                Toolbar="toolbarExam" @ref="_sfterWiseExamSetList">
+
+                            <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+
+                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                            <GridPageSettings PageSizes="@(new string[] { "25", "50","100", "150", "200",  "All" })" PageSize="@pageSize"></GridPageSettings>
+
+                            <GridGroupSettings Columns=@InitialGroupColumn>
+                                <CaptionTemplate>
+                                    @{
+                                        var UnitDetails = (context as CaptionTemplateContext);
+                                        <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                    }
+                                </CaptionTemplate>
+                            </GridGroupSettings>
+                            <GridEvents OnToolbarClick="toolBarItemsToolBar" TValue=TermWiseExamSchedule_List_Output_Model></GridEvents>
+                            <GridColumns>
+                                <GridColumn Field=@nameof(TermWiseExamSchedule_List_Output_Model.className) HeaderText="Class" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TermWiseExamSchedule_List_Output_Model.examType) HeaderText="Exam Type" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TermWiseExamSchedule_List_Output_Model.subjectName) HeaderText="Subject" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TermWiseExamSchedule_List_Output_Model.startTime) HeaderText="Start Time" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TermWiseExamSchedule_List_Output_Model.endTime) HeaderText="End Time" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TermWiseExamSchedule_List_Output_Model.examDate) Format="d" Type="ColumnType.Date" HeaderText="Exam Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TermWiseExamSchedule_List_Output_Model.examdayName) HeaderText="Day" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                <GridColumn Field=@nameof(Exam_Type_List_Output_Model.createdDate) HeaderText="Created Date" Format="d" Type="ColumnType.Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Exam_Type_List_Output_Model.createdByUser) HeaderText="created ByUser" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                @* <GridColumn Field=@nameof(Exam_Type_List_Output_Model.updatedByUser) HeaderText="UpdateBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn> *@
+                            </GridColumns>
+                        </SfGrid>
+                    </ContentTemplate>
+                </DashboardLayoutPanel>
+            </DashboardLayoutPanels>
+        </SfDashboardLayout>
+    </MudItem>
+</MudGrid>

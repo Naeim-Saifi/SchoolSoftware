@@ -1,0 +1,72 @@
+﻿@using Syncfusion.Blazor.Grids
+@using AIS.Data.RequestResponseModel.StudentSetUp;
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using AIS.Data.RequestResponseModel.TransactionSetUp;
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+
+@using Syncfusion.Blazor.Charts
+
+
+@page "/User_Pages/Transaction/ClassWise"
+@inherits ClassWiseBase;
+
+@{
+    
+    var InitSearchClassWise = (new string[] { "className" });
+}
+
+<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Class Wise Data</MudText>
+
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="8">
+        <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+            <DashboardLayoutPanels>
+                <DashboardLayoutPanel SizeX=7 SizeY="2">
+            <HeaderTemplate><div>ClassWise Details</div></HeaderTemplate>
+            <ContentTemplate>
+                <div>
+                    <SfGrid DataSource="@_transaction_Details_ClassWise_List"
+                    @ref="_sfClassWise"
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="710"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            Toolbar="@(new string[] {"Search","Print" })">
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        <GridPageSettings PageSize="15" PageSizes="true"></GridPageSettings>
+                        <GridSearchSettings Fields=@InitSearchClassWise Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+
+
+
+                        <GridColumns>
+                            <GridColumn Field=@nameof(ClassWise_TransactionDetails_LIST_Output_Model.className) HeaderText="Class Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(ClassWise_TransactionDetails_LIST_Output_Model.monthDetails) HeaderText="MonthDetails" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(ClassWise_TransactionDetails_LIST_Output_Model.paycount) HeaderText="Paycount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(ClassWise_TransactionDetails_LIST_Output_Model.totalAmount) HeaderText="TotalAmount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(ClassWise_TransactionDetails_LIST_Output_Model.discount) HeaderText="Discount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(ClassWise_TransactionDetails_LIST_Output_Model.netAmount) HeaderText="NetAmount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(ClassWise_TransactionDetails_LIST_Output_Model.recievedAmount) HeaderText="RecievedAmount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(ClassWise_TransactionDetails_LIST_Output_Model.dueAmount) HeaderText="DueAmount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                              <GridColumn Field=@nameof(ClassWise_TransactionDetails_LIST_Output_Model.advanceAmount) HeaderText="AdvanceAmount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                        </GridColumns>
+                      
+                    </SfGrid>
+                </div>
+            </ContentTemplate>
+
+        </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+</SfDashboardLayout>
+</MudItem>
+</MudGrid>

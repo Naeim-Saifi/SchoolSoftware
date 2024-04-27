@@ -1,0 +1,166 @@
+﻿@using Syncfusion.Blazor.Grids
+@using AIS.Data.RequestResponseModel.HolidaySetup;
+@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+
+@page "/User_Pages/HolidaySetup/HolidayTypeMaster"
+
+@inherits HolidayTypeMasterBase
+
+@{
+
+
+    var InitSearch2 = (new string[] { "holidayType" });
+    var Tool = (new List<string>() { "Search" });
+    //var InitialGroupColumn = (new string[] { "className" });
+}
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="6">
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Period Master Details</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@holidayListModels"
+                            EnableVirtualMaskRow="true"
+                                RowHeight="38" Height="700"
+                                AllowTextWrap="true"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="false" AllowGrouping="false" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            ContextMenuItems="MenuItems"
+                            @ref="sfHolidayListGrid"
+                            Toolbar="classMasterItem">
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                            <GridPageSettings PageSizes="@(new string[] { "25", "50","100", "150", "200",  "All" })" PageSize="@pageSize"></GridPageSettings>
+                        <GridPageSettings PageCount="25" PageSizes="true"></GridPageSettings>
+                        @* <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>*@
+                        @* <GridGroupSettings Columns=@InitialGroupColumn>
+                        <CaptionTemplate>
+                        @{
+                        var UnitDetails = (context as CaptionTemplateContext);
+                        <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                        }
+                        </CaptionTemplate>
+                        </GridGroupSettings>*@
+
+                        <GridEvents CommandClicked="EditHolidayMaster" OnToolbarClick="ToolbarClickHandler" TValue="Holiday_Type_List_Output_Model"></GridEvents>
+                        <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+                        <GridColumns>
+                            <GridColumn Field=@nameof(Holiday_Type_List_Output_Model.holidayTypeId) HeaderText="ID" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Holiday_Type_List_Output_Model.holidayType) HeaderText="Holiday Type" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Holiday_Type_List_Output_Model.descriptionHindi) HeaderText="Description Hindi" TextAlign="TextAlign.Right"   Width="220"></GridColumn>
+                                <GridColumn Field=@nameof(Holiday_Type_List_Output_Model.descriptionEnglish) HeaderText="Description English" TextAlign="TextAlign.Right" Width="220"></GridColumn>
+                            <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                <GridCommandColumns>
+                                    <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                    <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                </GridCommandColumns>
+                            </GridColumn>
+                            <GridColumn Field=@nameof(Holiday_Type_List_Output_Model.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Holiday_Type_List_Output_Model.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Holiday_Type_List_Output_Model.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Holiday_Type_List_Output_Model.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            @*<GridColumn Field=@nameof(MasterUnitListModel.) HeaderText="CreatedBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(MasterUnitListModel.updatedDate) HeaderText="CreatedBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            *@
+                        </GridColumns>
+                    </SfGrid>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+
+</MudItem>
+</MudGrid>
+
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        <MudItem xs="12" sm="12" md="12">
+            <SfDialog @ref="@DialogRef" Width="750px" AllowDragging="true" IsModal="false" ShowCloseIcon="true" @bind-Visible="@IsVisible">
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>                   
+                    <Header>
+                        @DialogHeaderName 
+                    </Header>
+                    <Content>
+                        <MudGrid>
+                            <MudItem xs="12" md="12" sm="12">
+                                <EditForm Model="_holidayViewModel" OnValidSubmit="OnValidSubmit">
+                                    <DataAnnotationsValidator />
+                                    <MudCardContent>
+                                        <MudGrid>
+
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Holiday Type" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@_holidayViewModel.holidayType"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => _holidayViewModel.holidayType" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Description English" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@_holidayViewModel.descriptionEnglish"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => _holidayViewModel.descriptionEnglish" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Description Hindi" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@_holidayViewModel.descriptionHindi"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => _holidayViewModel.descriptionHindi" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfButton CssClass=@btncss type="submit" IsPrimary="true">@HeaderText</SfButton>
+                                                @*<SfButton CssClass="e-outline" OnClick="@CloseDialog">Cancel</SfButton>*@
+                                                <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>
+                                            </MudItem>
+                                        </MudGrid>
+                                    </MudCardContent>
+                                </EditForm>
+                            </MudItem>
+                        </MudGrid>
+                        
+                    </Content>
+                </DialogTemplates>
+                <DialogAnimationSettings Delay="400" Effect="DialogEffect.SlideBottom">
+                </DialogAnimationSettings>
+                <DialogPositionData X="@Xvalue" Y="@Yvalue"></DialogPositionData>
+            </SfDialog>
+        </MudItem>
+    </MudItem>
+</MudGrid>
+
+@code {
+
+    private string Xvalue = "center";
+    private string Yvalue = "center";
+}
+<style>
+
+    .e-toolbar-item .e-tbar-btn {
+        background-color: powderblue;
+    }
+
+    .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+</style>

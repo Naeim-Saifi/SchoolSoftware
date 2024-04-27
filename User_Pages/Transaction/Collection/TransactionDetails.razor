@@ -1,0 +1,344 @@
+﻿@using Syncfusion.Blazor.Grids
+@using AIS.Data.RequestResponseModel.TransactionSetUp;
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Popups
+@using System.Globalization;
+
+@page "/User_Pages/Collection/TransactionDetails"
+
+@inherits TransactionDetailsBase
+@{
+
+    var InitSearch1 = (new string[] { "periodName" });
+    var InitSearchpaymentMode = (new string[] { "paymentMode" });
+    var InitSearchreceiptBy = (new string[] { "receiptBy" });
+    var InitialGroupreceiptBy = (new string[] { "receiptBy" });
+    var transGroupBy = (new string[] { "receiptBy", "paymentMode" });
+}
+<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Today Transaction Details</MudText>
+<MudGrid>
+
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.Euro" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n2">Today Collection Amount</MudText>
+                
+                    <MudText Typo="Typo.subtitle2" Class="mud-text-secondary mb-n2">@_netCollection</MudText>
+                    <MudText Typo="Typo.h5"></MudText>
+                
+               
+
+                @*<MudNavLink Href="/Razorpay/RazorpayDetail" Icon="@Icons.Material.Outlined.Payment">Paynow</MudNavLink>*@
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.Layers" Color="Color.Secondary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">@_currentMonthName -Month Collection Amount</MudText>
+                <MudText Typo="Typo.button" Class="mud-text-secondary mb-n1">@_netCollectioncurrentMonth</MudText>
+                <MudText Typo="Typo.h5"></MudText>                    
+                 
+
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Material.Filled.Public" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                 
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">@_currentMonthName - Month Due Amount</MudText>
+                <MudText Typo="Typo.subtitle2" Class="mud-text-secondary mb-n1">@_netPendingFee</MudText>
+                    <MudText Typo="Typo.h5"></MudText>
+                
+
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+            <MudIcon Icon="@Icons.Custom.Uncategorized.Radioactive" Color="Color.Warning" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Withdrawal Number NotFound</MudText>
+                <MudText Typo="Typo.h5"></MudText>
+            </div>
+        </MudPaper>
+    </MudItem>
+
+</MudGrid>
+ 
+@* User transaction details *@
+    <MudGrid>
+        <MudItem xs="12" sm="12" md="12">       
+        <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+        <DashboardLayoutPanels>
+                <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Today Transaction Details</HeaderTemplate>
+                <ContentTemplate>
+            <SfGrid DataSource="@_transaction_List_Output_Model"
+            @ref="_sfgridTransaction_List_Output_Model"
+                    EnableVirtualMaskRow="true"
+                    RowHeight="38" Height="570"
+                    Width="auto" EnableVirtualization="false"
+                    AllowResizing="true" AllowExcelExport="true"
+                    EnableAutoFill="true" AllowReordering="true"
+                    ShowColumnChooser="false" AllowGrouping="true" AllowSorting="true"
+                    AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                    Toolbar="@transactionToolBar">
+                <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                <GridGroupSettings Columns="@transGroupBy"></GridGroupSettings>
+                <GridPageSettings PageSize="50" PageSizes="true"></GridPageSettings>
+                <GridSearchSettings Fields=@InitSearchreceiptBy Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                    IgnoreCase="true"></GridSearchSettings>
+                            <GridEvents OnToolbarClick="TransactionToolBarClick" TValue=Transaction_List_Output_Model></GridEvents>
+
+                <GridColumns>
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.admissionId) HeaderText="Admission Id" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.studentName) HeaderText="Student Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.fatherName) HeaderText="Father Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.fatherMobileNo) HeaderText="Father MobileNo" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.feeCategoryName) HeaderText="FeeCategory Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.busStopName) HeaderText="BusStop Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.receiptId) HeaderText="Receipt Id" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.paymentMode) HeaderText="Payment Mode" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.monthName) HeaderText="Month Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.bankName) HeaderText="Bank Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.chequeNoTransactionN) HeaderText="ChequeNo_TransactionN" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.cheqDate) HeaderText="CheqDate" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.branchName) HeaderText="Branch Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.totalAmount) HeaderText="Total Amount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.discount) HeaderText="Discount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.netAmount) HeaderText="Net Amount" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.paidAmount) HeaderText="Paid Amount" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.dueAmount) HeaderText="Due Amount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.advanceAmount) HeaderText="Advance Amount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.receiptBy) HeaderText="ReceiptBy" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.paymentDate) HeaderText="PaymentDate" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                    <GridColumn Field=@nameof(Transaction_List_Output_Model.remarks) HeaderText="remarks" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                </GridColumns>
+                @* <SfToolbar>
+                    <ToolbarItems>
+                        <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel_PaymentModeCollection" Align="ItemAlign.Left"></ToolbarItem>
+                    </ToolbarItems>
+                </SfToolbar> *@
+            </SfGrid>
+
+
+            </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+            </SfDashboardLayout>
+        </MudItem>    
+</MudGrid>
+
+ @* User wise Collection Dialog *@
+<MudGrid>    
+        <MudItem xs="12" sm="12" md="6">
+            <SfDialog @ref="@DialogRef" Width="1450px" AllowDragging="true" IsModal="true" ShowCloseIcon="true" @bind-Visible="@IsVisibleUserWiseCollection">
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>
+                    <Header>User Wise Fee Collection </Header>
+                    <Content>
+                        <MudGrid>
+                            <MudItem xs="12" md="6" sm="12">
+                                <SfGrid DataSource="@_userWiseFeeCollection"
+                                @ref="_sfgridUserWiseFeeCollection"
+                                        EnableVirtualMaskRow="true"
+                                        RowHeight="38" Height="500"
+                                        Width="400" EnableVirtualization="false"
+                                        AllowResizing="true" AllowExcelExport="true"
+                                        EnableAutoFill="true" AllowReordering="true"
+                                        ShowColumnChooser="false" AllowGrouping="true" AllowSorting="true"
+                                        AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                        Toolbar="@(new string[] {"Search","Print" })">
+                                    <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                    <GridPageSettings PageSize="50" PageSizes="true"></GridPageSettings>
+                                    <GridSearchSettings Fields=@InitSearchreceiptBy Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                        IgnoreCase="true"></GridSearchSettings>
+                                    <GridGroupSettings Columns=@InitialGroupreceiptBy>
+                                        @*  <CaptionTemplate>
+                                        @{
+                                        var _class = (context as CaptionTemplateContext);
+                                        <div>@_class.Field - @_class.Key</div>
+                                        }
+                                        </CaptionTemplate>*@
+                                    </GridGroupSettings>
+                                    @*   <GridAggregates>
+                                    <GridAggregate>
+                                    <GridAggregateColumns>
+                                    <GridAggregateColumn Field=@nameof(UserWiseFeeCollection.netAmount) Type="AggregateType.Sum">
+                                    <GroupFooterTemplate>
+                                    @{
+                                    var _studentCount = (context as AggregateTemplateContext);
+                                    <div>
+                                    Net collection: @_studentCount.Sum
+                                    </div>
+                                    }
+                                    </GroupFooterTemplate>
+                                    </GridAggregateColumn>
+
+                                    </GridAggregateColumns>
+                                    </GridAggregate>
+                                    </GridAggregates>*@
+                                    <GridColumns>
+                                        <GridColumn Field=@nameof(UserWiseFeeCollection.receiptBy) HeaderText="User Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(UserWiseFeeCollection.paymentMode) HeaderText="Payment Mode" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(UserWiseFeeCollection.payCount) HeaderText="Count" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(UserWiseFeeCollection.netAmount) HeaderText="NetAmount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                    </GridColumns>
+                                    @* <SfToolbar>
+                                    <ToolbarItems>
+                                    <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel_PaymentModeCollection" Align="ItemAlign.Left"></ToolbarItem>
+                                    </ToolbarItems>
+                                    </SfToolbar> *@
+                                </SfGrid>
+                            </MudItem>
+                           <MudItem xs="12" md="6" sm="12">
+                            <SfAccumulationChart Title="User Wise Fee Collection" EnableSmartLabels="true">
+                                <AccumulationChartTooltipSettings Enable="true"></AccumulationChartTooltipSettings>
+
+                                <AccumulationChartLegendSettings Visible="false"></AccumulationChartLegendSettings>
+
+                                <AccumulationChartSeriesCollection>
+                                    <AccumulationChartSeries DataSource="@_userWiseFeeCollection" XName="receiptBy" YName="netAmount" Explode="true" Radius="70%" GroupTo="20">
+                                        <AccumulationDataLabelSettings Visible="true" Name="paymentMode" Position="AccumulationLabelPosition.Outside">
+                                            <AccumulationChartConnector Type="ConnectorType.Line" Length="15%"></AccumulationChartConnector>
+                                            <AccumulationChartDataLabelFont Size="14px"></AccumulationChartDataLabelFont>
+                                        </AccumulationDataLabelSettings>
+                                    </AccumulationChartSeries>
+                                </AccumulationChartSeriesCollection>
+                            </SfAccumulationChart>
+
+
+         
+                           </MudItem>
+                        </MudGrid>
+                    </Content>
+                </DialogTemplates>
+               
+                <DialogAnimationSettings Delay="400" Effect="DialogEffect.FlipXDown">
+                </DialogAnimationSettings>
+                <DialogPositionData X="center" Y="center"></DialogPositionData>
+            </SfDialog>
+        </MudItem>
+   
+</MudGrid>
+
+@* User wise Collection Dialog *@
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        <SfDialog @ref="@DialogRef" Width="1450px" AllowDragging="true" IsModal="true" ShowCloseIcon="true" @bind-Visible="@IsVisibleModeofTransaction">
+            <DialogEvents OnOpen="onOpen"></DialogEvents>
+            <DialogTemplates>
+                <Header>Mode of transaction details </Header>
+                <Content>
+                    <MudGrid>
+                        <MudItem xs="12" md="6" sm="12">
+                            <SfGrid DataSource="@_paymentModeFeeCollection"
+                            @ref="_sfgridPaymentModeFeeCollection"
+                                    EnableVirtualMaskRow="true"
+                                    RowHeight="38" Height="500"
+                                    Width="400" EnableVirtualization="false"
+                                    AllowResizing="true" AllowExcelExport="true"
+                                    EnableAutoFill="true" AllowReordering="true"
+                                    ShowColumnChooser="false" AllowGrouping="false" AllowSorting="true"
+                                    AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                    Toolbar="@(new string[] {"Search","Print" })">
+                                <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                <GridPageSettings PageSize="50" PageSizes="true"></GridPageSettings>
+                                <GridSearchSettings Fields=@InitSearchpaymentMode Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                    IgnoreCase="true"></GridSearchSettings>
+
+                                <GridColumns>
+                                    <GridColumn Field=@nameof(PaymentModeFeeCollection.paymentMode) HeaderText="Payment Mode" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                    <GridColumn Field=@nameof(PaymentModeFeeCollection.payCount) HeaderText="Count" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                    <GridColumn Field=@nameof(PaymentModeFeeCollection.netAmount) HeaderText="NetAmount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                </GridColumns>
+                                @* <SfToolbar>
+                                <ToolbarItems>
+                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel_PaymentModeCollection" Align="ItemAlign.Left"></ToolbarItem>
+                                </ToolbarItems>
+                                </SfToolbar> *@
+                            </SfGrid>
+                        </MudItem>
+                        <MudItem xs="12" md="6" sm="12"> 
+                            <SfAccumulationChart Title="Mode of transaction details">
+                               
+                                <AccumulationChartLegendSettings Visible="false"></AccumulationChartLegendSettings>
+                                  
+                                <AccumulationChartSeriesCollection>
+                                     
+                                    <AccumulationChartSeries DataSource="@_paymentModeFeeCollection" XName="paymentMode" YName="netAmount" Name="paymentMode">
+                                        <AccumulationDataLabelSettings    EnableRotation="true" Visible="true"
+                                                                       Name="paymentMode" Position="AccumulationLabelPosition.Inside">
+                                              
+                                        </AccumulationDataLabelSettings>
+                                        
+                                    </AccumulationChartSeries>
+                                     
+                                </AccumulationChartSeriesCollection>
+                            </SfAccumulationChart>
+
+
+
+                        </MudItem>
+                    </MudGrid>
+                </Content>
+            </DialogTemplates>
+
+            <DialogAnimationSettings Delay="400" Effect="DialogEffect.FlipXDown">
+            </DialogAnimationSettings>
+            <DialogPositionData X="center" Y="center"></DialogPositionData>
+        </SfDialog>
+    </MudItem>
+
+</MudGrid>
+
+<style>
+    /* .e-panel-header {
+        background-color: rgba(0, 0, 0, .1);
+        text-align: center;
+    }
+
+    .e-panel-content {
+        text-align: center;
+        margin-top: 10px;
+    } */
+
+    .e-toolbar-item .e-tbar-btn {
+        background-color: orange;
+    }
+
+    .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+
+    .e-dialog .e-dlg-header {
+        color: cornflowerblue;
+        font-size: 20px;
+        font-weight: normal;
+    }
+</style>

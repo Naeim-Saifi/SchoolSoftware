@@ -1,0 +1,577 @@
+﻿@inherits NavMenuBase
+<PersonCard Style="background-color: var(--mud-palette-drawer-background);color: var(--mud-palette-drawer-text);" />
+<MudDivider Class="mb-4" />
+<MudNavMenu>
+ @if (UserRole == "Owner")
+    {
+        <MudText Typo="Typo.subtitle2" Color="Color.Tertiary" Class="ml-4 my-3">Supper Admin</MudText>
+        @*Super Admin Menu Details*@
+        <MudNavGroup Title="Scchool setup" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="true">
+            @*
+                <MudNavGroup Title="School" Icon="@Icons.Material.Outlined.AdminPanelSettings" HideExpandIcon="false" Expanded="false">
+                </MudNavGroup>
+            *@
+            <MudNavLink Href="/SchoolSetup/EditSchool" Icon="@Icons.Material.Outlined.Edit">Edit School</MudNavLink>
+            @*
+                <MudNavLink Href="/SchoolSetup/SchoolList" Icon="@Icons.Material.Outlined.List">School List</MudNavLink>
+            *@
+            <MudNavLink Href="/AdminUserRegistration/AdminUserRegistration" Icon="@Icons.Material.Outlined.PersonAdd">Add User</MudNavLink>
+            <MudNavLink Href="/PaymentGatewaySetup/PaymentGatewayDetail" Icon="@Icons.Material.Outlined.Add">Payment Gateway Setup</MudNavLink>
+        </MudNavGroup>
+    }
+else if (UserRole == "Admin")
+    { @*Admin Munu Details*@
+    <MudText Typo="Typo.subtitle2" Color="Color.Primary" Class="ml-4 my-3">School Admin</MudText>
+    <MudNavLink Href="/personal/dashboard" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Dashboard">Dashboard</MudNavLink>
+    <MudNavGroup Title="Master Setting" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+        <MudNavGroup Title="General" Icon="@Icons.Material.Outlined.AdminPanelSettings" HideExpandIcon="false" Expanded="false">
+            @*
+                <MudNavLink Href="/MasterSetting/MasterBatch" Icon="@Icons.Material.Outlined.InsertDriveFile">Batch</MudNavLink>
+                <MudNavLink Href="/MasterSetting/MasterClass" Icon="@Icons.Material.Outlined.InsertDriveFile">Class</MudNavLink>
+                <MudNavLink Href="/MasterSetting/MasterSection" Icon="@Icons.Material.Outlined.InsertDriveFile">Section</MudNavLink>
+            *@
+            <MudNavLink Href="/MasterConfiguration/ClassMaster" Icon="@Icons.Material.Outlined.Add">Class Master</MudNavLink>
+            @*
+                <MudNavLink Href="/MasterSetting/MasterDepartment" Icon="@Icons.Material.Outlined.InsertDriveFile">Department</MudNavLink>
+                <MudNavLink Href="/MasterSetting/MasterDocument" Icon="@Icons.Material.Outlined.InsertDriveFile">Document</MudNavLink>
+                <MudNavLink Href="/MasterSetting/MasterEmployee" Icon="@Icons.Material.Outlined.InsertDriveFile">Employee</MudNavLink>
+                <MudNavLink Href="/MasterSetting/MasterOccupation" Icon="@Icons.Material.Outlined.InsertDriveFile">Occupation</MudNavLink>
+                <MudNavLink Href="/MasterSetting/MasterBatch" Icon="@Icons.Material.Outlined.InsertDriveFile">State</MudNavLink>
+            *@
+        </MudNavGroup>
+        <MudNavGroup Title="Accadmic" Icon="@Icons.Material.Outlined.AdminPanelSettings" HideExpandIcon="false" Expanded="false">
+            @*
+                <MudNavLink Href="/Academic/MasterSubject" Icon="@Icons.Material.Outlined.Subject">Subject</MudNavLink>
+                <MudNavLink Href="/Academic/MasterUnit" Icon="@Icons.Material.Outlined.InsertDriveFile">Unit</MudNavLink>
+                <MudNavLink Href="/Academic/MasterChapter" Icon="@Icons.Material.Outlined.InsertDriveFile">Chapter</MudNavLink>
+                <MudNavLink Href="/Academic/MasterTopic" Icon="@Icons.Material.Outlined.InsertDriveFile">Topic</MudNavLink>
+            *@
+        </MudNavGroup>
+        <MudNavGroup Title="Mapping" Icon="@Icons.Material.Outlined.AdminPanelSettings" HideExpandIcon="false" Expanded="false">
+            @*
+                <MudNavLink Href="/Mapping/MapClassWithSection" Icon="@Icons.Material.Outlined.InsertDriveFile">Class with Section</MudNavLink>
+                <MudNavLink Href="/Mapping/MapClassWithSubject" Icon="@Icons.Material.Outlined.InsertDriveFile">Subject with Class</MudNavLink>
+                <MudNavLink Href="/Mapping/MapTeacherWithSubject" Icon="@Icons.Material.Outlined.InsertDriveFile">Subject with Teacher</MudNavLink>
+            *@
+        </MudNavGroup>
+    </MudNavGroup>
+    <MudNavGroup Title="User" Icon="@Icons.Material.Outlined.Person" HideExpandIcon="false" Expanded="false">
+        <MudNavGroup Title="Student" Icon="@Icons.Material.Outlined.Folder" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/Student/StudentList" Icon="@Icons.Material.Outlined.InsertDriveFile">All Student</MudNavLink>
+            <MudNavLink Href="/MasterSetting/MasterClass" Icon="@Icons.Material.Outlined.PhotoAlbum">Add Profile Photo</MudNavLink>
+        </MudNavGroup>
+        <MudNavGroup Title="Employee" Icon="@Icons.Material.Outlined.Folder" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href= "/Employee/EmployeeDetails" Icon="@Icons.Material.Outlined.Add">Employee</MudNavLink>
+              
+        </MudNavGroup>
+    </MudNavGroup>
+    <MudNavGroup Title="Manage Document" Icon="@Icons.Material.Outlined.Person" HideExpandIcon="false" Expanded="false">
+        <MudNavLink Href="/Student/StudentList" Icon="@Icons.Material.Outlined.InsertDriveFile">StudentList</MudNavLink>
+        <MudNavLink Href="/MasterSetting/MasterClass" Icon="@Icons.Material.Outlined.PhotoAlbum">Staff</MudNavLink>
+        <MudNavLink Href="/MasterSetting/MasterClass" Icon="@Icons.Material.Outlined.PhotoAlbum">Transport</MudNavLink>
+        <MudNavLink Href="/MasterSetting/MasterClass" Icon="@Icons.Material.Outlined.PhotoAlbum">School</MudNavLink>
+    </MudNavGroup>
+    <MudNavGroup Title="Transaction" Icon="@Icons.Material.Outlined.Person" HideExpandIcon="false" Expanded="false">
+        <MudNavLink Href="/Student/StudentList" Icon="@Icons.Material.Outlined.InsertDriveFile">Fee Collection</MudNavLink>
+        <MudNavLink Href="/MasterSetting/MasterClass" Icon="@Icons.Material.Outlined.PhotoAlbum">PendingFee</MudNavLink>
+    </MudNavGroup>
+}
+else if (UserRole == "Management")
+{
+    <MudText Typo="Typo.subtitle2" Color="Color.Dark" Class="ml-4 my-3">Management</MudText>
+        <MudNavLink Href="/Dashboard/Student/StudentDashboard"
+                    Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Dashboard">Dashboard</MudNavLink>
+        <MudNavGroup Title="Student" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">
+
+           @*  <MudNavLink Href=" /Student/StudentAddProfilePicture" Icon="@Icons.Material.Outlined.Add">Student Photo</MudNavLink> *@
+
+            <MudNavLink Href="/User_Pages/Student/StudentList" Icon="@Icons.Material.Outlined.List">Student List</MudNavLink>
+            <MudNavLink Href="/User_Pages/Student/GenericStudentList" Icon="@Icons.Material.Outlined.List">Generic List</MudNavLink>
+           @*  <MudNavLink Href="/User_Pages/Attendance/StudentAttendance" Icon="@Icons.Material.Outlined.Add">Student Attendance</MudNavLink>
+            <MudNavLink Href="/User_Pages/Attendance/StudentAttendanceDetails" Icon="@Icons.Material.Outlined.List">Single Student</MudNavLink>
+            <MudNavLink Href="/User_Pages/Attendance/AllStudentAttendanceList" Icon="@Icons.Material.Outlined.List">All Student</MudNavLink> *@
+        </MudNavGroup>
+
+        <MudNavLink Href="/SchoolCalender/SchoolCalender"
+                    Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.VerifiedUser">School Calender</MudNavLink>
+        <MudNavGroup Title="Time Table" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/TimeTable/Period" Icon="@Icons.Material.Outlined.Add">Period Type</MudNavLink>
+            <MudNavLink Href="/User_Pages/TimeTable/TimeTableSetup" Icon="@Icons.Material.Outlined.Update">Time TableSetup</MudNavLink>
+            <MudNavLink Href="/User_Pages/TimeTable/TimeTableAllTeacherAndAllClassSection" Icon="@Icons.Material.Outlined.List">Teacher and Class Section List</MudNavLink>
+        </MudNavGroup>
+         <MudNavGroup Title="Transaction" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+            <MudNavGroup Title="Collection " Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/User_Pages/Collection/TransactionDetails" Icon="@Icons.Material.Outlined.List">Today Collection</MudNavLink>
+                <MudNavLink Href="/User_Pages/Transaction/StudentTransactionDetails" Icon="@Icons.Material.Outlined.List">Transaction</MudNavLink>
+                <MudNavLink Href="/User_Pages/Transaction/MonthWise" Icon="@Icons.Material.Outlined.List">MonthWise</MudNavLink>
+                <MudNavLink Href="/User_Pages/Transaction/ClassWise" Icon="@Icons.Material.Outlined.List">ClassWise </MudNavLink>
+                <MudNavLink Href="/User_Pages/Transaction/PaymentMode" Icon="@Icons.Material.Outlined.List">PaymentModeWise</MudNavLink>
+                <MudNavLink Href="/User_Pages/Transaction/MonthWiseMode" Icon="@Icons.Material.Outlined.List">MonthWiseMode</MudNavLink>
+            </MudNavGroup>
+            <MudNavGroup Title="Pending Fee " Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/User_Pages/Transaction/GenericPendingFee" Icon="@Icons.Material.Outlined.List">Generic PendingFee</MudNavLink>
+                <MudNavLink Href="/User_Pages/Transaction/PendingFee/PendingFee" Icon="@Icons.Material.Outlined.List">Pending Fee List</MudNavLink>
+                <MudNavLink Href="/User_Pages/Transaction/PendingFee/PendingFeeFlowUpList" Icon="@Icons.Material.Outlined.List">Pending Fee Flowup List</MudNavLink>               
+            </MudNavGroup>
+        </MudNavGroup>
+      
+        
+        
+        <MudNavGroup Title="Holiday" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/HolidaySetup/HolidayTypeMaster" Icon="@Icons.Material.Outlined.Add">Holiday Type</MudNavLink>
+            <MudNavLink Href="/User_Pages/HolidaySetup/HolidaySetup" Icon="@Icons.Material.Outlined.AddTask">Holiday Setup</MudNavLink>
+        </MudNavGroup>
+
+        <MudNavGroup Title="Exam" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">
+
+            <MudNavGroup Title="Configuration" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/User_Pages/ExamSetup/ExamTypeMaster" Icon="@Icons.Material.Outlined.Add">Exam Type</MudNavLink>
+                <MudNavLink Href="/User_Pages/ExamSetup/ExamSchedule" Icon="@Icons.Material.Outlined.AddTask">Exam Schedule Setup</MudNavLink>
+                <MudNavLink Href="/OnlineExam/TestList" Icon="@Icons.Material.Outlined.List"> Test List </MudNavLink>
+            </MudNavGroup>
+            <MudNavGroup Title="Marks Entry " Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/User_Pages/ExamSetup/UnitWiseMarksEntry" Icon="@Icons.Material.Outlined.List">Unit Wise</MudNavLink>
+                <MudNavLink Href="/User_Pages/Transaction/PendingFee/PendingFee" Icon="@Icons.Material.Outlined.List">Term Wise</MudNavLink>
+            </MudNavGroup>
+            <MudNavGroup Title="Report Card " Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/User_Pages/ExamSetup/StudentUnitList" Icon="@Icons.Material.Outlined.List">Unit Wise Student  </MudNavLink>
+
+            </MudNavGroup>
+        </MudNavGroup>
+
+}
+else if (UserRole == "Sys Admin")
+    {
+        <MudText Typo="Typo.subtitle2" Color="Color.Dark" Class="ml-4 my-3">Student</MudText>
+
+        <MudNavLink Href="/Dashboard/Student/StudentDashboard"
+                Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Dashboard">Dashboard</MudNavLink>
+
+        <MudNavLink Href="/StudentModule/ProfileDetails/ProfilePage"
+                Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.VerifiedUser">Profile</MudNavLink>
+
+        <MudNavLink Href="/SchoolCalender/SchoolCalender"
+                    Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.VerifiedUser">School Calender</MudNavLink>
+
+       
+        <MudNavLink Href="/User_Pages/SchoolDetails/SchoolDetails"
+                    Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Update">Update School Details</MudNavLink>
+
+        <MudNavGroup Title="Master Data" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/MasterData/MasterDataList" Icon="@Icons.Material.Outlined.List">Master Data</MudNavLink>
+            <MudNavLink Href="/User_Pages/MasterData/RemarksTypeMaster" Icon="@Icons.Material.Outlined.Add">Remarks Type</MudNavLink>
+            <MudNavLink Href="/User_Pages/MasterData/RemarksTypeDescription" Icon="@Icons.Material.Outlined.Add">Remarks Description</MudNavLink>
+        </MudNavGroup>
+
+        <MudNavGroup Title="Enquiry" Icon="@Icons.Material.Outlined.SupervisedUserCircle" HideExpandIcon="false" Expanded="false">         
+            <MudNavLink Href="/User_Pages/Enquiry/EnquiryDetails" Icon="@Icons.Material.Outlined.Add">Enquiry </MudNavLink>
+        </MudNavGroup>
+
+        <MudNavGroup Title="User Account" Icon="@Icons.Material.Outlined.VerifiedUser" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/Employee/EmployeeSetup" Icon="@Icons.Material.Outlined.Add">User Account</MudNavLink>
+        </MudNavGroup>
+        <MudNavGroup Title="Time Table" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/TimeTable/Period" Icon="@Icons.Material.Outlined.Add">Period Type</MudNavLink>
+            <MudNavLink Href="/User_Pages/TimeTable/TimeTableSetup" Icon="@Icons.Material.Outlined.Update">Time TableSetup</MudNavLink>
+            <MudNavLink Href="/User_Pages/TimeTable/TimeTableAllTeacherAndAllClassSection" Icon="@Icons.Material.Outlined.List">Teacher and Class Section List</MudNavLink>
+        </MudNavGroup>
+        
+        <MudNavGroup Title="Student" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">
+
+             <MudNavLink Href=" /Student/StudentAddProfilePicture" Icon="@Icons.Material.Outlined.Add">Student Photo</MudNavLink>
+           
+            <MudNavLink Href="/User_Pages/Student/StudentList" Icon="@Icons.Material.Outlined.List">Student List</MudNavLink>
+            <MudNavLink Href="/User_Pages/Student/GenericStudentList" Icon="@Icons.Material.Outlined.List">Generic List</MudNavLink>
+            <MudNavLink Href="/User_Pages/Attendance/StudentAttendance" Icon="@Icons.Material.Outlined.Add">Student Attendance</MudNavLink>
+            <MudNavLink Href="/User_Pages/Attendance/StudentAttendanceDetails" Icon="@Icons.Material.Outlined.List">Single Student</MudNavLink>
+            <MudNavLink Href="/User_Pages/Attendance/AllStudentAttendanceList" Icon="@Icons.Material.Outlined.List">All Student</MudNavLink>
+        </MudNavGroup>
+
+
+        @* <MudNavGroup Title="Attendance" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/Attendance/StudentAttendance" Icon="@Icons.Material.Outlined.Add">Student Attendance</MudNavLink>
+            <MudNavLink Href="/User_Pages/Attendance/StudentAttendanceDetails" Icon="@Icons.Material.Outlined.List">Single Student</MudNavLink>
+            <MudNavLink Href="/User_Pages/Attendance/AllStudentAttendanceList" Icon="@Icons.Material.Outlined.List">All Student</MudNavLink>
+
+            @*  <MudNavLink Href="/RND/DropDownList _DataGrid" Icon="@Icons.Material.Outlined.Add">Student Attendance dropdown</MudNavLink>
+        <MudNavLink Href="/RND/Radio_button_instead_of_checkbox" Icon="@Icons.Material.Outlined.Add">Student Attendance option</MudNavLink> 
+
+        </MudNavGroup> *@
+        <MudNavGroup Title="Transaction" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+            <MudNavGroup Title="Collection " Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/User_Pages/Collection/TransactionDetails" Icon="@Icons.Material.Outlined.List">Today Collection</MudNavLink>
+                <MudNavLink Href="/User_Pages/Transaction/StudentTransactionDetails" Icon="@Icons.Material.Outlined.List">Transaction</MudNavLink>
+                <MudNavLink Href="/User_Pages/Transaction/MonthWise" Icon="@Icons.Material.Outlined.List">MonthWise</MudNavLink>
+                <MudNavLink Href="/User_Pages/Transaction/ClassWise" Icon="@Icons.Material.Outlined.List">ClassWise </MudNavLink>
+                <MudNavLink Href="/User_Pages/Transaction/PaymentMode" Icon="@Icons.Material.Outlined.List">PaymentModeWise</MudNavLink>
+                <MudNavLink Href="/User_Pages/Transaction/MonthWiseMode" Icon="@Icons.Material.Outlined.List">MonthWiseMode</MudNavLink>
+            </MudNavGroup>
+            <MudNavGroup Title="Pending Fee " Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/User_Pages/Transaction/GenericPendingFee" Icon="@Icons.Material.Outlined.List">Generic PendingFee</MudNavLink>
+                <MudNavLink Href="/User_Pages/Transaction/PendingFee/PendingFee" Icon="@Icons.Material.Outlined.List">Pending Fee List</MudNavLink>
+                <MudNavLink Href="/User_Pages/Transaction/PendingFee/PendingFeeFlowUpList" Icon="@Icons.Material.Outlined.List">Pending Fee Flowup List</MudNavLink>
+               
+            </MudNavGroup>
+
+        </MudNavGroup>
+         
+        <MudNavGroup Title="Syllabus" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/Syllabus/UnitMasterSetup" Icon="@Icons.Material.Outlined.Add">Unit</MudNavLink>
+            <MudNavLink Href="/User_Pages/Syllabus/ChapterMasterSetup" Icon="@Icons.Material.Outlined.Add">Chapter</MudNavLink>
+            <MudNavLink Href="/User_Pages/Syllabus/TopicMasterSetup" Icon="@Icons.Material.Outlined.Add">Topic</MudNavLink>
+            <MudNavLink Href="/User_Pages/Syllabus/SyllabusPlanerSetup" Icon="@Icons.Material.Outlined.Settings">Syllabus Planer</MudNavLink>
+            <MudNavLink Href="/User_Pages/Syllabus/SyllabusStatus" Icon="@Icons.Material.Outlined.AddTask">Syllabus Status</MudNavLink>
+            <MudNavLink Href="/User_Pages/SyllabusVideo/SyllabusVideoList" Icon="@Icons.Material.Outlined.Add">Syllabus Video List</MudNavLink>
+            <MudNavLink Href="/User_Pages/QuestionBank/QuestionBank" Icon="@Icons.Material.Outlined.Add">Question</MudNavLink>
+            <MudNavLink Href="/User_Pages/QuestionBank/GenerateQuestionPaper" Icon="@Icons.Material.Outlined.Create">Create Question Paper</MudNavLink>
+
+        </MudNavGroup>
+        @* <MudNavGroup Title="Syllabus Video" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/SyllabusVideo/SyllabusVideoList" Icon="@Icons.Material.Outlined.Add">Syllabus Video List</MudNavLink>
+             
+        </MudNavGroup> *@
+        @* <MudNavGroup Title="QuestionBank" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/QuestionBank/QuestionBank" Icon="@Icons.Material.Outlined.Add">Question</MudNavLink>
+            <MudNavLink Href="/User_Pages/QuestionBank/GenerateQuestionPaper" Icon="@Icons.Material.Outlined.Create">Create Question Paper</MudNavLink>
+             
+        </MudNavGroup>
+ *@
+
+        <MudNavGroup Title="Holiday" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/HolidaySetup/HolidayTypeMaster" Icon="@Icons.Material.Outlined.Add">Holiday Type</MudNavLink>
+            <MudNavLink Href="/User_Pages/HolidaySetup/HolidaySetup" Icon="@Icons.Material.Outlined.AddTask">Holiday Setup</MudNavLink>
+        </MudNavGroup>
+        <MudNavGroup Title="Exam" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">            
+            <MudNavGroup Title="Configuration" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/User_Pages/ExamSetup/ExamTypeMaster" Icon="@Icons.Material.Outlined.Add">Exam Type</MudNavLink>
+                <MudNavLink Href="/User_Pages/ExamSetup/ExamSchedule" Icon="@Icons.Material.Outlined.Add">Unit Wise Exam Schedule</MudNavLink>
+                <MudNavLink Href="/User_Pages/ExamSetup/TermWiseExamSchedule" Icon="@Icons.Material.Outlined.Add">Term Wise Exam Schedule</MudNavLink>
+                <MudNavLink Href="/OnlineExam/TestList" Icon="@Icons.Material.Outlined.List"> Test List </MudNavLink>
+            </MudNavGroup>
+            <MudNavGroup Title="Marks Entry " Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/User_Pages/ExamSetup/UnitWiseMarksEntry" Icon="@Icons.Material.Outlined.List">Unit Wise</MudNavLink>
+                <MudNavLink Href="/User_Pages/Transaction/PendingFee/PendingFee" Icon="@Icons.Material.Outlined.List">Term Wise</MudNavLink>
+            </MudNavGroup>
+            <MudNavGroup Title="Report Card " Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/User_Pages/ExamSetup/StudentUnitList" Icon="@Icons.Material.Outlined.List">Unit Wise Student  </MudNavLink>               
+            </MudNavGroup>
+        </MudNavGroup>
+        <MudNavGroup Title="Home Work" Icon="@Icons.Material.Outlined.HomeWork" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/HomeWork/HomeWorkType" Icon="@Icons.Material.Outlined.AddTask">Homework Type</MudNavLink>
+            <MudNavLink Href="/User_Pages/HomeWork/HomeWork" Icon="@Icons.Material.Outlined.AddToHomeScreen">Home work</MudNavLink>
+        </MudNavGroup>
+
+        <MudNavGroup Title="Expense" Icon="@Icons.Material.Outlined.HomeWork" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/Expense/AccountMaster" Icon="@Icons.Material.Outlined.Add">Account Type</MudNavLink>
+            <MudNavLink Href="/User_Pages/Expense/VendorDetails" Icon="@Icons.Material.Outlined.Add">Account Details</MudNavLink>
+            <MudNavLink Href="/User_Pages/Expense/AddBillDetails" Icon="@Icons.Material.Outlined.Add">Bill</MudNavLink>
+            <MudNavLink Href="/User_Pages/Expense/AccountWisePayment" Icon="@Icons.Material.Outlined.Add">Account Wise Payment</MudNavLink>
+            @*<MudNavLink Href="/User_Pages/Expense/ExpenseDetails" Icon="@Icons.Material.Outlined.Add">Expense</MudNavLink>*@
+        </MudNavGroup>
+        <MudNavLink Href="/User_Pages/ComplaintRegister/ComplaintRegister" Icon="@Icons.Material.Outlined.Add">Complient Register</MudNavLink>
+
+       @*  <MudNavGroup Title="RND By Naeim" Icon="@Icons.Material.Outlined.VerifiedUser" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/RND/Grid" Icon="@Icons.Material.Outlined.Add">Grid</MudNavLink>
+
+        </MudNavGroup> *@
+    }
+else if (UserRole == "Student")
+    {
+        <MudText Typo="Typo.subtitle2" Color="Color.Dark" Class="ml-4 my-3">Student</MudText>
+
+        <MudNavLink Href="/Dashboard/Student/StudentDashboard"
+                Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Dashboard">Dashboard</MudNavLink>
+
+        <MudNavLink Href="/StudentModule/ProfileDetails/ProfilePage"
+                Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.VerifiedUser">Profile</MudNavLink>
+
+        <MudNavLink Href="/User_Pages/Transaction/StudentTransactionDetails"
+                Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.VerifiedUser">Transaction Details</MudNavLink>
+
+        <MudNavLink Href="/User_Pages/timeTable/StudentTimeTable"
+                Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.VerifiedUser">Time Table</MudNavLink>
+        
+        <MudNavGroup Title="Syllabus" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/QuestionBank/QuestionBank" Icon="@Icons.Material.Outlined.Add">Syllabus Planer</MudNavLink>
+            <MudNavLink Href="/User_Pages/QuestionBank/QuestionBank" Icon="@Icons.Material.Outlined.Add">Syllabus status</MudNavLink>
+            <MudNavLink Href="/User_Pages/QuestionBank/QuestionBank" Icon="@Icons.Material.Outlined.Add">Syllabus Vedio</MudNavLink>
+            
+        </MudNavGroup>
+        <MudNavGroup Title="Attendance" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/QuestionBank/QuestionBank" Icon="@Icons.Material.Outlined.List">Attendance Report</MudNavLink>
+            
+        </MudNavGroup>
+        <MudNavGroup Title="Exam Schedule" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/ExamSetup/ExamScheduleForStudent" Icon="@Icons.Material.Outlined.List">Unit Exam Schedule</MudNavLink>
+            <MudNavLink Href="/User_Pages/ExamSetup/ExamScheduleForStudent" Icon="@Icons.Material.Outlined.List">Term Exam Schedule</MudNavLink>
+        </MudNavGroup>
+
+        <MudNavGroup Title="Feed Back" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/QuestionBank/QuestionBank" Icon="@Icons.Material.Outlined.List">Feedback</MudNavLink>
+            
+        </MudNavGroup>
+        <MudNavGroup Title="Academic Report" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/QuestionBank/QuestionBank" Icon="@Icons.Material.Outlined.List">Unit Test Report</MudNavLink>
+
+        </MudNavGroup>
+        
+}
+else if (UserRole == "Teacher")
+{
+    <MudText Typo="Typo.subtitle2" Color="Color.Dark" Class="ml-4 my-3">Teacher</MudText>
+    @*Management Menu Details*@
+    <MudNavLink Href="/Dashboard/Teacher/TeacherDashboard"
+                Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Dashboard">Dashboard</MudNavLink>
+        <MudNavGroup Title="Syllabus" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/Syllabus/UnitMasterSetup" Icon="@Icons.Material.Outlined.Add">Unit</MudNavLink>
+            <MudNavLink Href="/User_Pages/Syllabus/ChapterMasterSetup" Icon="@Icons.Material.Outlined.Add">Chapter</MudNavLink>
+            <MudNavLink Href="/User_Pages/Syllabus/TopicMasterSetup" Icon="@Icons.Material.Outlined.Add">Topic</MudNavLink>
+            <MudNavLink Href="/User_Pages/Syllabus/SyllabusPlanerSetup" Icon="@Icons.Material.Outlined.Settings">Syllabus Planer</MudNavLink>
+            <MudNavLink Href="/User_Pages/Syllabus/SyllabusStatus" Icon="@Icons.Material.Outlined.AddTask">Syllabus Status</MudNavLink>
+            <MudNavLink Href="/User_Pages/SyllabusVideo/SyllabusVideoList" Icon="@Icons.Material.Outlined.Add">Syllabus Video List</MudNavLink>
+            <MudNavLink Href="/User_Pages/QuestionBank/QuestionBank" Icon="@Icons.Material.Outlined.Add">Question</MudNavLink>
+            <MudNavLink Href="/User_Pages/QuestionBank/GenerateQuestionPaper" Icon="@Icons.Material.Outlined.Create">Generate Question Paper</MudNavLink>
+
+        </MudNavGroup>
+       
+        <MudNavGroup Title="Time Table" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">             
+            <MudNavLink Href="/User_Page/TimeTable/TeacherTimeTable" Icon="@Icons.Material.Outlined.Update">Time Table</MudNavLink>            
+        </MudNavGroup>
+
+        <MudNavGroup Title="Pending Fee " Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+           
+            <MudNavLink Href="/User_Pages/Transaction/PendingFee/PendingFee" Icon="@Icons.Material.Outlined.List">Pending Fee List</MudNavLink>
+            <MudNavLink Href="/User_Pages/Transaction/PendingFee/PendingFeeFlowUpList" Icon="@Icons.Material.Outlined.List">Pending Fee Flowup List</MudNavLink>
+
+        </MudNavGroup>
+        <MudNavGroup Title="Exam" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">
+
+            <MudNavGroup Title="Configuration" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">               
+                <MudNavLink Href="/User_Pages/ExamSetup/ExamSchedule" Icon="@Icons.Material.Outlined.AddTask">Exam Schedule Setup</MudNavLink>                
+            </MudNavGroup>
+            <MudNavGroup Title="Marks Entry " Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/User_Pages/ExamSetup/UnitWiseMarksEntry" Icon="@Icons.Material.Outlined.List">Unit Wise</MudNavLink>
+                <MudNavLink Href="/User_Pages/Transaction/PendingFee/PendingFee" Icon="@Icons.Material.Outlined.List">Term Wise</MudNavLink>
+            </MudNavGroup>
+            <MudNavGroup Title="Report Card " Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/User_Pages/ExamSetup/StudentUnitList" Icon="@Icons.Material.Outlined.List">Unit Wise Student  </MudNavLink>
+
+            </MudNavGroup>
+        </MudNavGroup>
+        
+        <MudNavGroup Title="Student Attendance" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">
+
+            <MudNavLink Href=" /Student/StudentAddProfilePicture" Icon="@Icons.Material.Outlined.Add">Student Photo</MudNavLink>   
+            <MudNavLink Href="/User_Pages/Attendance/StudentAttendance" Icon="@Icons.Material.Outlined.Add">Student Attendance</MudNavLink>
+            <MudNavLink Href="/User_Pages/Attendance/StudentAttendanceDetails" Icon="@Icons.Material.Outlined.List">Single Student</MudNavLink>
+            <MudNavLink Href="/User_Pages/Attendance/AllStudentAttendanceList" Icon="@Icons.Material.Outlined.List">All Student</MudNavLink>
+        </MudNavGroup>
+
+        <MudNavGroup Title="Home Work" Icon="@Icons.Material.Outlined.HomeWork" HideExpandIcon="false" Expanded="false">           
+            <MudNavLink Href="/User_Pages/HomeWork/HomeWork" Icon="@Icons.Material.Outlined.Add">Home work</MudNavLink>
+        </MudNavGroup>
+
+}
+else if (UserRole == "AIS_Admin")
+    {
+
+        <MudText Typo="Typo.subtitle2" Color="Color.Dark" Class="ml-4 my-3">AIS Admin</MudText>
+        @*Management Menu Details*@
+        <MudNavLink Href="/AISSchoolDetails/AISDashboard"
+                Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Dashboard">Dashboard</MudNavLink>
+
+        @*<MudNavGroup Title="School Details" Icon="@Icons.Material.Outlined.Add" HideExpandIcon="false" Expanded="true">
+            <MudNavLink Href="/AISSchoolDetails/AISSchoolDetails" Icon="@Icons.Material.Outlined.Add">School</MudNavLink>
+        </MudNavGroup>*@
+
+        <MudNavGroup Title="User Account" Icon="@Icons.Material.Outlined.VerifiedUser" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/Employee/EmployeeSetup" Icon="@Icons.Material.Outlined.Add">User Account</MudNavLink>             
+        </MudNavGroup>
+
+        <MudNavGroup Title="School Details" Icon="@Icons.Material.Outlined.Add" HideExpandIcon="false" Expanded="true">
+            <MudNavLink Href="/User_Pages/FlowUpSchool/FlowUpSchool" Icon="@Icons.Material.Outlined.Add">School</MudNavLink>
+        </MudNavGroup>
+
+
+    }
+else if (UserRole == "AIS_Executive")
+{
+
+    <MudText Typo="Typo.subtitle2" Color="Color.Dark" Class="ml-4 my-3">AIS Executive</MudText>
+    @*Management Menu Details*@
+    <MudNavLink Href="/AISSchoolDetails/AISDashboard"
+                Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Dashboard">Dashboard</MudNavLink>
+
+        <MudNavGroup Title="School Details" Icon="@Icons.Material.Outlined.Add" HideExpandIcon="false" Expanded="true">
+            <MudNavLink Href="/User_Pages/FlowUpSchool/FlowUpSchool" Icon="@Icons.Material.Outlined.Add">School</MudNavLink>
+        </MudNavGroup>
+
+}
+else
+{
+    <MudText Typo="Typo.subtitle2" Color="Color.Dark" Class="ml-4 my-3">Management</MudText>
+    @*Management Menu Details*@
+    <MudNavLink Href="/Dashboard/Management/ManagementDashboard"
+                Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Dashboard">Dashboard</MudNavLink>
+    <!--<MudNavGroup Title="Managemet" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="true">--> @*
+        <MudNavGroup Title="School" Icon="@Icons.Material.Outlined.AdminPanelSettings" HideExpandIcon="false" Expanded="false">
+          <MudNavLink Href="/MasterSetting/MasterBatch" Icon="@Icons.Material.Outlined.Add">Profile</MudNavLink>
+          <MudNavLink Href="/SchoolSetup/SchoolList" Icon="@Icons.Material.Outlined.List">Syllabus</MudNavLink>
+          <MudNavLink Href="/MasterSetting/MasterClass" Icon="@Icons.Material.Outlined.PersonAdd">Fee</MudNavLink>
+          <MudNavLink Href="/MasterSetting/MasterClass" Icon="@Icons.Material.Outlined.PersonAdd">Attendance</MudNavLink>
+        </MudNavGroup>
+    *@ <!--</MudNavGroup>-->
+
+    <MudNavGroup Title="Master Setting" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+        <MudNavGroup Title="Master Data" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/MasterData/ClassMaster" Icon="@Icons.Material.Outlined.Add">Class Master</MudNavLink>
+            <MudNavLink Href="/MasterData/SectionMaster" Icon="@Icons.Material.Outlined.Add">Section Master</MudNavLink>
+            <MudNavLink Href="/MasterData/BatchMaster" Icon="@Icons.Material.Outlined.Add">Batch Master</MudNavLink>
+            <MudNavLink Href="/MasterData/DepartmentMaster" Icon="@Icons.Material.Outlined.Add">Department Master</MudNavLink>
+            <MudNavLink Href="/MasterData/EmployeeMaster" Icon="@Icons.Material.Outlined.Add">Employee Master</MudNavLink>
+            <MudNavLink Href="/MasterData/OccupationMaster" Icon="@Icons.Material.Outlined.Add">Occupation Master</MudNavLink>
+            <MudNavLink Href="/MasterData/DocumentMaster" Icon="@Icons.Material.Outlined.Add">Document Master</MudNavLink>
+        </MudNavGroup>
+        <MudNavGroup Title="Exam Master" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/MasterData/ExamTypeMaster" Icon="@Icons.Material.Outlined.Add">Exam Type</MudNavLink>
+            <MudNavLink Href="/MasterData/SubjectMaster" Icon="@Icons.Material.Outlined.Add">Subject</MudNavLink>
+
+        </MudNavGroup>
+        <MudNavGroup Title="Fee Master" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/MasterData/FeeHeaderMaster" Icon="@Icons.Material.Outlined.Add">Fee Header</MudNavLink>
+                <MudNavLink Href= "/MasterData/ConcessionMaster" Icon="@Icons.Material.Outlined.Add">Concession </MudNavLink>
+            <MudNavLink Href="/MasterData/DiscountMaster" Icon="@Icons.Material.Outlined.Add">Discount</MudNavLink>
+            <MudNavLink Href="/MasterData/FeeTermMaster" Icon="@Icons.Material.Outlined.Add">Fee Term</MudNavLink>
+
+        </MudNavGroup>
+        <MudNavGroup Title="Inventery Master" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/MasterData/VenderMaster" Icon="@Icons.Material.Outlined.Add">Vender</MudNavLink>
+                <MudNavLink Href="/MasterData/ItemMaster" Icon="@Icons.Material.Outlined.Add">Item</MudNavLink>
+                <MudNavLink Href="/MasterData/VehicleMaster" Icon="@Icons.Material.Outlined.Add">Vehicle</MudNavLink>
+
+        </MudNavGroup>
+      <MudNavGroup Title="Transport Master" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/MasterData/BusStopWithRouteMaster" Icon="@Icons.Material.Outlined.Add">BusStopWithRoute</MudNavLink>
+                <MudNavLink Href="/MasterData/GatePassMaster" Icon="@Icons.Material.Outlined.Add">GatePass</MudNavLink>
+      </MudNavGroup>
+        @*<MudNavLink Href="/MasterConfiguration/ClassMaster" Icon="@Icons.Material.Outlined.List">Class Master</MudNavLink>
+        <MudNavLink Href="/MasterConfiguration/SubjectMaster" Icon="@Icons.Material.Outlined.List">Subject</MudNavLink>*@
+    </MudNavGroup>
+        
+    <MudNavGroup Title="Planner" Icon="@Icons.Material.Outlined.QueuePlayNext" HideExpandIcon="false" Expanded="false">
+            <MudNavGroup Title="Term Planner" Icon="@Icons.Material.Outlined.QuestionAnswer" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/Syllabus/MasterUnit" Icon="@Icons.Material.Outlined.Add"> Unit Master </MudNavLink>
+                <MudNavLink Href="/Syllabus/ChapterMaster" Icon="@Icons.Material.Outlined.Add"> Chapter Master </MudNavLink>
+                <MudNavLink Href="/Syllabus/TopicMaster" Icon="@Icons.Material.Outlined.Add"> Topic Master </MudNavLink>
+                <MudNavLink Href="/Syllabus/SyllabusPlanDetails" Icon="@Icons.Material.Outlined.Add"> Syllabus Setup </MudNavLink>
+            </MudNavGroup>
+            <MudNavLink Href="/SchoolCalender/SchoolCalender" Icon="@Icons.Material.Outlined.Add"> Yearly Planner </MudNavLink>
+
+
+        </MudNavGroup>
+        
+    <MudNavGroup Title="Employee" Icon="@Icons.Material.Outlined.SupervisedUserCircle" HideExpandIcon="false" Expanded="false">
+        <MudNavLink Href="/Employee/EmployeeDetails" Icon="@Icons.Material.Outlined.Add">Employee</MudNavLink>
+        <MudNavLink Href="/Employee/MapClasswithSubject" Icon="@Icons.Material.Outlined.Add">Map Class&Subject</MudNavLink>
+    </MudNavGroup>
+    <MudNavGroup Title="Student" Icon="@Icons.Material.Outlined.AdminPanelSettings" HideExpandIcon="false" Expanded="false">
+        <MudNavLink Href="/Student/StudentDetailsList" Icon="@Icons.Material.Outlined.List">Student List</MudNavLink>
+        <MudNavLink Href="/Student/AddStudent" Icon="@Icons.Material.Outlined.Add">Student</MudNavLink>
+        <MudNavLink Href="/Student/StudentAddProfilePicture" Icon="@Icons.Material.Outlined.Add">Profile Picture</MudNavLink>
+    </MudNavGroup>
+    
+
+    <MudNavGroup Title="Transaction" Icon="@Icons.Material.Outlined.Payment" HideExpandIcon="false" Expanded="false">
+        <MudNavLink Href="/Transaction/StudentTransactionDetails" Icon="@Icons.Material.Outlined.Payment">Fee Collection</MudNavLink>
+        <MudNavLink Href="/Transaction/StudentPendingFeeList" Icon="@Icons.Material.Outlined.Payment">Pending Fee</MudNavLink>
+        <MudNavLink Href="/FeeConfigurationDetails/FeeConfigurationList" Icon="@Icons.Material.Outlined.Payment">Fee Details</MudNavLink>
+    </MudNavGroup>
+  
+    <MudNavGroup Title="Time Table" Icon="@Icons.Material.Outlined.Timer" HideExpandIcon="false" Expanded="false">
+        <MudNavLink Href="/TimeTable/PeriodSetup" Icon="@Icons.Material.Rounded.PhonelinkSetup">Period Setup</MudNavLink>
+        <MudNavLink Href="/TimeTable/TimeTableSetup" Icon="@Icons.Material.Sharp.Add">Time Table Setup</MudNavLink>
+        @*<MudNavLink Href="/TimeTable/ViewTimeTableSetup" Icon="@Icons.Material.Rounded.ViewList">View Time Table</MudNavLink>*@
+    </MudNavGroup>
+    <MudNavGroup Title="Exam Schedule" Icon="@Icons.Material.Outlined.Schedule" HideExpandIcon="false" Expanded="false">
+        <MudNavLink Href="/ExamSchedule/ExamSchedule" Icon="@Icons.Material.Rounded.Schedule">Schedule</MudNavLink>
+    </MudNavGroup>
+
+    <MudNavGroup Title="Holiday" Icon="@Icons.Material.Outlined.House" HideExpandIcon="false" Expanded="false">
+        <MudNavLink Href="/Holiday/HolidayTypeMaster" Icon="@Icons.Material.Rounded.PhonelinkSetup"> Holiday Master </MudNavLink>
+        <MudNavLink Href="/Holiday/HolidayDetails" Icon="@Icons.Material.Sharp.PhonelinkSetup"> Holiday setup </MudNavLink>
+    </MudNavGroup>
+   
+    <MudNavGroup Title="Question Bank" Icon="@Icons.Material.Outlined.QuestionAnswer" HideExpandIcon="false" Expanded="false">
+        <MudNavLink Href="/QuestionBank/AddQuestionBankDetails" Icon="@Icons.Material.Outlined.Add">Question </MudNavLink>
+        <MudNavLink Href="/QuestionBank/QuestionBankList" Icon="@Icons.Material.Outlined.List">Question List </MudNavLink>
+        <MudNavLink Href="/QuestionBank/QuestionBank" Icon="@Icons.Material.Outlined.QuestionAnswer"> Question Bank </MudNavLink>
+        <MudNavLink Href="/QuestionBank/QuestioPaperGenerate" Icon="@Icons.Material.Outlined.QuestionAnswer"> Select Question Paper </MudNavLink>
+    </MudNavGroup>
+
+    <MudNavGroup Title="Online Exam" Icon="@Icons.Material.Outlined.QuestionAnswer" HideExpandIcon="false" Expanded="false">
+        <MudNavLink Href="/OnlineExam/TestList" Icon="@Icons.Material.Outlined.List"> Test List </MudNavLink>
+        @*<MudNavLink Href="/QuestionBank/QuestioPaperGenerate" Icon="@Icons.Material.Outlined.QuestionAnswer"> Select Question Paper </MudNavLink>*@
+    </MudNavGroup>
+
+    <MudNavGroup Title="Attendance" Icon="@Icons.Material.Outlined.QuestionAnswer" HideExpandIcon="false" Expanded="false">
+        <MudNavLink Href="/Attendance/StudentAttendance" Icon="@Icons.Material.Outlined.List">Attendance </MudNavLink>
+        <MudNavLink Href="/Attendance/ViewStudentAttendanceList" Icon="@Icons.Material.Outlined.List">Attendance Register </MudNavLink>
+
+        @*<MudNavLink Href="/QuestionBank/QuestioPaperGenerate" Icon="@Icons.Material.Outlined.QuestionAnswer"> Select Question Paper </MudNavLink>*@
+    </MudNavGroup>
+
+
+    @*<MudNavGroup Title="School Calender" Icon="@Icons.Material.Outlined.SupervisedUserCircle" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/SchoolCalender/SchoolCalender" Icon="@Icons.Material.Outlined.CalendarViewDay"> Calender </MudNavLink>
+        </MudNavGroup>*@
+
+    <MudNavGroup Title="Remarks" Icon="@Icons.Material.Outlined.SupervisedUserCircle" HideExpandIcon="false" Expanded="false">
+        <MudNavLink Href="/RemarksDetails/RemarksDetails" Icon="@Icons.Material.Outlined.Update"> Update Resmarks </MudNavLink>
+    </MudNavGroup>
+
+    <MudNavGroup Title="Enquiry" Icon="@Icons.Material.Outlined.SupervisedUserCircle" HideExpandIcon="false" Expanded="false">
+        <MudNavLink Href="/Enquiry/Enquiry" Icon="@Icons.Material.Outlined.Add">Enquiry </MudNavLink>
+        <MudNavLink Href="/Enquiry/AddEnquiry" Icon="@Icons.Material.Outlined.Add">Enquiry </MudNavLink>
+    </MudNavGroup>
+
+    <MudNavGroup Title="Home work" Icon="@Icons.Material.Outlined.HomeWork" HideExpandIcon="false" Expanded="false">
+        <MudNavLink Href="/HomeWork/HomeWork" Icon="@Icons.Material.Outlined.Send"> Send Homework </MudNavLink>
+    </MudNavGroup>
+
+    @*<MudNavGroup Title="RND Concept" Icon="@Icons.Material.Outlined.HomeWork" HideExpandIcon="false" Expanded="false">
+
+        <MudNavLink Href="/DocIO" Icon="@Icons.Material.Outlined.Send"> word Document </MudNavLink>
+
+        <MudNavLink Href="/RND/BatchDataUpdateGrid" Icon="@Icons.Material.Outlined.Send"> Batch _DataGrid </MudNavLink>
+
+        <MudNavLink Href="/RND/DropDownList _DataGrid" Icon="@Icons.Material.Outlined.Send"> DropDownList _DataGrid </MudNavLink>
+
+        <MudNavLink Href="/RND/Dialog_Editing_DataGrid" Icon="@Icons.Material.Outlined.Send"> Dialog Editng </MudNavLink>
+
+        <MudNavLink Href="/RND/Confirmation_Dialog_Blazor" Icon="@Icons.Material.Outlined.Send"> Confirmation_Dialog_Blazor </MudNavLink>
+
+        <MudNavLink Href="/RND/Checkbox_Grid" Icon="@Icons.Material.Outlined.Send"> Checkbox under grid</MudNavLink>
+
+        <MudNavLink Href="/RND/Header_withExportExcel" Icon="@Icons.Material.Outlined.Send"> export with header</MudNavLink>
+
+        <MudNavLink Href="/RND/Custom_external_form_editing" Icon="@Icons.Material.Outlined.Send"> Custom_external_form_editing </MudNavLink>
+
+        <MudNavLink Href="/RND/Adaptive_UI_Layout" Icon="@Icons.Material.Outlined.Send"> Adaptive_UI_Layout </MudNavLink>
+
+        <MudNavLink Href="/RND/Command_Column_Button" Icon="@Icons.Material.Outlined.Send"> Command_Column_Button </MudNavLink>
+
+        <MudNavLink Href="/RND/Radio_button_instead_of_checkbox" Icon="@Icons.Material.Outlined.Send"> radio_button_instead_of_checkbox </MudNavLink>
+
+        <MudNavLink Href="/RND/Grouping_in_Dropdown_List" Icon="@Icons.Material.Outlined.Send"> Grouping_in_Dropdown_List </MudNavLink>
+        <MudNavLink Href="/RND/Custom_Toolbar" Icon="@Icons.Material.Outlined.Send">Custom_Toolbar </MudNavLink>
+
+    </MudNavGroup>
+
+    <MudNavGroup Title="RND Concept" Icon="@Icons.Material.Outlined.HomeWork" HideExpandIcon="false" Expanded="false">
+        <MudNavLink Href="/RND/Grid/Grid_EditMode" Icon="@Icons.Material.Outlined.Send"> Grid_EditMode </MudNavLink>
+        <MudNavLink Href="/RND/Cell_Formatting" Icon="@Icons.Material.Outlined.Send">Cell_Formatting </MudNavLink>
+    </MudNavGroup>*@
+
+}
+</MudNavMenu>
+@code { string AlertAssignmentIcon { get; set; } = "<path d=\"M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3H9.18C9.6,1.84 10.7,1 12,1C13.3,1 14.4,1.84 14.82,3H19M12,3A1,1 0 0,0 11,4A1,1 0 0,0 12,5A1,1 0 0,0 13,4A1,1 0 0,0 12,3M7,7V5H5V19H19V5H17V7H7M11,9H13V13.5H11V9M11,15H13V17H11V15Z\" />"; }

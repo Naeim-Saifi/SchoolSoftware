@@ -1,0 +1,74 @@
+﻿@page "/MasterConfiguration/ClassMaster"
+
+@using Syncfusion.Blazor.Grids
+@using  AIS.Model.MasterData;
+
+@inherits ClassMasterBase
+
+@{
+    var InitSearch = (new string[] { "className" });
+    var Tool = (new List<string>() { "Search" });
+}
+
+
+<MudGrid>
+    <MudItem xs="12" sm="8" md="6">
+        <MudCard Elevation="25">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText>Master class and section list</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudCard>
+
+                            @if (classMasterListModel.Count == 0)
+                            {
+                                <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                            }
+                            else
+                            {
+                           
+                                <SfGrid DataSource="@classMasterListModel" AllowPaging="true" Toolbar=@Tool
+                                        AllowTextWrap="false"
+                                        RowHeight="38" EnableVirtualMaskRow="false" EnableVirtualization="false"
+                                        Height="410" AllowResizing="true" 
+                                        AllowFiltering="true" ShowColumnMenu="true"
+                                        AllowExcelExport="true" AllowPdfExport="true"
+                                        ContextMenuItems="@(new List<object>() {"PdfExport", "ExcelExport", "CsvExport"})">
+
+                                    <GridSearchSettings Fields=@InitSearch Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                        IgnoreCase="true"></GridSearchSettings>
+
+                                    <GridPageSettings PageSize="30"></GridPageSettings>
+                                    <GridColumns>
+
+                                        <GridColumn Field=@nameof(ClassMasterListModel.classId)
+                                                    HeaderText="Class Id" Width="60" TextAlign="TextAlign.Center"></GridColumn>
+                                        <GridColumn Field=@nameof(ClassMasterListModel.className)
+                                                    HeaderText="Class Name" Width="60"TextAlign="TextAlign.Center"></GridColumn>
+                                        <GridColumn Field=@nameof(ClassMasterListModel.sectionName)
+                                                    HeaderText="Section Name" AllowGrouping="false" Width="60"TextAlign="TextAlign.Center"></GridColumn>
+                                        <GridColumn Field=@nameof(ClassMasterListModel.stength)
+                                                    HeaderText="Stength" AllowGrouping="false" Width="60"TextAlign="TextAlign.Center"></GridColumn>
+                                        <GridColumn Field=@nameof(ClassMasterListModel.activeStatusDetails)
+                                                    HeaderText="Status" AllowGrouping="false" Width="80"TextAlign="TextAlign.Center"></GridColumn>
+
+                                        @*<GridColumn Field=@nameof(paymentDetails[1].paymentMode) HeaderText="paymentMode" Width="150"></GridColumn>*@
+                                        @*<GridColumn Field=@nameof(OrdersDetails.OrderDate) HeaderText="Order Date" Format="d" Type="ColumnType.Date" TextAlign="TextAlign.Right" Width="130"></GridColumn>
+        <GridColumn Field=@nameof(OrdersDetails.Freight) Format="C2" TextAlign="TextAlign.Right" Width="120"></GridColumn>
+        <GridColumn Field=@nameof(OrdersDetails.ShipCountry) HeaderText="Ship Country" Width="150"></GridColumn>*@
+                                    </GridColumns>
+                                </SfGrid>
+
+
+                            }
+                        </MudCard>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</MudGrid>

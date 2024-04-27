@@ -1,0 +1,159 @@
+﻿@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using AIS.Data.RequestResponseModel.TransactionSetUp;
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+
+@using Syncfusion.Blazor.Charts
+
+@page "/User_Pages/Transaction/GenericPendingFee"
+@inherits GenericPendingFeeBase;
+
+@{
+
+    var InitSearchClassWise = (new string[] { "className" });
+    var InitSearchMonthWise = (new string[] { "monthName" });
+    var InitSearchBusStopWise = (new string[] { "busStopID" });
+}
+
+
+<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Generic PendingFee Data</MudText>
+<SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="3">
+<DashboardLayoutPanels>
+
+        <DashboardLayoutPanel Column=0>
+            <HeaderTemplate><div>MonthWise Details</div></HeaderTemplate>
+            <ContentTemplate>
+                <div>
+                    <SfGrid DataSource="@_monthWise_PendingFee_List"
+                    @ref="_sfMonthWise"
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="500"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="false" AllowGrouping="true" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            Toolbar="@(new string[] {"Search","Print" })">
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        <GridPageSettings PageSize="15" PageSizes="true"></GridPageSettings>
+                        <GridSearchSettings Fields=@InitSearchClassWise Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+
+
+
+                        <GridColumns>
+                            <GridColumn Field=@nameof(MonthWise_PendingFee_LIST_Output_Model.monthName) HeaderText="Month Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(MonthWise_PendingFee_LIST_Output_Model.pending) HeaderText="Pending" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(MonthWise_PendingFee_LIST_Output_Model.netDueAmount) HeaderText="NetDue Amount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                        </GridColumns>
+                        <SfToolbar>
+                            <ToolbarItems>
+                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel_MonthWise" Align="ItemAlign.Left"></ToolbarItem>
+                            </ToolbarItems>
+                        </SfToolbar>
+                    </SfGrid>
+                </div>
+            </ContentTemplate>
+
+        </DashboardLayoutPanel>
+        <DashboardLayoutPanel  Column=1>
+            <HeaderTemplate><div>ClassWise Details</div></HeaderTemplate>
+            <ContentTemplate>
+                <div>
+                    <SfGrid DataSource="@_classWise_PendingFee_List"
+                    @ref="_sfclassWise"
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="500"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="false" AllowGrouping="true" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            Toolbar="@(new string[] {"Search","Print" })">
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        <GridPageSettings PageSize="15" PageSizes="true"></GridPageSettings>
+                        <GridSearchSettings Fields=@InitSearchClassWise Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+                        <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+                       @* <GridAggregates>
+                            <GridAggregate>
+                                <GridAggregateColumns>
+                                    <GridAggregateColumn Field=@nameof(ClassWise_PendingFee_LIST_Output_Model.netDueAmount) Type="AggregateType.Sum">
+                                        <GroupFooterTemplate>
+                                            @{
+                                                var Unit = (context as AggregateTemplateContext);
+                                                <div>
+                                                    Total: @Unit.Sum
+                                                </div>
+                                            }
+                                        </GroupFooterTemplate>
+                                    </GridAggregateColumn>
+                                </GridAggregateColumns>
+                            </GridAggregate>
+                        </GridAggregates>*@
+
+                        <GridColumns>
+                            <GridColumn Field=@nameof(ClassWise_PendingFee_LIST_Output_Model.className) HeaderText="Class Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(ClassWise_PendingFee_LIST_Output_Model.sectionName) HeaderText="Section Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(ClassWise_PendingFee_LIST_Output_Model.pending) HeaderText="Pending" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(ClassWise_PendingFee_LIST_Output_Model.netDueAmount) HeaderText="NetDue Amount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                         
+                        </GridColumns>
+                        <SfToolbar>
+                            <ToolbarItems>
+                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel_lassWise" Align="ItemAlign.Left"></ToolbarItem>
+                            </ToolbarItems>
+                        </SfToolbar>
+                    </SfGrid>
+                </div>
+            </ContentTemplate>
+
+        </DashboardLayoutPanel>
+
+        <DashboardLayoutPanel Column=2>
+            <HeaderTemplate><div>BusStopWise tDetails</div></HeaderTemplate>
+            <ContentTemplate>
+                <div>
+                    <SfGrid DataSource="@_busStopWise_PendingFee_List"
+                    @ref="_sfbusStopWise"
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="500"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="false" AllowGrouping="true" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            Toolbar="@(new string[] {"Search","Print" })">
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        <GridPageSettings PageSize="15" PageSizes="true"></GridPageSettings>
+                        <GridSearchSettings Fields=@InitSearchClassWise Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+
+
+
+                        <GridColumns>
+                            <GridColumn Field=@nameof(BusStopWise_PendingFee_LIST_Output_Model.busStopID) HeaderText="BusStop ID" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(BusStopWise_PendingFee_LIST_Output_Model.pending) HeaderText="Pending" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(BusStopWise_PendingFee_LIST_Output_Model.netDueAmount) HeaderText="netDue Amount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                        </GridColumns>
+                        <SfToolbar>
+                            <ToolbarItems>
+                                <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel_BusStopWise" Align="ItemAlign.Left"></ToolbarItem>
+                            </ToolbarItems>
+                        </SfToolbar>
+                    </SfGrid>
+                </div>
+            </ContentTemplate>
+
+        </DashboardLayoutPanel>
+
+        </DashboardLayoutPanels>
+</SfDashboardLayout>

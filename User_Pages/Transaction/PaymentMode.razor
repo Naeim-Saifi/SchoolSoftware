@@ -1,0 +1,138 @@
+﻿@using Syncfusion.Blazor.Grids
+@using AIS.Data.RequestResponseModel.StudentSetUp;
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using AIS.Data.RequestResponseModel.TransactionSetUp;
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+
+@using Syncfusion.Blazor.Charts
+
+@page "/User_Pages/Transaction/PaymentMode"
+@inherits PaymentModeBase;
+
+@{
+    
+    var InitSearchPaymentMode = (new string[] { "className","sectionName", "paymentMode" });
+   
+}
+
+<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Payment Mode Data</MudText>
+<SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" >
+  
+    <DashboardLayoutPanels>
+    <DashboardLayoutPanel >
+            <HeaderTemplate><div>Payment Mode</div></HeaderTemplate>
+            <ContentTemplate>
+                <div>
+                    <SfGrid DataSource="@_transaction_Details_PaymentMode_List"
+                    @ref="_sfPaymentMode"
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="570"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="false" AllowGrouping="true" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                             Toolbar="toolBarItems">
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        <GridPageSettings PageSize="15" PageSizes="true"></GridPageSettings>
+                        <GridSearchSettings Fields=@InitSearchPaymentMode Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+                        <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+                        <GridAggregates>
+                            <GridAggregate>
+                                <GridAggregateColumns>
+                                    <GridAggregateColumn Field=@nameof(PaymentMode_TransactionDetails_LIST_Output_Model.totalAmount) Type="AggregateType.Sum">
+                                        <GroupFooterTemplate>
+                                            @{
+                                                var Unit = (context as AggregateTemplateContext);
+                                                <div>
+                                                    @Unit.Sum
+                                                </div>
+                                            }
+                                        </GroupFooterTemplate>
+                                    </GridAggregateColumn>
+                                    <GridAggregateColumn Field=@nameof(PaymentMode_TransactionDetails_LIST_Output_Model.discount) Type="AggregateType.Sum">
+                                        <GroupFooterTemplate>
+                                            @{
+                                                var Unit = (context as AggregateTemplateContext);
+                                                <div>
+                                                    @Unit.Sum
+                                                </div>
+                                            }
+                                        </GroupFooterTemplate>
+                                    </GridAggregateColumn>
+                                    <GridAggregateColumn Field=@nameof(PaymentMode_TransactionDetails_LIST_Output_Model.netAmount) Type="AggregateType.Sum">
+                                        <GroupFooterTemplate>
+                                            @{
+                                                var Unit = (context as AggregateTemplateContext);
+                                                <div>
+                                                    @Unit.Sum
+                                                </div>
+                                            }
+                                        </GroupFooterTemplate>
+                                    </GridAggregateColumn>
+                                    <GridAggregateColumn Field=@nameof(PaymentMode_TransactionDetails_LIST_Output_Model.recievedAmount) Type="AggregateType.Sum">
+                                        <GroupFooterTemplate>
+                                            @{
+                                                var Unit = (context as AggregateTemplateContext);
+                                                <div>
+                                                    @Unit.Sum
+                                                </div>
+                                            }
+                                        </GroupFooterTemplate>
+                                    </GridAggregateColumn>
+                                    <GridAggregateColumn Field=@nameof(PaymentMode_TransactionDetails_LIST_Output_Model.dueAmount) Type="AggregateType.Sum">
+                                        <GroupFooterTemplate>
+                                            @{
+                                                var Unit = (context as AggregateTemplateContext);
+                                                <div>
+                                                    @Unit.Sum
+                                                </div>
+                                            }
+                                        </GroupFooterTemplate>
+                                    </GridAggregateColumn>
+
+                                    <GridAggregateColumn Field=@nameof(PaymentMode_TransactionDetails_LIST_Output_Model.advanceAmount) Type="AggregateType.Sum">
+                                        <GroupFooterTemplate>
+                                            @{
+                                                var Unit = (context as AggregateTemplateContext);
+                                                <div>
+                                                    @Unit.Sum
+                                                </div>
+                                            }
+                                        </GroupFooterTemplate>
+                                    </GridAggregateColumn>
+                                </GridAggregateColumns>
+                            </GridAggregate>
+
+                        </GridAggregates>
+                        <GridColumns>
+                            <GridColumn Field=@nameof(PaymentMode_TransactionDetails_LIST_Output_Model.paymentMode) HeaderText="Payment Mode" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(PaymentMode_TransactionDetails_LIST_Output_Model.className) HeaderText="ClassName" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(PaymentMode_TransactionDetails_LIST_Output_Model.sectionName) HeaderText="SectionName" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(PaymentMode_TransactionDetails_LIST_Output_Model.monthDetails) HeaderText="MonthDetails" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(PaymentMode_TransactionDetails_LIST_Output_Model.paycount) HeaderText="Paycount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(PaymentMode_TransactionDetails_LIST_Output_Model.totalAmount) HeaderText="TotalAmount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(PaymentMode_TransactionDetails_LIST_Output_Model.discount) HeaderText="Discount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(PaymentMode_TransactionDetails_LIST_Output_Model.netAmount) HeaderText="NetAmount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(PaymentMode_TransactionDetails_LIST_Output_Model.recievedAmount) HeaderText="RecievedAmount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(PaymentMode_TransactionDetails_LIST_Output_Model.dueAmount) HeaderText="DueAmount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(PaymentMode_TransactionDetails_LIST_Output_Model.advanceAmount) HeaderText="AdvanceAmount" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                        </GridColumns>
+                         
+                    </SfGrid>
+                </div>
+            </ContentTemplate>
+
+        </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    
+        </SfDashboardLayout>
+
+

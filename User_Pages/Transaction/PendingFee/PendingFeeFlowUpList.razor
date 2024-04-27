@@ -1,0 +1,147 @@
+﻿@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@using Microsoft.AspNetCore.Components.Forms
+@using AIS.Data.RequestResponseModel.TransactionSetUp;
+@page "/User_Pages/Transaction/PendingFee/PendingFeeFlowUpList"
+
+@inherits PendingFeeFlowUpListBase
+
+
+@{
+
+    var InitSearchStudentName = (new string[] { "studentName", "fatherName", "fatherContactNumber", "busStopName" });
+}
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="11">
+        <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+            <DashboardLayoutPanels>
+                <DashboardLayoutPanel SizeX=7 SizeY="2">
+            <HeaderTemplate>Student Pending Fee List</HeaderTemplate>
+            <ContentTemplate>
+                        @* <SfToolbar>
+                            <ToolbarItems>
+                                
+                            </ToolbarItems>
+                        </SfToolbar> *@
+                        <SfToolbar Width="300px" OverflowMode="OverflowMode.Popup">
+                            <ToolbarItems>
+                                <ToolbarItem Type="ItemType.Input">
+                                    <Template>
+                                        <SfDropDownList TValue="string" TItem="CallStatus" DataSource=@callStatusList Width="200">
+                                            <DropDownListFieldSettings Text="Text" Value="ID"> </DropDownListFieldSettings>
+                                            <DropDownListEvents TValue="string" ValueChange="OnChange" TItem="CallStatus"> </DropDownListEvents>
+                                        </SfDropDownList>
+                                    </Template>
+                                </ToolbarItem>
+                                <ToolbarItem Text="Cut" ShowAlwaysInPopup=true TooltipText="Cut"></ToolbarItem>
+                                <ToolbarItem Text="Copy" TooltipText="Copy"></ToolbarItem>
+                                <ToolbarItem Text="Paste" TooltipText="Paste"></ToolbarItem>
+                                <ToolbarItem></ToolbarItem>
+                                <ToolbarItem Text="Bold" TooltipText="Bold"></ToolbarItem>
+                                <ToolbarItem Text="Underline" TooltipText="Underline"></ToolbarItem>
+                                <ToolbarItem Text="Italic" TooltipText="Italic"></ToolbarItem>
+                                <ToolbarItem Text="Color Picker" TooltipText="Color-Picker"></ToolbarItem>
+                                <ToolbarItem></ToolbarItem>
+                                <ToolbarItem Text="Align Left" TooltipText="Align-Left"></ToolbarItem>
+                                <ToolbarItem Text="Align Right" TooltipText="Align-Right"></ToolbarItem>
+                                <ToolbarItem Text="Align Center" TooltipText="Align-Center"></ToolbarItem>
+                                <ToolbarItem Text="Align Justify" TooltipText="Align-Justify"></ToolbarItem>
+                            </ToolbarItems>
+                        </SfToolbar>
+
+
+                        <SfGrid DataSource="@pendingFeeFollowUpDetailsListModels"
+                                EnableVirtualMaskRow="true"
+                                RowHeight="38" Height="710"
+                                Width="auto" EnableVirtualization="false"
+                                AllowResizing="true" AllowExcelExport="true"
+                                EnableAutoFill="true" AllowReordering="true"
+                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                        @ref="_sfgridflowuplist"
+                        Toolbar="@(new string[] {"Search","Print","ColumnChooser" })">
+                     
+                    <GridPageSettings PageCount="50" PageSizes="true"></GridPageSettings>
+                    <GridGroupSettings EnableLazyLoading="true"></GridGroupSettings>
+
+                            @* <GridEvents CommandClicked="EditFlowUp" QueryCellInfo="CustomizeCell" TValue=Pending_Fee_List_Output_Model></GridEvents> *@
+                    <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+                    <GridPageSettings PageSize="15" PageSizes="true"></GridPageSettings>
+                    <GridSearchSettings Fields=@InitSearchStudentName Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                        IgnoreCase="true"></GridSearchSettings>
+                   @*  <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>  *@
+                    <GridColumns>
+                          <GridColumn Field=@nameof(PendingFeeFollowUpDetailsListModel.pendingFeeFollowUpID) IsPrimaryKey="true"
+                                            HeaderText="FollowUp ID" TextAlign="TextAlign.Left" Width="60" Visible="false">
+                        </GridColumn>
+                         
+                                <GridColumn Field=@nameof(PendingFeeFollowUpDetailsListModel.className)
+                                    HeaderText="Class" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true>
+                        </GridColumn>
+                                <GridColumn Field=@nameof(PendingFeeFollowUpDetailsListModel.sectionName)
+                                    HeaderText="Section" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true>
+                        </GridColumn>
+                                <GridColumn Field=@nameof(PendingFeeFollowUpDetailsListModel.studentName)
+                                    HeaderText="student Name" TextAlign="TextAlign.Right" AllowGrouping=false AutoFit=true>
+                        </GridColumn>
+                                <GridColumn Field=@nameof(PendingFeeFollowUpDetailsListModel.fatherName)
+                                    HeaderText="Father Name" TextAlign="TextAlign.Right" AllowGrouping=false AutoFit=true>
+                        </GridColumn>
+                                <GridColumn Field=@nameof(PendingFeeFollowUpDetailsListModel.fatherMobileNo)
+                                    HeaderText="Father Number" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true>
+                        </GridColumn>
+                                <GridColumn Field=@nameof(PendingFeeFollowUpDetailsListModel.motherName)
+                                    HeaderText="Mother Name" TextAlign="TextAlign.Right" AllowGrouping=false AutoFit=true>
+                        </GridColumn>
+                                <GridColumn Field=@nameof(PendingFeeFollowUpDetailsListModel.motherMobileNo)
+                                    HeaderText="Mother Number" TextAlign="TextAlign.Right" AllowGrouping=false AutoFit=true>
+                        </GridColumn>
+                                <GridColumn Field=@nameof(PendingFeeFollowUpDetailsListModel.followUpDate)
+                                            HeaderText="followUp Date" TextAlign="TextAlign.Right" AllowGrouping=false AutoFit=true>
+                        </GridColumn>
+                                <GridColumn Field=@nameof(PendingFeeFollowUpDetailsListModel.callStart)
+                                            HeaderText="Call Start" TextAlign="TextAlign.Right" AllowGrouping=false AutoFit=true>
+                                </GridColumn>
+                                <GridColumn Field=@nameof(PendingFeeFollowUpDetailsListModel.callEnd)
+                                            HeaderText="Call End" TextAlign="TextAlign.Right" AllowGrouping=false AutoFit=true>
+                                </GridColumn>
+                                <GridColumn Field=@nameof(PendingFeeFollowUpDetailsListModel.nextFollowUpDate)
+                                            HeaderText="Next FollowUp Date" TextAlign="TextAlign.Right" AllowGrouping=false AutoFit=true>
+                        </GridColumn>
+
+                                <GridColumn Field=@nameof(PendingFeeFollowUpDetailsListModel.nextFollowUpTime)
+                                            HeaderText="Next FollowUp Time" TextAlign="TextAlign.Right" AllowGrouping=false AutoFit=true>
+                        </GridColumn>
+                                <GridColumn Field=@nameof(PendingFeeFollowUpDetailsListModel.followUpRemarks)
+                                            HeaderText="Remarks" TextAlign="TextAlign.Right" AllowGrouping=false AutoFit=true>
+                                </GridColumn>
+
+                                <GridColumn Field=@nameof(PendingFeeFollowUpDetailsListModel.callStatusDescription)
+                                            HeaderText="Call Status" TextAlign="TextAlign.Right" AllowGrouping=false AutoFit=true>
+                        </GridColumn>
+                                
+                                 
+                        
+                    </GridColumns>                    
+                 
+                </SfGrid>
+
+                        
+            
+            </ContentTemplate>
+        </DashboardLayoutPanel>
+    </DashboardLayoutPanels>
+</SfDashboardLayout>
+</MudItem>
+</MudGrid>

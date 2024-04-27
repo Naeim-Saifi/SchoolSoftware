@@ -1,0 +1,405 @@
+﻿@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
+
+@page "/User_Pages/MasterData/MasterDataList"
+
+@inherits MasterDataListBase
+
+
+@{
+
+    var InitSearchclass = (new string[] { "className", "classCode" });
+    var Tool = (new List<string>() { "Search" });
+    var InitialGroupColumn = (new string[] { "className" });
+    var InitSearchSection = (new string[] { "sectionName", "sectionCode" });
+    var InitSearchsubject = (new string[] { "subjectName", "subjectCode" });
+    var InitSearchmapsubject = (new string[] { "subjectName", "className" });
+}
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="6">
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Master Data</HeaderTemplate>
+                <ContentTemplate>
+                    <div style="height:500px">
+                        <SfTab ID="Ej2Tab" Height="100%">
+                            <TabItems>
+                                <TabItem>
+                                    <HeaderTemplate>
+                                       Master Class
+                                    </HeaderTemplate>
+                                    <ContentTemplate>
+                                        <SfGrid DataSource="@_cLass_List"
+                                                EnableVirtualMaskRow="true"
+                                                RowHeight="38" Height="410"
+                                                Width="auto" EnableVirtualization="false"
+                                                AllowResizing="true" AllowExcelExport="true"
+                                                EnableAutoFill="true" AllowReordering="true"
+                                                ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
+                                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                                ContextMenuItems="MenuItems"
+                                                @ref="sfclass"
+                                                Toolbar="toolclassBarItems">
+                                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                            <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+                                            @* <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>*@
+                                            @*<GridGroupSettings Columns=@InitialGroupColumn>
+                                                <CaptionTemplate>
+                                                    @{
+                                                        var UnitDetails = (context as CaptionTemplateContext);
+                                                        <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                                    }
+                                                </CaptionTemplate>
+                                            </GridGroupSettings>*@
+
+                                            @*<GridEvents CommandClicked="EditChapterMaster" OnToolbarClick="ToolbarClickHandler" TValue=Chapter_Output_Model></GridEvents>*@
+                                            <GridSearchSettings Fields=@InitSearchclass Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                                IgnoreCase="true"></GridSearchSettings>
+                                            <GridColumns>
+                                                <GridColumn Field=@nameof(Master_CLass_List_Output_Model.classId) HeaderText="Id" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_CLass_List_Output_Model.className) HeaderText="Class Name" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_CLass_List_Output_Model.classCode) HeaderText="Class Code" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_CLass_List_Output_Model.displayOrder) HeaderText="Display Order" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_CLass_List_Output_Model.statusDetails) HeaderText="Status" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                @*<GridColumn Field=@nameof(Master_CLass_List_Output_Model.chapterDescription) HeaderText="Chapter Description" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                 <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                                    <GridCommandColumns>
+                                                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                                    </GridCommandColumns>
+                                                </GridColumn>*@
+                                                <GridColumn Field=@nameof(Master_CLass_List_Output_Model.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_CLass_List_Output_Model.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_CLass_List_Output_Model.createdByUser) HeaderText="CreatedBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_CLass_List_Output_Model.updatedByUser) HeaderText="UpdateBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                            </GridColumns>
+                                        </SfGrid>
+                                    </ContentTemplate>
+                                </TabItem>
+                                <TabItem>
+                                    <HeaderTemplate>
+                                       Master Section
+                                    </HeaderTemplate>
+                                    <ContentTemplate>
+                                        <SfGrid DataSource="@_section_List"
+                                                    EnableVirtualMaskRow="true"
+                                                    RowHeight="38" Height="710"
+                                                    Width="auto" EnableVirtualization="false"
+                                                    AllowResizing="true" AllowExcelExport="true"
+                                                    EnableAutoFill="true" AllowReordering="true"
+                                                    ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                                    AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                                ContextMenuItems="MenuItems"
+                                                @ref="sfsection"
+                                                Toolbar="toolsectionBarItems">
+                                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                            <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+                                            @* <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>*@
+                                            @*<GridGroupSettings Columns=@InitialGroupColumn>
+                                                <CaptionTemplate>
+                                                    @{
+                                                        var UnitDetails = (context as CaptionTemplateContext);
+                                                        <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                                    }
+                                                </CaptionTemplate>
+                                            </GridGroupSettings>*@
+
+                                            @*<GridEvents CommandClicked="EditChapterMaster" OnToolbarClick="ToolbarClickHandler" TValue=Chapter_Output_Model></GridEvents>*@
+                                            <GridSearchSettings Fields=@InitSearchSection Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                                IgnoreCase="true"></GridSearchSettings>
+                                            <GridColumns>
+                                                <GridColumn Field=@nameof(Master_Section_List_Output_Model.sectionId) HeaderText="Id" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Section_List_Output_Model.sectionName) HeaderText="Section Name" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Section_List_Output_Model.sectionCode) HeaderText="Section Code" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Section_List_Output_Model.displayOrder) HeaderText="Display Order" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Section_List_Output_Model.statusDetails) HeaderText="Status" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                @*<GridColumn Field=@nameof(Master_CLass_List_Output_Model.chapterDescription) HeaderText="Chapter Description" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                                <GridCommandColumns>
+                                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                                </GridCommandColumns>
+                                                </GridColumn>*@
+                                                <GridColumn Field=@nameof(Master_Section_List_Output_Model.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Section_List_Output_Model.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Section_List_Output_Model.createdByUser) HeaderText="CreatedBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Section_List_Output_Model.updatedByUser) HeaderText="UpdateBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                            </GridColumns>
+                                        </SfGrid>
+                                    </ContentTemplate>
+                                </TabItem>
+                                <TabItem>
+                                    <HeaderTemplate>
+                                        Master Subject
+                                    </HeaderTemplate>
+                                    <ContentTemplate>
+                                        <SfGrid DataSource="@_subject_List"
+                                                    EnableVirtualMaskRow="true"
+                                                    RowHeight="38" Height="710"
+                                                    Width="auto" EnableVirtualization="false"
+                                                    AllowResizing="true" AllowExcelExport="true"
+                                                    EnableAutoFill="true" AllowReordering="true"
+                                                    ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                                    AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                                ContextMenuItems="MenuItems"
+                                                @ref="sfsubject"
+                                                Toolbar="toolsubjectBarItems">
+                                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                            <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+                                            @* <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>*@
+                                            @*<GridGroupSettings Columns=@InitialGroupColumn>
+                                            <CaptionTemplate>
+                                            @{
+                                            var UnitDetails = (context as CaptionTemplateContext);
+                                            <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                            }
+                                            </CaptionTemplate>
+                                            </GridGroupSettings>*@
+
+                                            @*<GridEvents CommandClicked="EditChapterMaster" OnToolbarClick="ToolbarClickHandler" TValue=Chapter_Output_Model></GridEvents>*@
+                                            <GridSearchSettings Fields=@InitSearchsubject Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                                IgnoreCase="true"></GridSearchSettings>
+                                            <GridColumns>
+                                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.subjectId) HeaderText="Id" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.subjectName) HeaderText="Subject Name" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.subjectCode) HeaderText="Subject Code" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.marksType) HeaderText="Marks Type" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.marksDescription) HeaderText="Marks Description" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.subjectType) HeaderText="Subject Type" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.subjectDescription) HeaderText="Subject Description" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.displayOrder) HeaderText="Display Order" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                @*<GridColumn Field=@nameof(Master_CLass_List_Output_Model.chapterDescription) HeaderText="Chapter Description" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                                <GridCommandColumns>
+                                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                                </GridCommandColumns>
+                                                </GridColumn>*@
+                                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.createdByUser) HeaderText="CreatedBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.updatedByUser) HeaderText="UpdateBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                            </GridColumns>
+                                        </SfGrid>
+                                    </ContentTemplate>
+                                </TabItem>
+
+                                <TabItem>
+                                    <HeaderTemplate>
+                                        Map Subject with class
+                                    </HeaderTemplate>
+                                    <ContentTemplate>
+                                        <SfGrid DataSource="@_mapSubject_List"
+                                                    EnableVirtualMaskRow="true"
+                                                    RowHeight="38" Height="710"
+                                                    Width="auto" EnableVirtualization="false"
+                                                    AllowResizing="true" AllowExcelExport="true"
+                                                    EnableAutoFill="true" AllowReordering="true"
+                                                    ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                                    AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                                ContextMenuItems="MenuItems"
+                                                @ref="sfmapsubjectwithclass"
+                                                Toolbar="toolmapsubjectBarItems">
+                                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                            <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+                                             <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings> 
+                                            <GridGroupSettings Columns=@InitialGroupColumn>
+                                            <CaptionTemplate>
+                                            @{
+                                            var UnitDetails = (context as CaptionTemplateContext);
+                                            <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                            }
+                                            </CaptionTemplate>
+                                            </GridGroupSettings>
+
+                                            @*<GridEvents CommandClicked="EditChapterMaster" OnToolbarClick="ToolbarClickHandler" TValue=Chapter_Output_Model></GridEvents>*@
+                                            <GridSearchSettings Fields=@InitSearchmapsubject Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                                IgnoreCase="true"></GridSearchSettings>
+                                            <GridColumns>
+                                                <GridColumn Field=@nameof(Master_Map_Subject_With_Class_List_Output_Model.subjectId) HeaderText="Id" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Map_Subject_With_Class_List_Output_Model.className) HeaderText="Class Name" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Map_Subject_With_Class_List_Output_Model.subjectName) HeaderText="Subject Name" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Map_Subject_With_Class_List_Output_Model.subjectCode) HeaderText="Subject Code" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Map_Subject_With_Class_List_Output_Model.marksType) HeaderText="Marks Type" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Map_Subject_With_Class_List_Output_Model.marksDescription) HeaderText="Marks Description" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Map_Subject_With_Class_List_Output_Model.subjectType) HeaderText="Subject Type" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Map_Subject_With_Class_List_Output_Model.subjectDescription) HeaderText="Subject Description" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                
+                                                @*<GridColumn Field=@nameof(Master_CLass_List_Output_Model.chapterDescription) HeaderText="Chapter Description" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                                <GridCommandColumns>
+                                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                                </GridCommandColumns>
+                                                </GridColumn>*@
+                                                <GridColumn Field=@nameof(Master_Map_Subject_With_Class_List_Output_Model.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Map_Subject_With_Class_List_Output_Model.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Map_Subject_With_Class_List_Output_Model.createdByUser) HeaderText="CreatedBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Map_Subject_With_Class_List_Output_Model.updatedByUser) HeaderText="UpdateBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                            </GridColumns>
+                                        </SfGrid>
+                                    </ContentTemplate>
+                                </TabItem>
+                                <TabItem>
+                                    <HeaderTemplate>
+                                       User role
+                                    </HeaderTemplate>
+                                    <ContentTemplate>
+                                        <SfGrid DataSource="@_role_List"
+                                                    EnableVirtualMaskRow="true"
+                                                    RowHeight="38" Height="710"
+                                                    Width="auto" EnableVirtualization="false"
+                                                    AllowResizing="true" AllowExcelExport="true"
+                                                    EnableAutoFill="true" AllowReordering="true"
+                                                    ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                                    AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                                ContextMenuItems="MenuItems"
+                                                @ref="sfrole"
+                                                Toolbar="tooluserRoleBarItems">
+                                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                            <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+                                            @* <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>*@
+                                            @*<GridGroupSettings Columns=@InitialGroupColumn>
+                                            <CaptionTemplate>
+                                            @{
+                                            var UnitDetails = (context as CaptionTemplateContext);
+                                            <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                            }
+                                            </CaptionTemplate>
+                                            </GridGroupSettings>*@
+
+                                            <GridEvents CommandClicked="EditRoleMaster" OnToolbarClick="ToolbarClickHandler" TValue=Master_Role_List_Output_Model></GridEvents>
+                                            <GridSearchSettings Fields=@InitSearchmapsubject Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                                IgnoreCase="true"></GridSearchSettings>
+                                            <GridColumns>
+                                                <GridColumn Field=@nameof(Master_Role_List_Output_Model.masterRoleId) HeaderText="Id" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Role_List_Output_Model.roleName) HeaderText="Role Name" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Role_List_Output_Model.roleDescription) HeaderText="Role Description" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Role_List_Output_Model.displayOrder) HeaderText="Display Order" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>                                               
+                                                 
+                                               
+                                                <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                                <GridCommandColumns>
+                                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                                </GridCommandColumns>
+                                                </GridColumn>
+                                                <GridColumn Field=@nameof(Master_Role_List_Output_Model.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Role_List_Output_Model.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Role_List_Output_Model.createdByUser) HeaderText="CreatedBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(Master_Role_List_Output_Model.updatedByUser) HeaderText="UpdateBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                            </GridColumns>
+                                        </SfGrid>
+                                    </ContentTemplate>
+                                </TabItem>
+
+                            </TabItems>
+                        </SfTab>
+                    </div>
+
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+         </DashboardLayoutPanels>
+     </SfDashboardLayout>
+</MudItem>
+</MudGrid>
+
+
+<MudGrid>
+    <MudItem xs="12" sm="3" md="12">
+        <MudItem xs="12" sm="3" md="12">
+            <SfDialog @ref="@DialogRef" Width="750px" AllowDragging="true" IsModal="false" ShowCloseIcon="true" @bind-Visible="@IsVisible" >
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>
+                    <Header>@DialogHeaderName </Header>
+                    <Content>
+                        <MudGrid>
+                            <MudItem xs="12" md="12" sm="3">
+                                <EditForm Model="roleMasterViewModel" OnValidSubmit="OnValidSubmit">
+                                    <DataAnnotationsValidator />
+                                    <MudCardContent>
+
+                                        <MudGrid>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Role Name" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@roleMasterViewModel.roleName"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => roleMasterViewModel.roleName" />
+                                            </MudItem>
+                                             
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Role Description" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@roleMasterViewModel.roleDescription"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => roleMasterViewModel.roleDescription" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfNumericTextBox CssClass="e-outline" Placeholder="Display Order"  
+                                                           @bind-Value="@roleMasterViewModel.displayOrder"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfNumericTextBox>
+                                
+                                                <ValidationMessage For="() => roleMasterViewModel.displayOrder" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfButton CssClass=@btncss type="submit" IsPrimary="true">@HeaderText</SfButton>
+                                                @*  <SfButton CssClass="e-outline" OnClick="@CloseDialog">Cancel</SfButton>*@
+                                                <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>
+                                            </MudItem>
+                                        </MudGrid>
+                                    </MudCardContent>
+                                </EditForm>
+                            </MudItem>
+                        </MudGrid>
+                    </Content>
+                </DialogTemplates>
+                <DialogAnimationSettings Effect="@AnimationEffect" Duration=400 />
+            </SfDialog>
+        </MudItem>
+    </MudItem>
+</MudGrid>
+
+<style>
+    .e-toolbar-item .e-tbar-btn {
+        background-color: powderblue;
+    }
+
+    .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+    /*  .e-rowcell.e-attr {
+                    background-color: lightgrey;
+                }*/
+
+    /* .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+                    position: fixed;
+                }*/
+
+    /*
+
+                .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
+                    transition: none;
+                }*/
+    /*.e-content .e-item {
+                    font-size: 12px;
+                    padding: 10px;
+                    text-align: justify;
+                }*/
+</style>

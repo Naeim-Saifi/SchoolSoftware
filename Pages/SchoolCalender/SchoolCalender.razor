@@ -1,0 +1,49 @@
+﻿@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Schedule
+
+@page "/SchoolCalender/SchoolCalender"
+
+@using Syncfusion.Blazor.Schedule
+
+<SfSchedule TValue="AppointmentData" Height="550px" @bind-SelectedDate="@CurrentDate">
+    <ScheduleEventSettings DataSource="@DataSource">
+        <ScheduleField>
+            <FieldSubject Name="Subject" Validation="@ValidationRules"></FieldSubject>
+            <FieldLocation Name="Location" Validation="@LocationValidationRules"></FieldLocation>
+            <FieldDescription Name="Description" Validation="@DescriptionValidationRules"></FieldDescription>
+            <FieldStartTime Name="StartTime"></FieldStartTime>
+            <FieldEndTime Name="EndTime"></FieldEndTime>
+        </ScheduleField>
+    </ScheduleEventSettings>
+    <ScheduleViews>
+        <ScheduleView Option="View.Day"></ScheduleView>
+        <ScheduleView Option="View.Week"></ScheduleView>
+        <ScheduleView Option="View.WorkWeek"></ScheduleView>
+        <ScheduleView Option="View.Month"></ScheduleView>
+        <ScheduleView Option="View.Agenda"></ScheduleView>
+    </ScheduleViews>
+</SfSchedule>
+
+@code{
+    DateTime CurrentDate = new DateTime(2023, 1, 6);
+    static Dictionary<string, object> ValidationMessages = new Dictionary<string, object>() { { "regex", "Special character(s) not allowed in this field" } };
+    ValidationRules ValidationRules = new ValidationRules { Required = true };
+    ValidationRules LocationValidationRules = new ValidationRules { Required = true, RegexPattern = "^[a-zA-Z0-9- ]*$", Messages = ValidationMessages };
+    ValidationRules DescriptionValidationRules = new ValidationRules { Required = true, MinLength = 5, MaxLength = 500 };
+    List<AppointmentData> DataSource = new List<AppointmentData>
+{
+        new AppointmentData { Id = 1, Subject = "Meeting", StartTime = new DateTime(2023, 1, 6, 9, 30, 0) , EndTime = new DateTime(2023, 1, 6, 11, 0, 0) }
+    };
+
+    public class AppointmentData
+    {
+        public int Id { get; set; }
+        public string Subject { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public bool IsAllDay { get; set; }
+        public string RecurrenceRule { get; set; }
+        public string RecurrenceException { get; set; }
+        public Nullable<int> RecurrenceID { get; set; }
+    }
+}

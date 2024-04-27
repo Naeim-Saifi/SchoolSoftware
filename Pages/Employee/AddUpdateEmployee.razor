@@ -1,0 +1,227 @@
+﻿@page  "/Employee/AddUpdateEmployee"
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Buttons;
+@using AIS.Model.Employee
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Notifications
+
+@inherits AddUpdateEmployeeBase
+
+
+
+
+@{
+
+    var InitSearch1 = (new string[] { "employeeName" });
+    var Tool = (new List<string>() { "Search" });
+}
+
+
+<MudGrid>
+    <MudItem xs="12" sm="3" md="12">
+        <MudItem xs="12" sm="3" md="12">
+            <MudCard Elevation="25">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText>Add/Update Employee</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    @*<div class="d-flex justify-center mb-4">*@
+                    @*@if (string.IsNullOrEmpty(Message))
+        {*@
+                    <EditForm Model="@employeeviewModel" OnValidSubmit="OnValidSubmit">
+                        <DataAnnotationsValidator />
+                        @*<MudCard Elevation="5">*@
+                        <MudCardContent>
+
+                            <MudGrid>
+
+                                <MudItem xs="12" md="3" sm="4">
+
+                                    <SfTextBox CssClass="e-outline" Placeholder="Employee ID" FloatLabelType="@FloatLabelType.Never" @bind-Value="@SelectedData.EmployeeCode"></SfTextBox>
+                                    <ValidationMessage For="() => employeeviewModel.EmployeeCode" />
+
+                                </MudItem>
+                                <MudItem xs="12" md="3" sm="4">
+                                    <SfTextBox CssClass="e-outline" Placeholder="First Name" @bind-Value="@SelectedData.FirstName" FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                    <ValidationMessage For="() => employeeviewModel.FirstName" />
+                                </MudItem>
+                                <MudItem xs="12" md="3" sm="4">
+                                    <SfTextBox CssClass="e-outline" Placeholder="Middle Name"  @bind-Value="@SelectedData.MiddleName" FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                </MudItem>
+                                <MudItem xs="12" md="3" sm="3">
+                                    <SfTextBox CssClass="e-outline" Placeholder="Last Name" @bind-Value="@SelectedData.LastName" FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                </MudItem>
+                                <MudItem xs="12" md="3" sm="3">
+                                    @*<SfDropDownList TValue="string" TItem="DropdwonList" Placeholder="Select a Gender" AllowFiltering="true"
+                                                    DataSource="@genderDetails"   @bind-Value="@SelectedData.GenderName"
+                                                    FloatLabelType="@FloatLabelType.Never">
+                                        <DropDownListFieldSettings Text="Text" Value="ID" />
+                                        <ValidationMessage For="() => employeeviewModel.GenderName" />
+                                    </SfDropDownList>*@
+                                </MudItem>
+                                <MudItem xs="12" md="3" sm="3">
+                                    <SfTextBox CssClass="e-outline" Placeholder="Mobile No" FloatLabelType="@FloatLabelType.Never"
+                                               @bind-Value="@SelectedData.PhoneNumber"></SfTextBox>
+                                    <ValidationMessage For="() => employeeviewModel.PhoneNumber" />
+                                </MudItem>
+                                <MudItem xs="12" md="3" sm="3">
+                                    <SfTextBox CssClass="e-outline" Placeholder="E-Mail" FloatLabelType="@FloatLabelType.Never"
+                                               @bind-Value="@SelectedData.Email"></SfTextBox>
+                                    <ValidationMessage For="() => employeeviewModel.Email" />
+                                </MudItem>
+                                <MudItem xs="12" md="3" sm="3">
+
+                                    @*<SfDropDownList TValue="string" TItem="DropdwonList" Placeholder="Select a Role" AllowFiltering="true"  
+                                                  @bind-Value="@SelectedData.EmployeeRole"
+                                                    DataSource="@userRole" FloatLabelType="@FloatLabelType.Never"
+                                                    >
+                                        <DropDownListFieldSettings Text="Text" Value="ID" />
+                                    </SfDropDownList>
+                                    <ValidationMessage For="() => employeeviewModel.EmployeeRole" />*@
+
+                                </MudItem>
+                                <MudItem xs="12" md="3" sm="3">
+                                    <SfButton type="submit" IsPrimary="true">Save</SfButton>
+
+                                </MudItem>
+
+                            </MudGrid>
+
+                        </MudCardContent>
+                        @*</MudCard>*@
+                    </EditForm>
+                    @*</div>*@
+                    @*}
+        else
+        {*@
+
+                    @*<div class="alert alert-success">
+            @Message
+        </div>*@
+                    @*<SfToast ID="toast_default" @ref="ToastObj" Title="Adaptive Tiles Meeting" Content="@Message">
+                        <ToastPosition X="Center"></ToastPosition>
+                    </SfToast>*@
+                    <SfToast @ref="ToastObj" Title="@_employeeCode" Width="280" Height="120" Icon="e-laura" Content="@ToastContent">
+                        <ToastPosition X="Right" Y="Bottom"></ToastPosition>
+                        @*<ToastButtons>
+                            <ToastButton Content="Ignore" OnClick="@HideToast"></ToastButton>
+                            <ToastButton Content="reply" OnClick="@HideToast"></ToastButton>
+                        </ToastButtons>*@
+                    </SfToast>
+
+                    @*}*@
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudItem>
+    @if (employeeDetailsModels.Count == 0)
+    {
+        <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+    }
+    else
+    {
+
+        <MudItem xs="12" sm="12" md="12">
+            <SfGrid DataSource="@employeeDetailsModels" AllowTextWrap="false"
+                    @ref="Grid"
+                    RowHeight="38"
+                    AllowPaging="true"
+                    Height="410" AllowResizing="true"
+                    AllowGrouping="true" AllowSorting="true"
+                    AllowFiltering="true" ShowColumnMenu="true"
+                    ContextMenuItems="@(new List<object>() {"PdfExport", "ExcelExport", "CsvExport"})"
+                    Toolbar="@(new List<string>() { "ExcelExport", "CsvExport", "PdfExport","Print"})"
+                    AllowExcelExport="true" AllowPdfExport="true">
+
+                @*<GridEvents OnToolbarClick="ToolbarClick" TValue="EmployeeViewModel"></GridEvents>*@
+                <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+                <GridGroupSettings ShowGroupedColumn="true"></GridGroupSettings>
+                <GridPageSettings PageSize="12"></GridPageSettings>
+                <GridSearchSettings Fields=@InitSearch1 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                    IgnoreCase="true"></GridSearchSettings>
+                @*<GridEvents RowSelected="RowSelectHandler" RowDeselected="RowDeSelectHandler" TValue="EmployeeViewModel"></GridEvents>*@
+                <GridColumns>
+
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.userId) HeaderText="ID" Width="60"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.employeeCode) HeaderText="Employee Code" Width="60"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.employeeName) HeaderText="Employee Name" AllowGrouping="false" Width="120"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.genderStatusDetails) HeaderText="Gender" Width="60"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.phoneNumber) HeaderText="Mobile No" Width="60"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.email) HeaderText="E-Mail" Width="60"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.activeStatusDetails) HeaderText="Status" AllowGrouping="false" Width="120"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.roleStatusDetails) HeaderText="Role Details" AllowGrouping="false" Width="120"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.bioMatricId) HeaderText="BioMatric Id" Visible="false" Width="60"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.jobTitle) HeaderText="jobTitle" Visible="false" Width="60"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.joiningDate) Format="d" Type="ColumnType.Date" HeaderText="joiningDate" Visible="false" Width="60"></GridColumn>
+
+
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.maritalStatus) HeaderText="Marital Status" Visible="false" Width="60"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.anniversaryDate) Format="d" Type="ColumnType.Date" Visible="false" HeaderText="Anniversary Date" Width="60"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.religionDetails) HeaderText="Religion" Width="120"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.castCategoryDetails) HeaderText="Cast Category" AllowGrouping="false" Width="120"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.bloodGroupDetails) HeaderText="Blood Group" AllowGrouping="false" Width="120" Visible="false"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.uIDTypeDetails) HeaderText="UID Type" AllowGrouping="false" Width="120"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.uIDNumber) HeaderText="UID Number" AllowGrouping="false" Width="120"></GridColumn>
+
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.accountNo) HeaderText="Account No" AllowGrouping="false" Width="120" Visible="false"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.iFSCCode) HeaderText="IFSC Code" AllowGrouping="false" Width="120" Visible="false"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.bankName) HeaderText="Bank Name" AllowGrouping="false" Width="120" Visible="false"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.panCard) HeaderText="Pan Card" Width="60" Visible="false"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.address1) HeaderText="Address1" Width="60" Visible="false"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.address2) HeaderText="Address2" Width="60" Visible="false"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.city) HeaderText="City" Width="60" Visible="false"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.pinCode) HeaderText="pinCode" Width="60" Visible="false"></GridColumn>
+                    <GridColumn Field=@nameof(EmployeeDetailsModel.stateStatusDetails) HeaderText="State" Width="60" Visible="false"></GridColumn>
+                    @*<GridColumn Field=@nameof(paymentDetails[1].paymentMode) HeaderText="paymentMode" Width="150"></GridColumn>*@
+                    @*<GridColumn Field=@nameof(OrdersDetails.OrderDate) HeaderText="Order Date" Format="d" Type="ColumnType.Date" TextAlign="TextAlign.Right" Width="130"></GridColumn>
+            <GridColumn Field=@nameof(OrdersDetails.Freight) Format="C2" TextAlign="TextAlign.Right" Width="120"></GridColumn>
+            <GridColumn Field=@nameof(OrdersDetails.ShipCountry) HeaderText="Ship Country" Width="150"></GridColumn>*@
+                </GridColumns>
+            </SfGrid>
+        </MudItem>
+
+    }
+</MudGrid>
+
+
+<style>
+    .control-wrapper {
+        width: 350px;
+        margin: 0 auto;
+        padding-top: 70px;
+    }
+
+    .sfButton {
+        padding-top: 20px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .validation-message {
+        color: red;
+        padding-top: 5px;
+    }
+   /* .e-toast-icon.e-laura.e-icons {
+        border-radius: 50%;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-image: url(https://blazor.syncfusion.com/demos/images/toast/laura.png);
+        height: 44px !important;
+        margin: 0 10px 0 0;
+        width: 60px;
+    }
+
+    #elementToastTime .e-toast-message {
+        padding: 10px;
+    }
+    .e-toast-container .e-toast {
+        background-color: cadetblue;
+    }
+        .e-toast-container .e-toast .e-toast-icon {
+            color: yellow;
+        }*/
+</style>
+ 

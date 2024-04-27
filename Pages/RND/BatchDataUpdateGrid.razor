@@ -1,0 +1,71 @@
+﻿<h3>BatchDataUpdateGrid</h3>
+
+@using Syncfusion.Blazor.Grids
+
+@page "/RND/BatchDataUpdateGrid"
+@inherits BatchDataGrid
+@*<SfGrid DataSource="@Orders" Toolbar="@(new List<string>() { "Add", "Update", "Cancel" })">
+        <GridEditSettings AllowEditing="true" AllowAdding="true" Mode="EditMode.Batch"></GridEditSettings>
+        <GridColumns>
+            <GridColumn Field=@nameof(Order.OrderID) HeaderText="Order ID" IsPrimaryKey="true" TextAlign="TextAlign.Right" Width="120"></GridColumn>
+            <GridColumn Field=@nameof(Order.CustomerID) HeaderText="Customer Name" Width="150"></GridColumn>
+            <GridColumn Field=@nameof(Order.OrderDate) HeaderText=" Order Date" Format="d" Type="ColumnType.Date" TextAlign="TextAlign.Right" Width="130"></GridColumn>
+            <GridColumn Field=@nameof(Order.Freight) HeaderText="Freight" Format="C2" TextAlign="TextAlign.Right" Width="120"></GridColumn>
+        </GridColumns>
+        <GridEvents TValue="Order" OnBatchAdd="BeforeAdd" OnCellEdit="CellEdit"></GridEvents>
+    </SfGrid>
+
+    @code {
+
+        List<Order> Orders { get; set; }
+
+        protected override void OnInitialized()
+        {
+            Orders = Enumerable.Range(1, 10).Select(x => new Order(1000 + x)
+            {
+                OrderID = 1000 + x,
+                CustomerID = (new string[] { "ALFKI",
+                    "ANANTR", "ANTON", "BLONP", "BOLID" })[new Random().Next(5)],
+                Freight = (new double[] { 2, 1, 4, 5, 3 })[new Random().Next(5)] * x,
+                OrderDate = (new DateTime[] { new DateTime(2019, 01, 01), new DateTime(2019, 01, 02) })[new Random().Next(2)]
+            }).ToList();
+        }
+
+        public void BeforeAdd(BeforeBatchAddArgs<Order> arg)
+        {
+            arg.DefaultData = new Order(0) { CustomerID = "Customer ID" };
+        }
+
+        public void CellEdit(CellEditArgs<Order> arg)
+        {
+            //Return args.Data if it is not null, so previously edited data will not be lost.
+            arg.Data = arg.Data ?? new Order(1)
+            {
+                CustomerID = arg.RowData.CustomerID,
+                Freight = arg.RowData.Freight,
+                OrderDate = arg.RowData.OrderDate
+            };
+        }
+
+        // This class does not contain any parameter-less constructor, hence this cannot be instantiated using Activator.CreateInstance.
+        public class Order
+        {
+            public Order(int orderid) => OrderID = orderid;
+            public int? OrderID { get; set; }
+            public string CustomerID { get; set; }
+            public DateTime? OrderDate { get; set; }
+            public double? Freight { get; set; }
+        }
+
+    }*@
+
+<SfGrid DataSource="@Orders" Toolbar="@(new List<string>() { "Add", "Delete", "Update", "Cancel" })">
+    <GridEvents OnBatchSave="BatchSaveHandler" TValue="Order"></GridEvents>
+    <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" Mode="EditMode.Batch"></GridEditSettings>
+    <GridColumns>
+        <GridColumn Field=@nameof(Order.OrderID) HeaderText="Order ID" IsPrimaryKey="true" TextAlign="TextAlign.Right" Width="120"></GridColumn>
+        <GridColumn Field=@nameof(Order.CustomerID) HeaderText="Customer Name" Width="150"></GridColumn>
+        <GridColumn Field=@nameof(Order.OrderDate) HeaderText=" Order Date" Format="d" Type="ColumnType.Date" TextAlign="TextAlign.Right" Width="130"></GridColumn>
+        <GridColumn Field=@nameof(Order.Freight) HeaderText="Freight" Format="C2" TextAlign="TextAlign.Right" Width="120"></GridColumn>
+    </GridColumns>
+</SfGrid>

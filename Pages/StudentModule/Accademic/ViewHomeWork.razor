@@ -1,0 +1,132 @@
+﻿@page  "/StudentModule/Accademic/ViewHomeWork"
+
+
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using AdminDashboard.Server.Models.MasterConfiguration.UnitMaster;
+@using AdminDashboard.Server.Models.MasterConfiguration.SubjectMaster;
+@using AIS.Model.MasterData;
+
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using AdminDashboard.Server.Models.HomeWork
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Popups;
+@using System.ComponentModel.DataAnnotations;
+@using Syncfusion.Blazor.Layouts
+
+@inherits ViewHomeWorkBase
+
+
+<SfButton Content="Expand" OnClick="BtnClick"></SfButton>
+
+@{
+
+    var InitSearch1 = (new string[] { "subjectName", "unitDescription", "chapterDescription", "topicDescription" });
+    var Tool = (new List<string>() { "Search" });
+}
+<SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7">
+    <DashboardLayoutPanels>
+        <DashboardLayoutPanel SizeX=6 SizeY="2">
+            <HeaderTemplate>Home work List</HeaderTemplate>
+            <ContentTemplate>
+                <SfGrid DataSource="@homeworkListModels" @ref="HomeworkList_grid"
+                        EnableVirtualMaskRow="true"
+                        RowHeight="38" Height="410"
+                        Width="auto" EnableVirtualization="false"
+                        AllowResizing="true" AllowExcelExport="true"
+                        EnableAutoFill="true" AllowReordering="true"
+                        ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                        AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                        Toolbar="@(new string[] {"Search","Print","ColumnChooser" })">
+                    <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                    <GridPageSettings PageCount="5" PageSizes="true"></GridPageSettings>
+                    <GridGroupSettings EnableLazyLoading="true"></GridGroupSettings>
+                    <GridSearchSettings Fields=@InitSearch1 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                        IgnoreCase="true"></GridSearchSettings>
+                    <GridGroupSettings Columns="@GroupedColumns"></GridGroupSettings>
+                    <GridTemplates>
+                        <DetailTemplate>
+                            @{
+                                var homeworkList = (context as HomeworkListModel);
+                                <table class="detailtable" width="75%">
+                                    <colgroup>
+                                        <col width="35%">
+                                        <col width="35%">
+                                        <col width="30%">
+                                    </colgroup>
+                                    <tbody>
+                                        @*<tr>
+                                                <td rowspan="4" style="text-align: center;">
+                                                    <img class="photo" src="@($" scripts/Images/Employees/{employee.EmployeeID}.png")" alt="@employee.EmployeeID" />
+                                                </td>
+                                                <td>
+                                                    <span style="font-weight: 500;">Employee ID: </span> @employee.FirstName
+                                                </td>
+                                                <td>
+                                                    <span style="font-weight: 500;">Hire Date: </span> @employee.HireDate.Value.ToShortDateString()
+                                                </td>
+                                            </tr>*@
+                                        <tr>
+                                            <td>
+                                                <span style="font-weight: 500;">Unit Details: </span> @homeworkList.unitDescription "-"@homeworkList.chapterDescription "-"@homeworkList.topicDescription
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span style="font-weight: 500;">Home Work Type: </span> @homeworkList.homeWorkTypeDetails
+                                            </td>
+                                            <td>
+                                                <span style="font-weight: 500;">Home work title: </span> @homeworkList.homeWorkTitle
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <span style="font-weight: 500;">Home work Description: </span> @homeworkList.homeworkDescription
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span style="font-weight: 500;">From Date: </span> @homeworkList.fromDate
+                                            </td>
+                                            <td>
+                                                <span style="font-weight: 500;">To Date: </span> @homeworkList.toDate
+                                            </td>
+                                            <td>
+                                                <span style="font-weight: 500;">Teacher Name: </span> Teacher Name
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            }
+                        </DetailTemplate>
+                    </GridTemplates>
+                    <GridColumns>
+                        @*<GridColumn Field=@nameof(HomeworkListModel.className) HeaderText="Class" Width="50"> </GridColumn>
+                        @GridColumn Field=@nameof(HomeworkListModel.sectionName) HeaderText="Section" Width="40"></GridColumn>
+                            *@
+                        <GridColumn Field=@nameof(HomeworkListModel.subjectName) HeaderText="Subject" Width="50"></GridColumn>
+                        <GridColumn Field=@nameof(HomeworkListModel.unitTitle) HeaderText="Unit" Width="40"></GridColumn>
+                        <GridColumn Field=@nameof(HomeworkListModel.chapterTitle) HeaderText="Chapter" Width="40"></GridColumn>
+                        <GridColumn Field=@nameof(HomeworkListModel.topicTitle) HeaderText="Topic" Width="40"></GridColumn>
+                        <GridColumn Field=@nameof(HomeworkListModel.fromDate) HeaderText="Date" Width="40"></GridColumn>
+
+                    </GridColumns>
+                    @*<SfToolbar>
+                        <ToolbarItems>
+                            <ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>
+                            <ToolbarItem Text="Add Home Work" CssClass="e-outline" OnClick="@AddHomeWorkDialog" Align="ItemAlign.Center"></ToolbarItem>
+                            <ToolbarItem Text="Search" Align="ItemAlign.Right"></ToolbarItem>
+                            <ToolbarItem Text="Settings" Align="ItemAlign.Right"></ToolbarItem>
+                        </ToolbarItems>
+                    </SfToolbar>*@
+                </SfGrid>
+            </ContentTemplate>
+        </DashboardLayoutPanel>
+    </DashboardLayoutPanels>
+</SfDashboardLayout>

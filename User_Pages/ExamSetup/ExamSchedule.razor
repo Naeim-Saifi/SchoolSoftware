@@ -1,0 +1,257 @@
+﻿@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using AIS.Data.RequestResponseModel.ExamMasterSetup;
+@using AIS.Data.RequestResponseModel.Syllabus;
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
+@page "/User_Pages/ExamSetup/ExamSchedule"
+@inherits ExamScheduleSetupBase
+
+@{
+
+    var InitSearch2 = (new string[] { "examType", "examTypeCode", "examTypeDescription" });
+    var Tool = (new List<string>() { "Search" });
+    var InitialGroupColumn = (new string[] { "examType" });
+}
+<MudGrid>
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Unit Master Details</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@_examScheduleList"
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="410"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            ContextMenuItems="MenuItems"
+                            @ref="sfExamScheduleListGrid"
+                            Toolbar="toolBarItems">
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+                         <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings> 
+                         <GridGroupSettings Columns=@InitialGroupColumn>
+                        <CaptionTemplate>
+                        @{
+                        var UnitDetails = (context as CaptionTemplateContext);
+                        <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                        }
+                        </CaptionTemplate>
+                        </GridGroupSettings>
+
+                        <GridEvents CommandClicked="EditExamScheduleSetupMaster" OnToolbarClick="ToolbarClickHandler" TValue=Exam_Schedule_Details_List_Output_Model></GridEvents>
+                        <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                            IgnoreCase="true"></GridSearchSettings>
+                        <GridColumns>
+                            <GridColumn Field=@nameof(Exam_Schedule_Details_List_Output_Model.examScheduleID) HeaderText="ID" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Schedule_Details_List_Output_Model.examType) HeaderText="Exam Type" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Schedule_Details_List_Output_Model.className) HeaderText="Class" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Schedule_Details_List_Output_Model.sectionName) HeaderText="Section" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Schedule_Details_List_Output_Model.subjectName) HeaderText="Subject" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Schedule_Details_List_Output_Model.unitTitle) HeaderText="Unit Title" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Schedule_Details_List_Output_Model.chapterTitle) HeaderText="Chapter Title" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Schedule_Details_List_Output_Model.topicTitle) HeaderText="Topic Title" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Schedule_Details_List_Output_Model.monthNameDetails) HeaderText="Month" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Schedule_Details_List_Output_Model.subjectName) HeaderText="Subject" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Schedule_Details_List_Output_Model.startTime) HeaderText="Start Time" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Schedule_Details_List_Output_Model.endTime) HeaderText="End Time" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Schedule_Details_List_Output_Model.roomNo) HeaderText="RoomNo" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                            <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                <GridCommandColumns>
+                                    <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                    <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                </GridCommandColumns>
+                            </GridColumn>
+                            <GridColumn Field=@nameof(Exam_Schedule_Details_List_Output_Model.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Schedule_Details_List_Output_Model.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Schedule_Details_List_Output_Model.createdByUser) HeaderText="CreatedBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                            <GridColumn Field=@nameof(Exam_Schedule_Details_List_Output_Model.updatedByUser) HeaderText="UpdateBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                        </GridColumns>
+                    </SfGrid>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+</MudGrid>
+
+@*Exam schedule Dialog *@
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        <MudItem xs="12" sm="12" md="12">
+            <SfDialog @ref="DialogRef" Width="650px" AllowDragging="true" IsModal="false" ShowCloseIcon="true" @bind-Visible="@IsVisible">
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>
+                    <Header>Time Table Setup </Header>
+                    <Content>
+                        <MudItem xs="12" md="12" sm="12">
+                            <EditForm Model="@examScheduleViewModel" OnValidSubmit="OnValidSubmit">
+                                <DataAnnotationsValidator />
+                                
+                                <MudCardContent>
+                                    <MudGrid>
+                                        
+                                        @* <SfSwitch @bind-Checked="isChecked" OffLabel="Without Syllabus Details" OnLabel="With Syllabus Details" Created="create" @ref="SwitchObj" TChecked="bool"></SfSwitch> *@
+                                        
+                                        <MudItem xs="12" md="6" sm="6">
+
+                                            <SfDropDownList ID="ClassId" TValue="string" TItem="Master_CLass_List_Output_Model"
+                                                            CssClass="e-outline" Placeholder="Select a Class"
+                                                            FloatLabelType="@FloatLabelType.Never"
+                                                            AllowFiltering="true"
+                                                            Enabled="ddEnable"
+                                            @bind-Value="@examScheduleViewModel.classId"
+                                                            DataSource="@_classList">
+
+                                                <DropDownListFieldSettings Text="className" Value="classId" />
+                                                <DropDownListEvents TItem="Master_CLass_List_Output_Model" TValue="string"
+                                                                    ValueChange="OnChangeClass" />
+                                                <ValidationMessage For="() => examScheduleViewModel.classId" />
+                                            </SfDropDownList>
+
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="6">
+                                            <SfDropDownList ID="SectionId" TValue="string" TItem="Master_Map_Subject_With_Class_List_Output_Model"
+                                                            CssClass="e-outline" Placeholder="Select a Subject"
+                                                            FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                            @bind-Value="@examScheduleViewModel.subjectId"
+                                                            Enabled="ddEnable"
+                                                            DataSource="@_subjectList">
+                                                <DropDownListFieldSettings Text="subjectName" Value="subjectId" />
+                                                <DropDownListEvents TItem="Master_Map_Subject_With_Class_List_Output_Model" TValue="string"
+                                                                    ValueChange="OnChangeSubject" />
+                                                <ValidationMessage For="() => examScheduleViewModel.subjectId" />
+                                            </SfDropDownList>
+                                        </MudItem>
+
+                                        <MudItem xs="12" md="6" sm="6">
+                                            <SfDropDownList ID="SectionId" TValue="string" TItem="Unit_Output_Model"
+                                                            CssClass="e-outline" Placeholder="Select a Unit"
+                                                            FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                            @bind-Value="@examScheduleViewModel.unitId"
+                                                            Enabled="ddEnable"
+                                                            DataSource="@_unitList">
+                                                <DropDownListFieldSettings Text="unitTitle" Value="unitId" />
+                                                <DropDownListEvents TItem="Unit_Output_Model" TValue="string"
+                                                                    ValueChange="OnChangeUnit" />
+                                                <ValidationMessage For="() => examScheduleViewModel.unitId" />
+                                            </SfDropDownList>
+                                        </MudItem>
+
+                                        <MudItem xs="12" md="6" sm="6">
+                                            <SfDropDownList ID="SectionId" TValue="string" TItem="Chapter_Output_Model"
+                                                            CssClass="e-outline" Placeholder="Select a Chapter"
+                                                            FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                            @bind-Value="@examScheduleViewModel.chapterId"
+                                                            Enabled="ddEnable"
+                                                            DataSource="@_chapterList">
+                                                <DropDownListEvents TItem="Chapter_Output_Model" TValue="string"
+                                                                    ValueChange="OnChangeChapter" />
+                                                <DropDownListFieldSettings Text="chapterTitle" Value="chapterID" />
+                                                <ValidationMessage For="() => examScheduleViewModel.chapterId" />
+                                            </SfDropDownList>
+                                        </MudItem>
+                                        <MudItem xs="12" md="6" sm="6">
+                                            <SfDropDownList ID="SectionId" TValue="string" TItem="Topic_Output_Model"
+                                                            CssClass="e-outline" Placeholder="Select a topic"
+                                                            FloatLabelType="@FloatLabelType.Never" AllowFiltering="true"
+                                            @bind-Value="@examScheduleViewModel.topicID"
+                                                            Enabled="ddEnable"
+                                                            DataSource="@_topicList">
+                                                
+                                                <DropDownListFieldSettings Text="topicTitle" Value="topicID" />
+                                                <ValidationMessage For="() => examScheduleViewModel.topicID" />
+                                            </SfDropDownList>
+                                        </MudItem>
+
+                                        
+                                        <MudItem xs="12" md="6" sm="6">
+                                            @* <SfDatePicker TValue="DateTime" @bind-Value="@examScheduleViewModel.fromDate"></SfDatePicker>
+                                            <ValidationMessage For="@(() => examScheduleViewModel.fromDate)"></ValidationMessage> *@
+
+                                            <SfDatePicker TValue="DateTime?" Value="@DateValue">
+                                                <DatePickerEvents TValue="DateTime?" ValueChange="@onChange"></DatePickerEvents>
+                                            </SfDatePicker>
+                                        </MudItem>
+                                        <MudItem xs="12" md="4" sm="6">
+                                            <SfTimePicker TValue="DateTime" Placeholder="Select a Start Time" Min="@MinVal"
+                                                          Max="@MaxVal" @bind-Value="@examScheduleViewModel.startTime">
+                                                <ValidationMessage For="@(() => examScheduleViewModel.startTime)"></ValidationMessage>
+                                            </SfTimePicker>
+                                        </MudItem>
+                                        <MudItem xs="12" md="4" sm="6">
+                                            <SfTimePicker TValue="DateTime" Placeholder="Select a End Time" Min="@MinVal"
+                                                          Max="@MaxVal" @bind-Value="@examScheduleViewModel.endTime">
+                                                <ValidationMessage For="@(() => examScheduleViewModel.endTime)"></ValidationMessage>
+                                            </SfTimePicker>
+                                        </MudItem>
+                                         
+                                        <MudItem xs="12" md="4" sm="6">
+                                            <SfTextBox CssClass="e-outline" Placeholder="Room No" Type="Syncfusion.Blazor.Inputs.InputType.Number"
+                                            @bind-Value="@examScheduleViewModel.roomNo"
+                                                       FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                            <ValidationMessage For="() => examScheduleViewModel.roomNo" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="4" sm="6">
+                                            <SfButton CssClass="e-outline" type="submit" IsPrimary="true">Save</SfButton>
+                                            <SfButton CssClass="e-outline" OnClick="@CloseDialog">Cancel</SfButton>
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudCardContent>
+                            </EditForm>
+                        </MudItem>
+                    </Content>
+                </DialogTemplates>
+                <DialogAnimationSettings Delay="400" Effect="DialogEffect.FlipXDown">
+                </DialogAnimationSettings>
+                <DialogPositionData X="@Xvalue" Y="@Yvalue"></DialogPositionData>
+            </SfDialog>
+        </MudItem>
+    </MudItem>
+</MudGrid>
+@code {
+    private string Xvalue = "center";
+    private string Yvalue = "center";
+    }
+<style>
+    .e-toolbar-item .e-tbar-btn {
+        background-color: orange;
+    }
+
+    .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+    /*  .e-rowcell.e-attr {
+                            background-color: lightgrey;
+                        }*/
+
+    /* .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+                            position: fixed;
+                        }*/
+
+    /*
+
+                        .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
+                            transition: none;
+                        }*/
+    /*.e-content .e-item {
+                            font-size: 12px;
+                            padding: 10px;
+                            text-align: justify;
+                        }*/
+</style>

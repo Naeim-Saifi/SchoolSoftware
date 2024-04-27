@@ -1,0 +1,109 @@
+﻿@using Syncfusion.Blazor.Grids
+@using AdminDashboard.Server.Models.TimeTable;
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using AdminDashboard.Server.Models.Dashboard.Management;
+@using Syncfusion.Blazor.Charts
+@using AdminDashboard.Server.Models.Transaction;
+@using AdminDashboard.Server.Models.Dashboard.Student;
+
+@page "/StudentModule/Transaction/StudentTransactionDetails"
+
+@inherits StudentTransactionDetailsBase
+
+@{
+
+    var InitSearch1 = (new string[] { "periodName" });
+    //var Tool = (new List<string>() { "Search" });
+}
+
+<MudGrid>
+    <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="9" CellAspectRatio="2" AllowResizing="true">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel SizeX=7 SizeY="2">
+                <HeaderTemplate>Transaction Details</HeaderTemplate>
+                <ContentTemplate>
+                    <SfGrid DataSource="@paymentDetails"
+                            AllowTextWrap="true"
+                            EnableVirtualMaskRow="true"
+                            RowHeight="38" Height="410"
+                            @ref="Grid"
+                            Width="auto" EnableVirtualization="false"
+                            AllowResizing="true" AllowExcelExport="true"
+                            EnableAutoFill="true" AllowReordering="true"
+                            ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                            AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                            Toolbar="@(new string[] {"Search","Print","ColumnChooser" })">
+                        <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                        <GridPageSettings PageSize="30"></GridPageSettings>
+                        <GridGroupSettings Columns="@GroupedColumn"></GridGroupSettings>
+                        <GridTemplates>
+                            <DetailTemplate>
+                                @{
+                                    var employee = (context as PaymentDetailsListModel);
+                                    <SfGrid DataSource="@studentTransactionHeaderDetailsModels" AllowExcelExport="true" AllowPdfExport="true"
+                                            Query="@(new Query().Where("receiptId", "equal", employee.receiptId))">
+                                        <GridColumns>
+                                            <GridColumn Field=@nameof(StudentTransactionHeaderDetailsModel.feeHeaderName) HeaderText="Header Name" Width="110"> </GridColumn>
+                                            <GridColumn Field=@nameof(StudentTransactionHeaderDetailsModel.amount) HeaderText="Amount" Width="110"></GridColumn>
+                                            <GridColumn Field=@nameof(StudentTransactionHeaderDetailsModel.discountAmount) HeaderText="Discount" Width="110"></GridColumn>
+                                            <GridColumn Field=@nameof(StudentTransactionHeaderDetailsModel.receivedAmount) HeaderText="Received" Width="110"></GridColumn>
+                                            <GridColumn Field=@nameof(StudentTransactionHeaderDetailsModel.feeReceivedDate) HeaderText="Date" Width="110"></GridColumn>
+                                        </GridColumns>
+                                    </SfGrid>
+                                }
+                            </DetailTemplate>
+                        </GridTemplates>
+
+
+                        <GridColumns>
+                            <GridColumn Field=@nameof(PaymentDetailsListModel.receiptId) HeaderText="Receipt Id" Width="80"
+                                        AllowGrouping="false"></GridColumn>
+                            <GridColumn Field=@nameof(PaymentDetailsListModel.paymentMode) HeaderText="Payment Mode" Width="80"
+                                        AllowGrouping="true"></GridColumn>
+                            <GridColumn Field=@nameof(PaymentDetailsListModel.monthName) HeaderText="Month Name" Width="80"
+                                        AllowGrouping="false"></GridColumn>
+                            <GridColumn Field=@nameof(PaymentDetailsListModel.totalAmount) HeaderText="Total Amount" Width="80"
+                                        AllowGrouping="false">
+                            </GridColumn>
+                            <GridColumn Field=@nameof(PaymentDetailsListModel.discount) HeaderText="Discount" Width="80"
+                                        AllowGrouping="false"></GridColumn>
+                            <GridColumn Field=@nameof(PaymentDetailsListModel.netAmount) HeaderText="Net Amount" Width="80"
+                                        AllowGrouping="false"></GridColumn>
+                            <GridColumn Field=@nameof(PaymentDetailsListModel.paidAmount) HeaderText="Paid Amount" Width="80"
+                                        AllowGrouping="false"></GridColumn>
+                            <GridColumn Field=@nameof(PaymentDetailsListModel.due) HeaderText="Due Amount" Width="80"
+                                        AllowGrouping="false"></GridColumn>
+                            <GridColumn Field=@nameof(PaymentDetailsListModel.advance) HeaderText="Advance" Width="80"
+                                        AllowGrouping="false"></GridColumn>
+                            <GridColumn Field=@nameof(PaymentDetailsListModel.receiptBy) HeaderText="Receipt By" Width="80"
+                                        AllowGrouping="false"></GridColumn>
+                            <GridColumn Field=@nameof(PaymentDetailsListModel.paymentDate) HeaderText="Payment Date" Width="80"
+                                        AllowGrouping="false"></GridColumn>
+                            <GridColumn Field=@nameof(PaymentDetailsListModel.remark) HeaderText="Remark" Width="80"
+                                        AllowGrouping="false" Visible="false"></GridColumn>
+                        </GridColumns>
+
+                        <!--<SfToolbar>
+                            <ToolbarItems>-->
+                                @*<ToolbarItem Text="Export to Excel" OnClick="@ExportToExcel" Align="ItemAlign.Left"></ToolbarItem>*@
+                                <!--<ToolbarItem Text="My Home Page" Align="ItemAlign.Center"></ToolbarItem>
+                                <ToolbarItem Text="Search" Align="ItemAlign.Right"></ToolbarItem>
+                                <ToolbarItem Text="Settings" Align="ItemAlign.Right"></ToolbarItem>
+                            </ToolbarItems>
+                        </SfToolbar>-->
+                    </SfGrid>
+
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+
+</MudGrid>

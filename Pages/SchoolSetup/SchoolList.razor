@@ -1,0 +1,78 @@
+﻿
+@page "/SchoolSetup/SchoolList"
+@inject IDialogService DialogService
+@inherits SchoolSetupListBase
+@using AIS.Model.SchoolSetup
+@using AIS.Model.GeneralConversion
+
+<MudGrid>
+    <MudItem xs="12" sm="8" md="12">
+        <MudCard Elevation="25">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText>School Details</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudCard>
+
+                            @if (schoolListModel.Count == 0)
+                            {
+                                <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                            }
+                            else
+                            {
+                                <MudTable Items="@SchoolSetupList()" Dense="true" Hover="true" Bordered="true" Striped="true"
+                                          @bind-SelectedItem="selectedItem" FixedHeader="true" Height="@(true || false ?"600px":"")"
+                                          SortLabel="Sort By">
+                                    <ToolBarContent>
+                                        <MudToolBarSpacer />
+                                        <MudTextField @bind-Value="_searchTerm" Placeholder="Search" Adornment="Adornment.End"
+                                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" class="mt-0 ma-2"
+                                                      Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true"></MudTextField>
+                                    </ToolBarContent>
+                                    <HeaderContent>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<SchoolListModel, object>(x=>x.schoolId)">SchoolId</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<SchoolListModel, object>(x=>x.schoolCode)">SchoolCode</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel Enabled="@enabled" SortBy="new Func<SchoolListModel, object>(x=>x.schoolName)">SchoolName</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<SchoolListModel, object>(x=>x.ownerName)">OwnerName</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<SchoolListModel, object>(x=>x.ownerContactNo)">MobileNo</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<SchoolListModel, object>(x=>x.activeStatusDetails)">Status</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<SchoolListModel, object>(x=>x.createdByUser)">CreatedBy</MudTableSortLabel></MudTh>
+                                        <MudTh><MudTableSortLabel SortBy="new Func<SchoolListModel, object>(x=>x.createdDate)">CreatedDate</MudTableSortLabel></MudTh>
+                                        <MudTh>Action</MudTh>
+                                    </HeaderContent>
+                                    <RowTemplate>
+                                        <MudTd DataLabel="SchoolId">@context.schoolId</MudTd>
+                                        <MudTd DataLabel="SchoolCode">@context.schoolCode</MudTd>
+
+                                        <MudTd DataLabel="SchoolName">
+                                            <MudHighlighter Text="@context.schoolName" HighlightedText="@_searchTerm" />
+                                        </MudTd>
+                                        <MudTd DataLabel="ownerName">@context.ownerName</MudTd>
+                                        <MudTd DataLabel="MobileNo">@context.ownerContactNo</MudTd>
+                                        <MudTd DataLabel="Status">@context.activeStatusDetails</MudTd>
+                                        <MudTd DataLabel="CreatedBy">@context.createdByUser</MudTd>
+                                        <MudTd DataLabel="CreatedDate">@context.createdDate</MudTd>
+                                        <MudTd DataLabel="Action">
+                                            <MudIconButton @onclick="@(()=>Edit(@context.schoolId))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Size="Size.Small" class="ma-2"></MudIconButton>
+                                            <MudIconButton OnClick="@(()=>DeleteRecord(@context.schoolId))" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Size="Size.Small" class="ma-2"></MudIconButton>
+                                        </MudTd>
+                                    </RowTemplate>
+                                    <PagerContent>
+                                        <MudTablePager />
+                                    </PagerContent>
+                                </MudTable>
+                            }
+                        </MudCard>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+            @*<MudCardActions Subject="pb-4 pl-4">
+
+                </MudCardActions>*@
+        </MudCard>
+    </MudItem>>
+</MudGrid>

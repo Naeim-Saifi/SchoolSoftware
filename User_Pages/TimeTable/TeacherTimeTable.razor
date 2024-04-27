@@ -1,0 +1,155 @@
+﻿@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@using AIS.Data.RequestResponseModel.MasterData;
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
+@using AIS.Data.RequestResponseModel.TimeTableSetUp;
+@using AIS.Model.Employee;
+@using AIS.Data.RequestResponseModel.Employee;
+@using Microsoft.AspNetCore.Components.Forms
+@page "/User_Page/TimeTable/TeacherTimeTable"
+
+@inherits TeacherTimeTableBase
+@*Start Master Class List Details*@
+
+@{
+
+    var InitSearch2 = (new string[] { "teacherName", "subjectName", "className", "sectionName", "dayNameDetails" });
+    var Tool = (new List<string>() { "Search" });
+    var InitialGroupColumn = (new string[] { "dayNameDetails" });
+}
+<MudGrid>
+    <MudItem xs="6" sm="6" md="6">
+        <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+            <DashboardLayoutPanels>
+                <DashboardLayoutPanel SizeX=7 SizeY="12">
+                    <HeaderTemplate>Time Table</HeaderTemplate>
+                    <ContentTemplate>
+
+                        <SfTab ID="Ej2Tab" Height="100%">
+                            <TabItems>
+                                <TabItem>
+                                    <HeaderTemplate>
+                                        Today TimeTable
+                                    </HeaderTemplate>
+                                    <ContentTemplate>
+                                        <SfGrid DataSource="@_todaytimeTableList"
+                                                EnableVirtualMaskRow="true"
+                                                RowHeight="38" Height="810"
+                                                Width="auto" EnableVirtualization="false"
+                                                AllowResizing="true" AllowExcelExport="true"
+                                                EnableAutoFill="true" AllowReordering="true"
+                                                ShowColumnChooser="false" AllowGrouping="true" AllowSorting="true"
+                                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                                @ref="sfTimeTableList"
+                                                Toolbar="toolBarItems">
+                                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                            <GridPageSettings PageCount="100" PageSizes="true"></GridPageSettings>
+
+                                            <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                                IgnoreCase="true"></GridSearchSettings>
+                                            <GridGroupSettings Columns=@InitialGroupColumn>
+                                                <CaptionTemplate>
+                                                    @{
+                                                        var UnitDetails = (context as CaptionTemplateContext);
+                                                        <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                                    }
+                                                </CaptionTemplate>
+                                            </GridGroupSettings>
+                                            <GridColumns>
+                                                @*<GridColumn Field=@nameof(TimeTableListModel.timeTableID) HeaderText="Id" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>*@
+                                                 <GridColumn Field=@nameof(TimeTableOutputModel.className) HeaderText="Class Name" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.sectionName) HeaderText="Section Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.dayNameDetails) HeaderText="Day" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.periodName) HeaderText="Period Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.startTime) HeaderText="Start Time" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.endTime) HeaderText="End Time" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.subjectName) HeaderText="Subject" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                               @* <GridColumn Field=@nameof(TimeTableOutputModel.teacherName) HeaderText="Teacher" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>*@
+
+                                                @*<GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                                <GridCommandColumns>
+                                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                                </GridCommandColumns>
+                                                </GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.createdByUser) HeaderText="Created By User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.updatedByUser) HeaderText="Updated By User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>*@
+
+                                            </GridColumns>
+                                        </SfGrid>
+                                    </ContentTemplate>
+                                </TabItem>
+                                <TabItem>
+                                    <HeaderTemplate>
+                                        Time Table Details
+                                    </HeaderTemplate>
+                                    <ContentTemplate>
+                                        <SfGrid DataSource="@_studentTableList"
+                                                EnableVirtualMaskRow="true"
+                                                RowHeight="38" Height="810"
+                                                Width="auto" EnableVirtualization="false"
+                                                AllowResizing="true" AllowExcelExport="true"
+                                                EnableAutoFill="true" AllowReordering="true"
+                                                ShowColumnChooser="false" AllowGrouping="true" AllowSorting="true"
+                                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                                @ref="sfTimeTableList"
+                                                Toolbar="toolBarItems">
+                                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                            <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+
+                                            <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                                IgnoreCase="true"></GridSearchSettings>
+                                            <GridGroupSettings Columns=@InitialGroupColumn>
+                                                <CaptionTemplate>
+                                                    @{
+                                                        var UnitDetails = (context as CaptionTemplateContext);
+                                                        <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                                    }
+                                                </CaptionTemplate>
+                                            </GridGroupSettings>
+                                            <GridColumns>
+                                                @*<GridColumn Field=@nameof(TimeTableListModel.timeTableID) HeaderText="Id" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>*@
+                                                 <GridColumn Field=@nameof(TimeTableOutputModel.className) HeaderText="Class Name" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.sectionName) HeaderText="Section Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.dayNameDetails) HeaderText="Day" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.periodName) HeaderText="Period Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.startTime) HeaderText="Start Time" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.endTime) HeaderText="End Time" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.subjectName) HeaderText="Subject" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                               @* <GridColumn Field=@nameof(TimeTableOutputModel.teacherName) HeaderText="Teacher" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>*@
+
+                                                @*<GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                                <GridCommandColumns>
+                                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                                </GridCommandColumns>
+                                                </GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.createdByUser) HeaderText="Created By User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.updatedByUser) HeaderText="Updated By User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                                <GridColumn Field=@nameof(TimeTableOutputModel.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>*@
+
+                                            </GridColumns>
+                                        </SfGrid>
+                                    </ContentTemplate>
+                                </TabItem>
+                            </TabItems>
+                        </SfTab>
+                    </ContentTemplate>
+                </DashboardLayoutPanel>
+            </DashboardLayoutPanels>
+        </SfDashboardLayout>
+    </MudItem>
+</MudGrid>
