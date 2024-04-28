@@ -25,9 +25,11 @@ resources:
 variables:
   - template: pipeline-templates/var/schoollinks-var.yml@adotemplates
   - name: websiteName
-    value: AIS_FrontEnd_Dev
+    value: AIS_FrontEnd
   - name: portNumber
-    value: 82
+    value: 8080
+  - name: portNumberLive
+    value: 8081
 
 stages:
   - stage: DotNetBuild
@@ -44,5 +46,14 @@ stages:
     jobs:
       - template: ${{variables.template_path}}/deploy/iis-deploy.yml@adotemplates
         parameters:
-          technology: test
+          technology: frontend
     displayName: IIS Deployment
+
+  - stage: IISDeploymentLive
+    dependsOn: IISDeployment
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    jobs:
+      - template: ${{variables.template_path}}/deploy/iis-deploy-live.yml@adotemplates
+        parameters:
+          technology: frontend
+    displayName: IIS Deployment Live 
