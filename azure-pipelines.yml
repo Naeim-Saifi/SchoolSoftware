@@ -25,7 +25,9 @@ resources:
 variables:
   - template: pipeline-templates/var/schoollinks-var.yml@adotemplates
   - name: websiteName
-    value: AIS-TestProject
+    value: AIS_FrontEnd_Dev
+  - name: portNumber
+    value: 82
 
 stages:
   - stage: DotNetBuild
