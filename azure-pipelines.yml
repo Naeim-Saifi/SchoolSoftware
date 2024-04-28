@@ -21,9 +21,32 @@ resources:
     - repository: ais-data
       name: SchoolLinks/ais-data
       type: git
+    - repository: ais-dal
+      name: SchoolLinks/ais-dal
+      type: git
+    - repository: ais-utility
+      name: SchoolLinks/ais-utility
+      type: git  
+    - repository: ais-service
+      name: SchoolLinks/ais-service
+      type: git      
+    - repository: ais-service
+      name: SchoolLinks/ais-service
+      type: git   
+    - repository: admin-dashboard-server
+      name: SchoolLinks/admin-dashboard-server
+      type: git
+    - repository: mts-common-library
+      name: SchoolLinks/mts-common-library
+      type: git
+    - repository: rdlc-project
+      name: SchoolLinks/rdlc-project
+      type: git
 
 variables:
   - template: pipeline-templates/var/schoollinks-var.yml@adotemplates
+  - name: websiteName
+    value: AIS-TestProject
 
 stages:
   - stage: DotNetBuild
@@ -31,5 +54,14 @@ stages:
     jobs:
       - template: ${{variables.template_path}}/build/dotnet-build.yml@adotemplates
         parameters:
-          gitrepo: admin-dashboard-server
+          gitrepo: ais-web-api
     displayName: Dot Net Build
+
+  - stage: IISDeployment
+    dependsOn: DotNetBuild
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    jobs:
+      - template: ${{variables.template_path}}/deploy/iis-deploy.yml@adotemplates
+        parameters:
+          technology: test
+    displayName: IIS Deployment
