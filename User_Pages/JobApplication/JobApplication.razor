@@ -1,0 +1,488 @@
+﻿@using AIS.Data.RequestResponseModel.JobApplication
+@using AdminDashboard.Server.Pages.JobApplication
+@using Syncfusion.Blazor.Grids
+@using AIS.Data.RequestResponseModel.Expense;
+@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@using AIS.Data.RequestResponseModel.MasterData;
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
+@page  "/User_Pages/JobApplication/JobApplication"
+
+@inherits JobApplicationBase
+
+
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="10" CellAspectRatio="1" AllowResizing="true">
+            <DashboardLayoutPanels>
+                <DashboardLayoutPanel SizeX="9" SizeY="17">
+                    <HeaderTemplate>Job Application Details</HeaderTemplate>
+                    <ContentTemplate>
+                        <MudGrid>
+                            <MudItem xs="12" md="12" sm="12">
+                                <EditForm Model="jobApplicationViewModel" OnValidSubmit="OnValidSubmit">
+                                    <DataAnnotationsValidator />
+                                    <MudCardContent>
+                                        <MudGrid>
+
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Job Applicant Name" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@jobApplicationViewModel.Name"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => jobApplicationViewModel.Name" />
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Father Name" @bind-Value="@jobApplicationViewModel.FatherName"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => jobApplicationViewModel.FatherName" />
+                                            </MudItem>
+
+
+                                            <MudItem xs="12" sm="4" md="4">
+                                                <SfDatePicker TValue="DateTime?" Format="yyyy-MM-dd" Placeholder="Date Of Birth" @bind-Value="@jobApplicationViewModel.DateOfBirth"></SfDatePicker>
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="4" sm="6">
+                                                <SfDropDownList ID="gender"
+                                                                CssClass="e-outline"
+                                                                Placeholder="Select a Gender"
+                                                                FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                                @bind-Value="@jobApplicationViewModel.Gender"
+                                                                DataSource="@genderDetails">
+                                                    <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                                    <ValidationMessage For="@(() => jobApplicationViewModel.Gender)"></ValidationMessage>
+                                                </SfDropDownList>
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="4" sm="6">
+                                                <SfDropDownList ID="category"
+                                                                CssClass="e-outline"
+                                                                Placeholder="Select a category"
+                                                                FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                                @bind-Value="@jobApplicationViewModel.CasteCategory"
+                                                                DataSource="@casteCategories">
+                                                    <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                                    <ValidationMessage For="@(() => jobApplicationViewModel.CasteCategory)"></ValidationMessage>
+                                                </SfDropDownList>
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfMaskedTextBox Mask="(0000)-0000-0000" Placeholder="Aadhar No" @bind-Value="@jobApplicationViewModel.AadharNumber"></SfMaskedTextBox>
+                                                <ValidationMessage For="() => jobApplicationViewModel.AadharNumber" />
+
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfMaskedTextBox Mask="LLLLL-0000-000A" Placeholder="PAN No" @bind-Value="@jobApplicationViewModel.PAN"></SfMaskedTextBox>
+                                                <ValidationMessage For="() => jobApplicationViewModel.PAN" />
+
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfMaskedTextBox Mask="LLLL-00000-0L" Placeholder="TAN No" @bind-Value="@jobApplicationViewModel.TAN"></SfMaskedTextBox>
+                                                <ValidationMessage For="() => jobApplicationViewModel.TAN" />
+
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfMaskedTextBox Mask="(000)-000-0000" Placeholder="Phone No" @bind-Value="@jobApplicationViewModel.PhoneNumber"></SfMaskedTextBox>
+                                                <ValidationMessage For="() => jobApplicationViewModel.PhoneNumber" />
+                                            </MudItem>
+                                            <MudItem xs="12" sm="6" md="6">
+                                                <SfTextBox ID="presaddress" @bind-Value="@(jobApplicationViewModel.PresentAddress)"
+                                                           Multiline="true" FloatLabelType="FloatLabelType.Never" Placeholder="Present Address"></SfTextBox>
+                                            </MudItem>
+
+                                            <MudItem xs="12" sm="6" md="6">
+                                                <SfTextBox ID="permaddress" @bind-Value="@(jobApplicationViewModel.PermanentAddress)"
+                                                           Multiline="true" FloatLabelType="FloatLabelType.Never" Placeholder="Permanent Address"></SfTextBox>
+                                            </MudItem>
+
+
+
+                                            <MudItem xs="12" md="4" sm="4">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Email Id" @bind-Value="@jobApplicationViewModel.Email" FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => jobApplicationViewModel.Email" />
+                                            </MudItem>
+
+                                           @*  <MudItem xs="12" md="4" sm="6">
+                                                <SfButton CssClass="e-outline" type="submit" IsPrimary="true">Save</SfButton>
+
+
+                                            </MudItem> *@
+
+                                            <MudItem xs="12" md="4" sm="6">
+                                                <SfDropDownList ID="positionapplied"
+                                                                CssClass="e-outline"
+                                                                Placeholder="Select a position"
+                                                                FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                                @bind-Value="@jobApplicationViewModel.PositionAppliedFor"
+                                                                DataSource="@positionDetails">
+                                                    <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                                    <ValidationMessage For="@(() => jobApplicationViewModel.PositionAppliedFor)"></ValidationMessage>
+                                                </SfDropDownList>
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="4" sm="6">
+                                                <SfDropDownList ID="teachingExperience"
+                                                                CssClass="e-outline"
+                                                                Placeholder="Total Teaching Experience"
+                                                                FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                                @bind-Value="@jobApplicationViewModel.TotalTeachingExperience"
+                                                                DataSource="@experienceDetails">
+                                                    <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                                    <ValidationMessage For="@(() => jobApplicationViewModel.TotalTeachingExperience)"></ValidationMessage>
+                                                </SfDropDownList>
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="4" sm="6">
+                                                <SfDropDownList ID="administrativeExperience"
+                                                                CssClass="e-outline"
+                                                                Placeholder="Administrative Experience Details"
+                                                                FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                                @bind-Value="@jobApplicationViewModel.AdministrativeExperienceDetails"
+                                                                DataSource="@administrativeExperienceDetails">
+                                                    <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                                    <ValidationMessage For="@(() => jobApplicationViewModel.AdministrativeExperienceDetails)"></ValidationMessage>
+                                                </SfDropDownList>
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfNumericTextBox Placeholder="Salary And Allowances" @bind-Value="@jobApplicationViewModel.SalaryAndAllowances"></SfNumericTextBox>
+                                                <ValidationMessage For="() => jobApplicationViewModel.SalaryAndAllowances" />
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfNumericTextBox Placeholder="Last Pay Drawn" @bind-Value="@jobApplicationViewModel.LastPayDrawn"></SfNumericTextBox>
+                                                <ValidationMessage For="() => jobApplicationViewModel.LastPayDrawn" />
+                                            </MudItem>
+
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfNumericTextBox Placeholder="Allowances" @bind-Value="@jobApplicationViewModel.Allowances"></SfNumericTextBox>
+                                                <ValidationMessage For="() => jobApplicationViewModel.Allowances" />
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Known Languages" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@jobApplicationViewModel.KnownLanguages"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => jobApplicationViewModel.KnownLanguages" />
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Sports And Activities" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@jobApplicationViewModel.ProficiencyInSportsAndActivities"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => jobApplicationViewModel.ProficiencyInSportsAndActivities" />
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="References" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@jobApplicationViewModel.References"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => jobApplicationViewModel.References" />
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Testimonials And Certificates" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@jobApplicationViewModel.TestimonialsAndCertificates"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => jobApplicationViewModel.TestimonialsAndCertificates" />
+                                            </MudItem>
+
+                                            <MudItem xs="12" sm="4" md="4">
+                                                <SfDatePicker TValue="DateTime?" Format="yyyy-MM-dd" Placeholder="Date Of Birth" @bind-Value="@jobApplicationViewModel.JoiningDate"></SfDatePicker>
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Other Information" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@jobApplicationViewModel.OtherInformation"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => jobApplicationViewModel.OtherInformation" />
+                                            </MudItem>
+
+                                            <MudItem xs="12" sm="4" md="4">
+                                                <SfDatePicker TValue="DateTime?" Format="yyyy-MM-dd" Placeholder="Date" @bind-Value="@jobApplicationViewModel.Date"></SfDatePicker>
+                                            </MudItem>
+
+
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Signature" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@jobApplicationViewModel.Signature"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => jobApplicationViewModel.Signature" />
+                                            </MudItem>
+
+                                            @*Academic Qualification Detail*@
+
+                                            
+                                            <MudItem xs="12" md="12" sm="12" Class="d-flex align-items-center justify-content-between">
+                                                <MudItem xs="12" md="4" sm="6">
+                                                    <SfDropDownList DegreeID="Degree"
+                                                                    CssClass="e-outline"
+                                                                    Placeholder="Degree Details"
+                                                                    FloatLabelType="@FloatLabelType.Never"
+                                                                    AllowFiltering="true"
+                                                                    @bind-Value="@jobApplicationViewModel.Degree"
+                                                                    DataSource="@degree">
+                                                        <DropDownListFieldSettings Text="DegreeType" Value="DegreeType"></DropDownListFieldSettings>
+                                                        <ValidationMessage For="@(() => jobApplicationViewModel.Degree)"></ValidationMessage>
+                                                    </SfDropDownList>
+                                                    </MudItem>
+                                                <MudItem xs="12" md="4" sm="6" Class="ml-2">
+                                                    <SfDropDownList UniversityID="University"
+                                                                        CssClass="e-outline"
+                                                                        Placeholder="University Details"
+                                                                        FloatLabelType="@FloatLabelType.Never"
+                                                                        AllowFiltering="true"
+                                                                        @bind-Value="@jobApplicationViewModel.University"
+                                                                    DataSource="@university">
+                                                        <DropDownListFieldSettings Text="UniversityType" Value="UniversityType"></DropDownListFieldSettings>
+                                                            <ValidationMessage For="@(() => jobApplicationViewModel.University)"></ValidationMessage>
+                                                        </SfDropDownList>
+                                                    </MudItem>
+
+                                                <MudItem xs="12" md="4" sm="6" Class="ml-2">
+                                                    <SfDropDownList YearOfPassingID="Year Of Passing"
+                                                                        CssClass="e-outline"
+                                                                        Placeholder="Year Of Passing Details"
+                                                                        FloatLabelType="@FloatLabelType.Never"
+                                                                        AllowFiltering="true"
+                                                                        @bind-Value="@jobApplicationViewModel.YearOfPassing"
+                                                                    DataSource="@yearOfPassing">
+                                                        <DropDownListFieldSettings Text="YearOfPassingYear" Value="YearOfPassingYear"></DropDownListFieldSettings>
+                                                            <ValidationMessage For="@(() => jobApplicationViewModel.YearOfPassing)"></ValidationMessage>
+                                                        </SfDropDownList>
+                                                    </MudItem>
+
+                                                <MudItem xs="12" md="4" sm="6" Class="ml-2">
+                                                        <SfDropDownList ID="Grade"
+                                                                        CssClass="e-outline"
+                                                                        Placeholder="Grade Details"
+                                                                        FloatLabelType="@FloatLabelType.Never"
+                                                                        AllowFiltering="true"
+                                                                        @bind-Value="@jobApplicationViewModel.Grade"
+                                                                    DataSource="@grade">
+                                                        <DropDownListFieldSettings Text="Value" Value="Value"></DropDownListFieldSettings>
+                                                            <ValidationMessage For="@(() => jobApplicationViewModel.Grade)"></ValidationMessage>
+                                                        </SfDropDownList>
+                                                    </MudItem>
+
+                                                <MudItem xs="12" md="4" sm="6" Class="ml-2">
+                                                        <SfDropDownList ID="Field Of Study"
+                                                                        CssClass="e-outline"
+                                                                        Placeholder="Field Of StudyDetails"
+                                                                        FloatLabelType="@FloatLabelType.Never"
+                                                                        AllowFiltering="true"
+                                                                        @bind-Value="@jobApplicationViewModel.FieldOfStudy"
+                                                                    DataSource="@fieldOfStudy">
+                                                        <DropDownListFieldSettings Text="Value" Value="Value"></DropDownListFieldSettings>
+                                                            <ValidationMessage For="@(() => jobApplicationViewModel.FieldOfStudy)"></ValidationMessage>
+                                                        </SfDropDownList>
+                                                    </MudItem>
+
+                                                <MudItem xs="12" md="6" sm="12" Class="ml-2">
+                                                    <SfButton Type="button" CssClass="e-flat e-primary no-hover-animation" IsToggle="false " IsPrimary="true" Content="Add" OnClick="@AddQualificationDetails"></SfButton>
+
+                                                </MudItem>
+
+                                               
+
+                                               
+                                                
+                                                
+
+
+                                            </MudItem>
+
+
+                                            <MudItem xs="12" md="12" sm="12">
+                                                <SfGrid DataSource="@academicQualificationDetails"
+                                                        EnableVirtualMaskRow="true"
+                                                        RowHeight="38" Height="350"
+                                                        EnableVirtualization="false"
+                                                        AllowResizing="true" AllowExcelExport="true"
+                                                        EnableAutoFill="true" AllowReordering="true"
+                                                        ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
+                                                        AllowFiltering="true" AllowPaging="false" ShowColumnMenu="true"
+                                                        @ref="sfacademicQualificationDetails">
+                                                    <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                                    <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+
+
+                                                    @*  <GridEvents CommandClicked="BillItemListClick" TValue=BillItemList></GridEvents>
+                                                    <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                    IgnoreCase="true"></GridSearchSettings> *@
+                                                    <GridColumns >
+                                                        <GridColumn Field=@nameof(AcademicQualificationDetails.Degree) HeaderText="Degree" TextAlign="TextAlign.Center" AutoFit=false></GridColumn>
+                                                        <GridColumn Field=@nameof(AcademicQualificationDetails.University) HeaderText="University" TextAlign="TextAlign.Center" AutoFit=false></GridColumn>
+                                                        <GridColumn Field=@nameof(AcademicQualificationDetails.YearOfPassing) HeaderText="Year Of Passing" TextAlign="TextAlign.Center" AutoFit=false></GridColumn>
+                                                        <GridColumn Field=@nameof(AcademicQualificationDetails.Grade) HeaderText="Grade" TextAlign="TextAlign.Center" AutoFit=false></GridColumn>
+                                                        <GridColumn Field=@nameof(AcademicQualificationDetails.FieldOfStudy) HeaderText="Field Of Study" TextAlign="TextAlign.Center" AutoFit=false></GridColumn>
+                                                        <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                                            <GridCommandColumns>
+                                                                @* <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn> *@
+                                                                <GridCommandColumn Type="CommandButtonType.Delete" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                                            </GridCommandColumns>
+                                                        </GridColumn>
+
+                                                    </GridColumns>
+                                                </SfGrid>
+
+                                            </MudItem>
+
+
+
+                                           @*Teaching Experience Details*@
+
+                                            <MudItem xs="12" md="12" sm="12" Class="d-flex align-items-center justify-content-between">
+                                                <MudItem xs="12" md="4" sm="6">
+                                                    <SfDropDownList InstitutionID="Institution"
+                                                                    CssClass="e-outline"
+                                                                    Placeholder="Institution Details"
+                                                                    FloatLabelType="@FloatLabelType.Never"
+                                                                    AllowFiltering="true"
+                                                                    @bind-Value="@jobApplicationViewModel.Institution"
+                                                                    DataSource="@institution">
+                                                        <DropDownListFieldSettings Text="InstitutionType" Value="InstitutionType"></DropDownListFieldSettings>
+                                                        <ValidationMessage For="@(() => jobApplicationViewModel.Institution)"></ValidationMessage>
+                                                    </SfDropDownList>
+                                                </MudItem>
+                                                <MudItem xs="12" md="4" sm="6" Class="ml-2">
+                                                    <SfDropDownList PositionID="Position"
+                                                                    CssClass="e-outline"
+                                                                    Placeholder="Position Details"
+                                                                    FloatLabelType="@FloatLabelType.Never"
+                                                                    AllowFiltering="true"
+                                                                    @bind-Value="@jobApplicationViewModel.Position"
+                                                                    DataSource="@position">
+                                                        <DropDownListFieldSettings Text="PositionType" Value="PositionType"></DropDownListFieldSettings>
+                                                        <ValidationMessage For="@(() => jobApplicationViewModel.Position)"></ValidationMessage>
+                                                    </SfDropDownList>
+                                                </MudItem>
+
+                                                <MudItem xs="12" md="4" sm="6" Class="ml-2">
+                                                    <SfDropDownList YearsOfExperienceID="Years Of Experience"
+                                                                    CssClass="e-outline"
+                                                                    Placeholder="Years Of Experience Details"
+                                                                    FloatLabelType="@FloatLabelType.Never"
+                                                                    AllowFiltering="true"
+                                                                    @bind-Value="@jobApplicationViewModel.YearsOfExperience"
+                                                                    DataSource="@yearsOfExperience">
+                                                        <DropDownListFieldSettings Text="YearsOfExperienceType" Value="YearsOfExperienceType"></DropDownListFieldSettings>
+                                                        <ValidationMessage For="@(() => jobApplicationViewModel.YearsOfExperience)"></ValidationMessage>
+                                                    </SfDropDownList>
+                                                </MudItem>
+
+                                                
+
+                                                <MudItem xs="12" md="6" sm="12" Class="ml-2">
+                                                    <SfButton Type="button" CssClass="e-flat e-primary no-hover-animation" IsToggle="false " IsPrimary="true" Content="Add" OnClick="@AddExperienceDetails"></SfButton>
+
+                                                </MudItem>
+
+
+
+                                               
+
+
+
+
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="12" sm="12">
+                                                <SfGrid DataSource="@teachingExperienceDetail"
+                                                        EnableVirtualMaskRow="true"
+                                                        RowHeight="38" Height="350"
+                                                        EnableVirtualization="false"
+                                                        AllowResizing="true" AllowExcelExport="true"
+                                                        EnableAutoFill="true" AllowReordering="true"
+                                                        ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
+                                                        AllowFiltering="true" AllowPaging="false" ShowColumnMenu="true"
+                                                        @ref="sfteachingExperienceDetail">
+                                                    <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                                    <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+
+
+                                                    @*  <GridEvents CommandClicked="BillItemListClick" TValue=BillItemList></GridEvents>
+                                                    <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                    IgnoreCase="true"></GridSearchSettings> *@
+                                                    <GridColumns>
+                                                        <GridColumn Field=@nameof(TeachingExperienceDetail.Institution) HeaderText="Institution" TextAlign="TextAlign.Center" AutoFit=false></GridColumn>
+                                                        <GridColumn Field=@nameof(TeachingExperienceDetail.Position) HeaderText="Position" TextAlign="TextAlign.Center" AutoFit=false></GridColumn>
+                                                        <GridColumn Field=@nameof(TeachingExperienceDetail.YearsOfExperience) HeaderText="Years Of Experience" TextAlign="TextAlign.Center" AutoFit=false></GridColumn>
+                                                        <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                                            <GridCommandColumns>
+                                                                @* <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn> *@
+                                                                <GridCommandColumn Type="CommandButtonType.Delete" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                                            </GridCommandColumns>
+                                                        </GridColumn>
+
+                                                    </GridColumns>
+                                                </SfGrid>
+
+                                            </MudItem>
+
+
+
+
+                                            <MudItem xs="12" md="12" sm="12" Class="m-2">
+                                                <div class="custom-file-upload">
+                                                    <h3>Upload Resume (only .pdf, .docx accepeted)</h3>
+                                                    <input type="file" class="mud-input custom-file-input" id="inputGroupFile02" aria-describedby="inputGroupFileAddon02" accept=".pdf,.doc,.docx">
+                                                </div>
+                                            </MudItem>
+
+                                           @*  <MudItem xs="12" md="12" sm="12" Class="m-2">
+                                                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnValidSubmit="OnValidSubmit" FullWidth="true">SUBMIT</MudButton>
+                                            </MudItem> *@
+
+                                            <MudItem xs="12" md="12" sm="12" Class="m-2">
+                                                <SfButton Variant="Filled" Color="Primary" FullWidth="true" OnClick="@OnValidSubmit">SUBMIT</SfButton>
+                                            </MudItem>
+                                            </MudGrid>
+
+
+
+                                    </MudCardContent>
+                                </EditForm>
+                            </MudItem>
+
+                        </MudGrid>
+
+                    </ContentTemplate>
+                </DashboardLayoutPanel>
+            </DashboardLayoutPanels>
+        </SfDashboardLayout>
+    </MudItem>
+</MudGrid>
+
+<style>
+    .no-hover-animation {
+        /* Apply blue color */
+        background-color: #007bff !important; /* Adjust as needed */
+        color: #fff !important; /* Adjust as needed */
+        /* Apply animation */
+        transition: background-color 0.3s ease-in-out; /* Adjust animation speed as needed */
+    }
+
+        .no-hover-animation:hover {
+            /* Remove hover effect */
+            background-color: #007bff !important; /* Keep the same color as normal state */
+        }
+</style>
+
+
+
+
+
+
