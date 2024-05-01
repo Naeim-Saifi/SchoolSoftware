@@ -115,7 +115,7 @@ namespace AdminDashboard.Server.User_Pages.Inventory.ItemVendor
             {
                 //navigationManager.NavigateTo($"/OnlineExam/ViewResult/{ testId}");
                 IsVisible = true;
-                DialogHeaderName = "Update Enquiry Details";
+                DialogHeaderName = "Update Vendor Details";
                 HeaderText = "Update Record";
                 OperationType = "Update";
                 btncss = "e-flat e-info e-outline";
@@ -147,7 +147,7 @@ namespace AdminDashboard.Server.User_Pages.Inventory.ItemVendor
             else
             {
                 IsVisible = true;
-                DialogHeaderName = "Delete Enquiry Details";
+                DialogHeaderName = "Delete Vendor Details";
                 OperationType = "Delete";
                 HeaderText = "Delete Record";
                 btncss = "e-flat e-danger e-outline";
@@ -188,9 +188,9 @@ namespace AdminDashboard.Server.User_Pages.Inventory.ItemVendor
                 IsVisible = true;
                 OperationType = "";
                 btncss = "e-flat e-primary e-outline";
-                DialogHeaderName = "Add Enquiry Details";
+                DialogHeaderName = "Add Vendor Details";
                 OperationType = "Add";
-                HeaderText = "Add Enquiry";
+                HeaderText = "Add Vendor";
                 ddEnable = true;
 
             }
