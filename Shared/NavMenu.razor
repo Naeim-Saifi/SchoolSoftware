@@ -44,9 +44,7 @@ else if (UserRole == "Admin")
         </MudNavGroup>
 
 
-            <MudNavGroup Title="Inventory" Icon="@Icons.Material.Outlined.Folder" HideExpandIcon="false" Expanded="false">
-                <MudNavLink Href="/ItemMaster/ItemMasters" Icon="@Icons.Material.Outlined.InsertDriveFile">Item Master</MudNavLink>
-            </MudNavGroup>
+         
 
 
 
@@ -168,6 +166,13 @@ else if (UserRole == "Sys Admin")
        
         <MudNavLink Href="/User_Pages/SchoolDetails/SchoolDetails"
                     Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Update">Update School Details</MudNavLink>
+
+
+
+        <MudNavGroup Title="Master Data" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">
+            <MudNavLink Href="/User_Pages/ItemMaster/ItemMasters" Icon="@Icons.Material.Outlined.List"> Item Master </MudNavLink>
+            <MudNavLink Href="/User_Pages/ItemVendor/ItemVendor" Icon="@Icons.Material.Outlined.Add">Item Vendor</MudNavLink>
+        </MudNavGroup>
 
         <MudNavGroup Title="Master Data" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">
             <MudNavLink Href="/User_Pages/MasterData/MasterDataList" Icon="@Icons.Material.Outlined.List">Master Data</MudNavLink>
