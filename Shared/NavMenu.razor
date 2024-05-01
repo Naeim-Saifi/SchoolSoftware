@@ -21,6 +21,9 @@
     }
 else if (UserRole == "Admin")
     { @*Admin Munu Details*@
+
+
+
     <MudText Typo="Typo.subtitle2" Color="Color.Primary" Class="ml-4 my-3">School Admin</MudText>
     <MudNavLink Href="/personal/dashboard" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Dashboard">Dashboard</MudNavLink>
     <MudNavGroup Title="Master Setting" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
@@ -39,6 +42,15 @@ else if (UserRole == "Admin")
                 <MudNavLink Href="/MasterSetting/MasterBatch" Icon="@Icons.Material.Outlined.InsertDriveFile">State</MudNavLink>
             *@
         </MudNavGroup>
+
+
+            <MudNavGroup Title="Inventory" Icon="@Icons.Material.Outlined.Folder" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/ItemMaster/ItemMasters" Icon="@Icons.Material.Outlined.InsertDriveFile">Item Master</MudNavLink>
+            </MudNavGroup>
+
+
+
+
         <MudNavGroup Title="Accadmic" Icon="@Icons.Material.Outlined.AdminPanelSettings" HideExpandIcon="false" Expanded="false">
             @*
                 <MudNavLink Href="/Academic/MasterSubject" Icon="@Icons.Material.Outlined.Subject">Subject</MudNavLink>
