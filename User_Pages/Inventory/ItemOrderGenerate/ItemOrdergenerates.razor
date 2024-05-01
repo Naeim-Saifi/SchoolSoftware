@@ -1,0 +1,354 @@
+﻿@using Syncfusion.Blazor.Grids
+@using AIS.Data.RequestResponseModel.Expense;
+@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@using AIS.Data.RequestResponseModel.Inventory.ItemOrderGenerate
+
+
+@page "/User_Pages/ItemOrderGenerate/ItemOrderGenerates"
+@inherits ItemOrderGenerateBase
+
+
+@{
+    var InitSearch2 = (new string[] { "accountName", "contactName", "organizationName", "invoiceID" });
+    var Tool = (new List<string>() { "Search" });
+    var InitialGroupColumn = (new string[] { "aCCOUNTTYPE" });
+}
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+            <DashboardLayoutPanels>
+                <DashboardLayoutPanel SizeX=7 SizeY="2">
+                    <HeaderTemplate>Order Generate Details</HeaderTemplate>
+                    <ContentTemplate>
+
+                        @*start show data*@
+
+                        <SfGrid DataSource="@_ItemOrderGenerateOutPutListModel"
+                                EnableVirtualMaskRow="true"
+                                RowHeight="38" Height="710"
+                                Width="auto" EnableVirtualization="false"
+                                AllowResizing="true" AllowExcelExport="true"
+                                EnableAutoFill="true" AllowReordering="true"
+                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                ContextMenuItems="MenuItems"
+                                @ref="sfOrderGenerateOutPutDetails"
+                                Toolbar="EnquirytoolBarItems">
+                                <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+                                <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+
+
+
+                            <GridGroupSettings Columns=@InitialGroupColumn>
+                                <CaptionTemplate>
+                                    @{
+                                        var UnitDetails = (context as CaptionTemplateContext);
+                                        <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                    }
+                                </CaptionTemplate>
+                            </GridGroupSettings>
+
+                            <GridEvents CommandClicked="EditOrderItemDetail" OnToolbarClick="ToolbarClickHandler" RowDataBound="RowBound" TValue="ItemOrderGenerateOutPutListModel"></GridEvents>
+                            <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                IgnoreCase="true"></GridSearchSettings>
+
+
+
+
+                          @*   <GridAggregates>
+                                <GridAggregate>
+                                    <GridAggregateColumns>
+                                        <GridAggregateColumn Field=@nameof(BillDetailsList.totalAmount) Type="AggregateType.Sum">
+                                            <GroupFooterTemplate>
+                                                @{
+                                                    var Unit = (context as AggregateTemplateContext);
+                                                    <div>
+                                                        @Unit.Sum
+                                                    </div>
+                                                }
+                                            </GroupFooterTemplate>
+                                        </GridAggregateColumn>
+                                        <GridAggregateColumn Field=@nameof(BillDetailsList.totalDiscount) Type="AggregateType.Sum">
+                                            <GroupFooterTemplate>
+                                                @{
+                                                    var Unit = (context as AggregateTemplateContext);
+                                                    <div>
+                                                        @Unit.Sum
+                                                    </div>
+                                                }
+                                            </GroupFooterTemplate>
+                                        </GridAggregateColumn>
+                                        <GridAggregateColumn Field=@nameof(BillDetailsList.netAmount) Type="AggregateType.Sum">
+                                            <GroupFooterTemplate>
+                                                @{
+                                                    var Unit = (context as AggregateTemplateContext);
+                                                    <div>
+                                                        @Unit.Sum
+                                                    </div>
+                                                }
+                                            </GroupFooterTemplate>
+                                        </GridAggregateColumn>
+                                        <GridAggregateColumn Field=@nameof(BillDetailsList.paidAmount) Type="AggregateType.Sum">
+                                            <GroupFooterTemplate>
+                                                @{
+                                                    var Unit = (context as AggregateTemplateContext);
+                                                    <div>
+                                                        @Unit.Sum
+                                                    </div>
+                                                }
+                                            </GroupFooterTemplate>
+                                        </GridAggregateColumn>
+                                        <GridAggregateColumn Field=@nameof(BillDetailsList.dueAmount) Type="AggregateType.Sum">
+                                            <GroupFooterTemplate>
+                                                @{
+                                                    var Unit = (context as AggregateTemplateContext);
+                                                    <div>
+                                                        @Unit.Sum
+                                                    </div>
+                                                }
+                                            </GroupFooterTemplate>
+                                        </GridAggregateColumn>
+
+                                    </GridAggregateColumns>
+                                </GridAggregate>
+                            </GridAggregates> *@
+
+
+
+
+
+
+
+
+                            <GridColumns>
+                                <GridColumn Field=@nameof(ItemOrderGenerateOutPutListModel.vendorId) HeaderText="Vendor Id" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ItemOrderGenerateOutPutListModel.vendorName) HeaderText="Vendor Name" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ItemOrderGenerateOutPutListModel.deilevryDate) HeaderText="Deilevry Date" AutoFit=true></GridColumn>
+                                @*                                 <GridColumn Field=@nameof(ItemOrderGenerateOutPutListModel.totalQunatity) HeaderText="Total Qunatity" AutoFit=true></GridColumn>
+                                *@
+                                <GridColumn Field=@nameof(ItemOrderGenerateOutPutListModel.itemCode) HeaderText="item Code" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ItemOrderGenerateOutPutListModel.itemName) HeaderText="item Name" AutoFit=true></GridColumn>
+                                @*   <GridColumn Field=@nameof(ItemOrderGenerateOutPutListModel.itemDeliveredQty) HeaderText="Item Delivered Qunatity" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ItemOrderGenerateOutPutListModel.itemPandingQty) HeaderText="item Panding  Qunatity" AutoFit=true></GridColumn>
+                                *@ <GridColumn Field=@nameof(ItemOrderGenerateOutPutListModel.itemQuantity) HeaderText="item Quantity" AutoFit=true></GridColumn>
+
+                                <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                    <GridCommandColumns>
+                                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                    </GridCommandColumns>
+                                </GridColumn>
+                                <GridColumn Field=@nameof(ItemOrderGenerateOutPutListModel.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ItemOrderGenerateOutPutListModel.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ItemOrderGenerateOutPutListModel.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ItemOrderGenerateOutPutListModel.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                            </GridColumns>
+
+                        </SfGrid>
+                        @*start show data*@
+                 </ContentTemplate>
+                </DashboardLayoutPanel>
+            </DashboardLayoutPanels>
+        </SfDashboardLayout>
+    </MudItem>
+</MudGrid>
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        <MudItem xs="12" sm="12" md="12">
+            <SfDialog @ref="@DialogRef" Width="750px" Height="800px" AllowDragging="true" IsModal="true" ShowCloseIcon="true" @bind-Visible="@IsVisible">
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>
+                    <Header>@DialogHeaderName </Header>
+                    <Content>
+
+
+
+
+                        @*start dialog box*@
+
+
+                        <MudGrid>
+                            <MudItem xs="12" md="12" sm="12">
+                                <EditForm Model="itemOrderGenerateViewModel" OnValidSubmit="OnValidSubmit">
+                                    <DataAnnotationsValidator />
+                                    <MudCardContent>
+                                        <MudGrid>
+                                            <MudItem xs="12" md="12" sm="12">
+                                                <SfDropDownList ID="ItemType"
+                                                                CssClass="e-outline"
+                                                                Placeholder="Select Vednor ID"
+                                                                FloatLabelType="@FloatLabelType.Always"
+                                                                AllowFiltering="true"
+                                                                @bind-Value="@itemOrderGenerateViewModel.vendorId"
+                                                                DataSource="@VednorCodeDetails">
+                                                    <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                                    <ValidationMessage For="@(() => itemOrderGenerateViewModel.vendorId)"></ValidationMessage>
+                                                </SfDropDownList>
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Vendor Name" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@itemOrderGenerateViewModel.vendorName"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => itemOrderGenerateViewModel.vendorName" />
+                                            </MudItem>
+
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfDatePicker CssClass="e-outline" Placeholder="Deilevry Date" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@itemOrderGenerateViewModel.deilevryDate"
+                                                              FloatLabelType="@FloatLabelType.Never"></SfDatePicker>
+                                                <ValidationMessage For="() => itemOrderGenerateViewModel.deilevryDate" />
+                                            </MudItem>
+                                       
+
+
+
+                                            <MudItem xs="12" md="4" sm="6">
+                                                <SfDropDownList ID="ItemName"
+                                                                CssClass="e-outline"
+                                                                Placeholder="Select a Item Name"
+                                                                FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                                @bind-Value="@itemOrderGenerateViewModel.itemName"
+                                                                DataSource="@ItemNameDetails">
+                                                    <DropDownListFieldSettings GroupBy="Category" Value="Vegetable"></DropDownListFieldSettings>
+                                                    <ValidationMessage For="@(() => itemOrderGenerateViewModel.itemName)"></ValidationMessage>
+                                                </SfDropDownList>
+                                            </MudItem>
+
+
+                                            <!-- Item Code -->
+                                            <MudItem xs="12" md="4" sm="6">
+                                                <SfNumericTextBox CssClass="e-outline" Placeholder="Item Code" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@itemOrderGenerateViewModel.itemCode"
+                                                                  FloatLabelType="@FloatLabelType.Never"></SfNumericTextBox>
+                                                <ValidationMessage For="() => itemOrderGenerateViewModel.itemCode" />
+                                            </MudItem>
+
+                                            <!-- Item Quantity -->
+                                            <MudItem xs="12" md="4" sm="6">
+                                                <SfNumericTextBox CssClass="e-outline" Placeholder="Item Quantity" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@itemOrderGenerateViewModel.itemQuantity"
+                                                                  FloatLabelType="@FloatLabelType.Never"></SfNumericTextBox>
+                                                <ValidationMessage For="() => itemOrderGenerateViewModel.itemQuantity" />
+                                            </MudItem>
+
+                                         
+
+                                                
+
+                                           
+                                                                        <MudItem xs="12" md="2" sm="4">
+                                              <SfButton Type="button" IsToggle="false " CssClass=@btncss IsPrimary="false" Content="Add Item" FloatLabelType="@FloatLabelType.Always" OnClick="@AddBillItems"></SfButton>
+
+                                        </MudItem>
+
+
+                                              <MudItem xs="12" md="12" sm="12">
+                                                <SfGrid DataSource="@_ItemOrderGenerateOutPutListModel"
+                                                        EnableVirtualMaskRow="true"
+                                                        RowHeight="38" Height="350"
+                                                        Width="auto" EnableVirtualization="false"
+                                                        AllowResizing="true" AllowExcelExport="true"
+                                                        EnableAutoFill="true" AllowReordering="true"
+                                                        ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
+                                                        AllowFiltering="true" AllowPaging="false" ShowColumnMenu="true"
+                                                        ContextMenuItems="MenuItems"
+                                                        @ref="sfOrderGenerateOutPutDetails">
+                                                    <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                                    <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+
+
+                                                                                                        <GridEvents CommandClicked="EditOrderItemDetail" TValue=ItemOrderGenerateOutPutListModel></GridEvents>
+                                                    <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                                        IgnoreCase="true"></GridSearchSettings>
+                                                    <GridColumns>
+                                                        <GridColumn Field=@nameof(ItemOrderGenerateOutPutListModel.vendorId) HeaderText="Vendor Id" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                                        <GridColumn Field=@nameof(ItemOrderGenerateOutPutListModel.vendorName) HeaderText="Vendor Name" AutoFit=true></GridColumn>
+                                                        <GridColumn Field=@nameof(ItemOrderGenerateOutPutListModel.deilevryDate) HeaderText="Deilevry Date" AutoFit=true></GridColumn>                                                   
+                                                        <GridColumn Field=@nameof(ItemOrderGenerateOutPutListModel.itemCode) HeaderText="item Code" AutoFit=true></GridColumn>
+                                                        <GridColumn Field=@nameof(ItemOrderGenerateOutPutListModel.itemName) HeaderText="item Name" AutoFit=true></GridColumn>
+                                                    <GridColumn Field=@nameof(ItemOrderGenerateOutPutListModel.itemQuantity) HeaderText="item Quantity" AutoFit=true></GridColumn>
+
+                                                        <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                                            <GridCommandColumns>
+@*                                                                 <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn> 
+ *@                                                                <GridCommandColumn Type="CommandButtonType.Delete" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                                            </GridCommandColumns>
+                                                        </GridColumn>
+
+                                                    </GridColumns>
+                                                </SfGrid>
+                                </MudItem>
+
+                                               
+
+                                         
+                               <MudItem xs="12" md="3" sm="4">
+                                                <SfNumericTextBox CssClass="e-outline" Placeholder="Total Quantity" @bind-Value="@(itemOrderGenerateViewModel.netQuantity)" FloatLabelType="@FloatLabelType.Always"></SfNumericTextBox>
+                                                <ValidationMessage For="() => itemOrderGenerateViewModel.netQuantity" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3" sm="4">
+                                                <SfNumericTextBox CssClass="e-outline" Placeholder="Total Amount" @bind-Value="@(itemOrderGenerateViewModel.totalAmount)" FloatLabelType="@FloatLabelType.Always"></SfNumericTextBox>
+                                                <ValidationMessage For="() => itemOrderGenerateViewModel.totalAmount" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3" sm="4">
+                                                <SfNumericTextBox CssClass="e-outline" Placeholder="Discount" @bind-Value="@(itemOrderGenerateViewModel.discount)"
+                                                                  FloatLabelType="@FloatLabelType.Always">
+                                                </SfNumericTextBox>
+                                                <ValidationMessage For="() => itemOrderGenerateViewModel.discount" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="3" sm="4">
+                                                <SfNumericTextBox CssClass="e-outline" Placeholder="Net Amount" @bind-Value="@(itemOrderGenerateViewModel.netAmount)" FloatLabelType="@FloatLabelType.Always"></SfNumericTextBox>
+                                                <ValidationMessage For="() => itemOrderGenerateViewModel.netAmount" />
+                                            </MudItem>
+                         
+                                            <MudItem xs="12" md="4" sm="4">
+                                                <SfDatePicker TValue="DateTime?" Format="yyyy-MM-dd" FloatLabelType="FloatLabelType.Always"
+                                                              Placeholder="Bill Generate Date" @bind-Value="@itemOrderGenerateViewModel.deilevryDate"></SfDatePicker>
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="4">
+                                                <SfButton CssClass="e-outline" type="submit" IsPrimary="true">Save Bill Details</SfButton>
+                                                <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>
+                                            </MudItem> 
+                                        </MudGrid>
+                                    </MudCardContent>
+                                </EditForm>
+                            </MudItem>
+                        </MudGrid>
+
+
+
+
+                        @*                         end dailog box*@
+
+                    </Content>
+                </DialogTemplates>
+                <DialogAnimationSettings Delay="400" Effect="DialogEffect.FlipLeftUp">
+                </DialogAnimationSettings>
+                <DialogPositionData X="@Xvalue" Y="@Yvalue"></DialogPositionData>
+            </SfDialog>
+        </MudItem>
+    </MudItem>
+</MudGrid>
+
+
+@code {
+    private string Xvalue = "center";
+    private string Yvalue = "center";
+
+    // private void ValueChangeHandler(ChangeEventArgs<int?> args)
+    // {
+    //     // Here you can customize your code
+    // }
+
+}
