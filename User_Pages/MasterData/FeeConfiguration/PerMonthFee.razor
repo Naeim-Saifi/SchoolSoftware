@@ -13,11 +13,11 @@
 @using Syncfusion.Blazor.Popups
 @using AIS.Data.RequestResponseModel.Inventory.ItemMaster
 
-@page "/User_Pages/AdminConfiguration/MenuMaster"
 
 
-@inherits MenuMasterBase;
+@inherits PerMonthFeeBase;
 
+@page "/User_Pages/FeeConfiguration/PerMonthFee"
 
 @{
     var InitSearch2 = (new string[] { "organizationName" });
@@ -108,26 +108,26 @@
                         @*    start *@
 
 
-                       @*  <MudGrid>
-                            <MudItem xs="12" md="12" sm="12">
-                                <EditForm Model="itemMasterViewModel" OnValidSubmit="OnValidSubmit">
-                                    <DataAnnotationsValidator />
-                                    <MudCardContent>
+                        @*  <MudGrid>
+                        <MudItem xs="12" md="12" sm="12">
+                        <EditForm Model="itemMasterViewModel" OnValidSubmit="OnValidSubmit">
+                        <DataAnnotationsValidator />
+                        <MudCardContent>
 
-                                        <MudGrid>
-                                  
+                        <MudGrid>
 
-                                         
-                                           
 
-                                                 <MudItem xs="12" md="4" sm="6">
-                                                <SfButton cssclass="e-outline" type="submit" isprimary="true">add</SfButton>
-                                                <SfButton type="button" cssclass="e-flat" istoggle="false " isprimary="false" content="cancel" onclick="@closedialog"></SfButton>
-                                            </MudItem>
-                                   </MudGrid>
-                                    </MudCardContent>
-                                </EditForm>
-                            </MudItem>
+
+
+
+                        <MudItem xs="12" md="4" sm="6">
+                        <SfButton cssclass="e-outline" type="submit" isprimary="true">add</SfButton>
+                        <SfButton type="button" cssclass="e-flat" istoggle="false " isprimary="false" content="cancel" onclick="@closedialog"></SfButton>
+                        </MudItem>
+                        </MudGrid>
+                        </MudCardContent>
+                        </EditForm>
+                        </MudItem>
 
                         </MudGrid>   *@
 
@@ -166,57 +166,57 @@
 
 
     /* html,
-                body,
-                #container {
-                    height: 100%;
-                    overflow: hidden;
-                    width: 100%;
-                    position: relative;
-                    min-height: 400px;
-                }
+                    body,
+                    #container {
+                        height: 100%;
+                        overflow: hidden;
+                        width: 100%;
+                        position: relative;
+                        min-height: 400px;
+                    }
 
-                .text {
-                    text-transform: capitalize;
-                }
+                    .text {
+                        text-transform: capitalize;
+                    }
 
-                #customization {
-                    display: table;
-                    margin: 0 auto;
-                }
-
-                .animate {
-                    display: table-cell;
-                    padding-left: 20px;
-                }
-
-                @@media only screen and (max-width: 360px) {
                     #customization {
-                        display: inline-block;
+                        display: table;
                         margin: 0 auto;
-                        text-align: center;
                     }
 
                     .animate {
-                        display: inline-block;
-                        padding: 10px;
+                        display: table-cell;
+                        padding-left: 20px;
                     }
-                } */
+
+                    @@media only screen and (max-width: 360px) {
+                        #customization {
+                            display: inline-block;
+                            margin: 0 auto;
+                            text-align: center;
+                        }
+
+                        .animate {
+                            display: inline-block;
+                            padding: 10px;
+                        }
+                    } */
     /*  .e-rowcell.e-attr {
-                                            background-color: lightgrey;
-                                        }*/
+                                                background-color: lightgrey;
+                                            }*/
 
     /* .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
-                                            position: fixed;
-                                        }*/
+                                                position: fixed;
+                                            }*/
 
     /*
 
-                                        .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
-                                            transition: none;
-                                        }*/
+                                            .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
+                                                transition: none;
+                                            }*/
     /*.e-content .e-item {
-                                            font-size: 12px;
-                                            padding: 10px;
-                                            text-align: justify;
-                                        }*/
+                                                font-size: 12px;
+                                                padding: 10px;
+                                                text-align: justify;
+                                            }*/
 </style>

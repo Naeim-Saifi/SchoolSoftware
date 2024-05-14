@@ -1,4 +1,219 @@
-﻿@page "/User_Pages/MasterConfiguration/Class"
+﻿@using Syncfusion.Blazor.Grids
+@using AIS.Data.RequestResponseModel.Expense;
+@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.LinearGauge
+@using Syncfusion.Blazor.Layouts
+@using Syncfusion.Blazor.Popups
+@using AIS.Data.RequestResponseModel.Inventory.ItemMaster
+
+@page "/User_Pages/MasterConfiguration/Class"
+
+@inherits ClassBase
+@{
+    var InitSearch2 = (new string[] { "organizationName" });
+    var Tool = (new List<string>() { "Search" });
+
+    var InitialGroupColumn = (new string[] { "previousClass" });
+}
 
 
-@inherits ClassBase;
+
+
+
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
+            <DashboardLayoutPanels>
+                <DashboardLayoutPanel SizeX=7 SizeY="2">
+                    <HeaderTemplate>Details</HeaderTemplate>
+                    <ContentTemplate>
+                        <SfGrid DataSource="@_ItemMasterListMoel"
+                                EnableVirtualMaskRow="true"
+                                RowHeight="38" Height="710"
+                                Width="auto" EnableVirtualization="false"
+                                AllowResizing="true" AllowExcelExport="true"
+                                EnableAutoFill="true" AllowReordering="true"
+                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
+                                ContextMenuItems="MenuItems"
+                                @ref="sfItemDetails"
+                                Toolbar="EnquirytoolBarItems">
+                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+                            <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
+                            <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
+                            <GridGroupSettings Columns=@InitialGroupColumn>
+                                <CaptionTemplate>
+                                    @{
+                                        var UnitDetails = (context as CaptionTemplateContext);
+                                        <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                                    }
+                                </CaptionTemplate>
+                            </GridGroupSettings>
+
+                            <GridEvents CommandClicked="EditItemDetail" OnToolbarClick="ToolbarClickHandler" TValue="ItemMasterListMoel"></GridEvents>
+                            <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                IgnoreCase="true"></GridSearchSettings>
+
+
+
+                            <GridColumns>
+                                <GridColumn Field=@nameof(ItemMasterListMoel.itemName) HeaderText="Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ItemMasterListMoel.itemCode) HeaderText="Code" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ItemMasterListMoel.displayOrder) HeaderText="Display Order" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ItemMasterListMoel.itemDescription) HeaderText="item Description" AutoFit=true></GridColumn>
+
+                                <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
+                                    <GridCommandColumns>
+                                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                    </GridCommandColumns>
+                                </GridColumn>
+                                <GridColumn Field=@nameof(ItemMasterListMoel.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ItemMasterListMoel.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ItemMasterListMoel.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ItemMasterListMoel.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+                            </GridColumns>
+
+                        </SfGrid>
+                    </ContentTemplate>
+                </DashboardLayoutPanel>
+            </DashboardLayoutPanels>
+        </SfDashboardLayout>
+    </MudItem>
+</MudGrid>
+
+
+
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        <MudItem xs="12" sm="12" md="12">
+            <SfDialog @ref="@DialogRef" Width="750px" AllowDragging="true" IsModal="true" ShowCloseIcon="true" @bind-Visible="@IsVisible">
+                <DialogEvents OnOpen="onOpen"></DialogEvents>
+                <DialogTemplates>
+                    <Header>@DialogHeaderName </Header>
+                    <Content>
+
+                        @*    start *@
+
+
+                       @*  <MudGrid>
+                            <MudItem xs="12" md="12" sm="12">
+                                <EditForm Model="itemMasterViewModel" OnValidSubmit="OnValidSubmit">
+                                    <DataAnnotationsValidator />
+                                    <MudCardContent>
+
+                                        <MudGrid>
+                                  
+
+                                         
+                                           
+
+                                                 <MudItem xs="12" md="4" sm="6">
+                                                <SfButton cssclass="e-outline" type="submit" isprimary="true">add</SfButton>
+                                                <SfButton type="button" cssclass="e-flat" istoggle="false " isprimary="false" content="cancel" onclick="@closedialog"></SfButton>
+                                            </MudItem>
+                                   </MudGrid>
+                                    </MudCardContent>
+                                </EditForm>
+                            </MudItem>
+
+                        </MudGrid>   *@
+
+                    </Content>
+                </DialogTemplates>
+                <DialogAnimationSettings Delay="400" Effect="DialogEffect.FlipLeftUp">
+                </DialogAnimationSettings>
+                <DialogPositionData X="@Xvalue" Y="@Yvalue"></DialogPositionData>
+            </SfDialog>
+        </MudItem>
+    </MudItem>
+</MudGrid>
+@code {
+    private string Xvalue = "center";
+    private string Yvalue = "center";
+}
+<style>
+    .e-toolbar-item .e-tbar-btn {
+        background-color: orange;
+    }
+
+    .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+
+    .e-dialog .e-dlg-header {
+        color: cornflowerblue;
+        font-size: 20px;
+        font-weight: normal;
+    }
+
+
+
+    /* html,
+                body,
+                #container {
+                    height: 100%;
+                    overflow: hidden;
+                    width: 100%;
+                    position: relative;
+                    min-height: 400px;
+                }
+
+                .text {
+                    text-transform: capitalize;
+                }
+
+                #customization {
+                    display: table;
+                    margin: 0 auto;
+                }
+
+                .animate {
+                    display: table-cell;
+                    padding-left: 20px;
+                }
+
+                @@media only screen and (max-width: 360px) {
+                    #customization {
+                        display: inline-block;
+                        margin: 0 auto;
+                        text-align: center;
+                    }
+
+                    .animate {
+                        display: inline-block;
+                        padding: 10px;
+                    }
+                } */
+    /*  .e-rowcell.e-attr {
+                                            background-color: lightgrey;
+                                        }*/
+
+    /* .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+                                            position: fixed;
+                                        }*/
+
+    /*
+
+                                        .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
+                                            transition: none;
+                                        }*/
+    /*.e-content .e-item {
+                                            font-size: 12px;
+                                            padding: 10px;
+                                            text-align: justify;
+                                        }*/
+</style>

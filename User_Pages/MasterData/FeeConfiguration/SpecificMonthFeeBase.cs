@@ -15,13 +15,13 @@ using System.Threading.Tasks;
 
 using System.Linq;
 
-
-namespace AdminDashboard.Server.User_Pages.MasterData.AdminConfiguration
+namespace AdminDashboard.Server.User_Pages.MasterData.FeeConfiguration
 {
-    public class RoleMasterBase : ComponentBase
+    public class SpecificMonthFeeBase:ComponentBase
     {
 
-    
+
+   
 
             public List<ItemMasterListMoel> _ItemMasterListMoel = new List<ItemMasterListMoel>();
             public SfGrid<ItemMasterListMoel> sfItemDetails;

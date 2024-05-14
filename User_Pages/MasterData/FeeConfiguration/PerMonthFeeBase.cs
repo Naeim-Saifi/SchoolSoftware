@@ -15,11 +15,11 @@ using System.Threading.Tasks;
 
 using System.Linq;
 
-
-namespace AdminDashboard.Server.User_Pages.MasterData.AdminConfiguration
+namespace AdminDashboard.Server.User_Pages.MasterData.FeeConfiguration
 {
-    public class RoleMasterBase : ComponentBase
+    public class PerMonthFeeBase: ComponentBase
     {
+
 
     
 
@@ -150,4 +150,3 @@ namespace AdminDashboard.Server.User_Pages.MasterData.AdminConfiguration
             }
         }
     }
-

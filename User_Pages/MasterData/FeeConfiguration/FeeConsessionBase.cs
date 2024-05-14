@@ -1,4 +1,5 @@
-﻿using AIS.Data.APIReturnModel;
+﻿
+using AIS.Data.APIReturnModel;
 using AIS.Data.RequestResponseModel.Enquiry;
 using AIS.Data.RequestResponseModel.Inventory.ItemMaster;
 
@@ -16,12 +17,11 @@ using System.Threading.Tasks;
 using System.Linq;
 
 
-namespace AdminDashboard.Server.User_Pages.MasterData.AdminConfiguration
+namespace AdminDashboard.Server.User_Pages.MasterData.FeeConfiguration
 {
-    public class RoleMasterBase : ComponentBase
+    public class FeeConsessionBase: ComponentBase
     {
-
-    
+  
 
             public List<ItemMasterListMoel> _ItemMasterListMoel = new List<ItemMasterListMoel>();
             public SfGrid<ItemMasterListMoel> sfItemDetails;
