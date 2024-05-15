@@ -12,6 +12,7 @@
 @using Syncfusion.Blazor.Layouts
 @using Syncfusion.Blazor.Popups
 @using AIS.Data.RequestResponseModel.Inventory.ItemMaster
+@using AIS.Data.RequestResponseModel.MasterData.MasterConfiguration.Class
 
 @page "/User_Pages/MasterConfiguration/Class"
 
@@ -33,9 +34,9 @@
         <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
             <DashboardLayoutPanels>
                 <DashboardLayoutPanel SizeX=7 SizeY="2">
-                    <HeaderTemplate>Details</HeaderTemplate>
+                    <HeaderTemplate>Class Details</HeaderTemplate>
                     <ContentTemplate>
-                        <SfGrid DataSource="@_ItemMasterListMoel"
+                        <SfGrid DataSource="@_ClassListModel"
                                 EnableVirtualMaskRow="true"
                                 RowHeight="38" Height="710"
                                 Width="auto" EnableVirtualization="false"
@@ -44,8 +45,8 @@
                                 ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
                                 AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
                                 ContextMenuItems="MenuItems"
-                                @ref="sfItemDetails"
-                                Toolbar="EnquirytoolBarItems">
+                                @ref="sfClassDetails"
+                                Toolbar="ToolBarItems">
                             <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
                             <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
                             <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
@@ -58,17 +59,16 @@
                                 </CaptionTemplate>
                             </GridGroupSettings>
 
-                            <GridEvents CommandClicked="EditItemDetail" OnToolbarClick="ToolbarClickHandler" TValue="ItemMasterListMoel"></GridEvents>
+                            <GridEvents CommandClicked="EditItemDetail" OnToolbarClick="ToolbarClickHandler" TValue="ClassOutputModel"></GridEvents>
                             <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
                                                 IgnoreCase="true"></GridSearchSettings>
 
 
 
                             <GridColumns>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.itemName) HeaderText="Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.itemCode) HeaderText="Code" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.displayOrder) HeaderText="Display Order" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.itemDescription) HeaderText="item Description" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ClassOutputModel.className) HeaderText="Class Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ClassOutputModel.classCode) HeaderText="Class Code" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ClassOutputModel.displayOrder) HeaderText="Display Order" AutoFit=true></GridColumn>
 
                                 <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
                                     <GridCommandColumns>
@@ -76,10 +76,10 @@
                                         <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
                                     </GridCommandColumns>
                                 </GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ClassOutputModel.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ClassOutputModel.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ClassOutputModel.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(ClassOutputModel.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
 
                             </GridColumns>
 
@@ -90,7 +90,6 @@
         </SfDashboardLayout>
     </MudItem>
 </MudGrid>
-
 
 
 <MudGrid>
@@ -105,28 +104,64 @@
                         @*    start *@
 
 
-                       @*  <MudGrid>
+                        <MudGrid>
                             <MudItem xs="12" md="12" sm="12">
-                                <EditForm Model="itemMasterViewModel" OnValidSubmit="OnValidSubmit">
+                                <EditForm Model="classViewModel" OnValidSubmit="OnValidSubmit">
                                     <DataAnnotationsValidator />
                                     <MudCardContent>
 
-                                        <MudGrid>
-                                  
 
-                                         
-                                           
 
-                                                 <MudItem xs="12" md="4" sm="6">
-                                                <SfButton cssclass="e-outline" type="submit" isprimary="true">add</SfButton>
-                                                <SfButton type="button" cssclass="e-flat" istoggle="false " isprimary="false" content="cancel" onclick="@closedialog"></SfButton>
+
+
+
+
+
+
+                                            <MudGrid>
+
+
+                                            <MudItem xs="12" md="12" sm="12">
+                                                <SfDropDownList ID="ClassName"
+                                                                CssClass="e-outline"
+                                                                Placeholder="Select Class Name"
+                                                                FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                                @bind-Value="@classViewModel.className"
+                                                                DataSource="@classNamedetails">
+                                                    <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                                           <ValidationMessage For="@(() => classViewModel.className)"></ValidationMessage>
+                                                </SfDropDownList>
                                             </MudItem>
-                                   </MudGrid>
+
+
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Class Code" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@classViewModel.classCode"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => classViewModel.classCode" />
+                                            </MudItem>
+                                       
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Dsiplay Order" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@classViewModel.displayOrder"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => classViewModel.displayOrder" />
+                                            </MudItem>
+
+                                     
+
+                                            <MudItem xs="12" md="4" sm="6">
+                                                <SfButton CssClass="e-outline" type="submit" IsPrimary="true">@HeaderText</SfButton>
+                                                <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>
+                                            </MudItem>
+
+                                        </MudGrid>
                                     </MudCardContent>
                                 </EditForm>
                             </MudItem>
 
-                        </MudGrid>   *@
+                        </MudGrid>
+                        @*   end *@
+
 
                     </Content>
                 </DialogTemplates>
