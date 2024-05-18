@@ -162,6 +162,59 @@ else if (UserRole == "Sys Admin")
         <MudNavLink Href="/Dashboard/Student/StudentDashboard"
                 Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Dashboard">Dashboard</MudNavLink>
 
+
+
+                // aded by sakib ansari on 10 may 2024
+                // start code
+        <MudNavGroup Title="Master Configuration" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">
+            <MudNavGroup Title="Master" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/User_Pages/MasterConfiguration/Class" Icon="@Icons.Material.Outlined.Add">Class</MudNavLink>
+                <MudNavLink Href="/User_Pages/MasterConfiguration/Section" Icon="@Icons.Material.Outlined.Add">Section</MudNavLink>
+          
+            </MudNavGroup>
+
+            <MudNavGroup Title="Admin" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/User_Pages/AdminConfiguration/RoleMaster" Icon="@Icons.Material.Outlined.Add">Role Master</MudNavLink>
+                <MudNavLink Href="/User_Pages/AdminConfiguration/UserMaster" Icon="@Icons.Material.Outlined.Add">User Master</MudNavLink>
+                <MudNavLink Href="/User_Pages/AdminConfiguration/MenuMaster" Icon="@Icons.Material.Outlined.Add">Menu Master</MudNavLink>
+                <MudNavLink Href="/User_Pages/AdminConfiguration/MapMenuMaster" Icon="@Icons.Material.Outlined.Add">Map Menu Master</MudNavLink>
+            </MudNavGroup>
+
+
+                <MudNavGroup Title="Exam" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/User_Pages/ExamConfiguration/ExamType" Icon="@Icons.Material.Outlined.Add">Exam Type</MudNavLink>
+                <MudNavLink Href="/User_Pages/ExamConfiguration/Subject" Icon="@Icons.Material.Outlined.Add">Subject</MudNavLink>
+                <MudNavLink Href="/User_Pages/ExamConfiguration/MapSubjectWithClass" Icon="@Icons.Material.Outlined.Add">Map Subject With Class</MudNavLink>
+                <MudNavLink Href="/User_Pages/ExamConfiguration/TermWithMarks" Icon="@Icons.Material.Outlined.Add">Term With Marks</MudNavLink>
+
+   
+            </MudNavGroup>
+
+
+                 <MudNavGroup Title="Transport" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+                <MudNavLink Href="/User_Pages/TransportConfiguration/RouteDetails" Icon="@Icons.Material.Outlined.Add">Route Details </MudNavLink>
+                <MudNavLink Href="/User_Pages/TransportConfiguration/TransportDetails" Icon="@Icons.Material.Outlined.Add">Transport Details</MudNavLink>
+                <MudNavLink Href="/User_Pages/TransportConfiguration/BusStop" Icon="@Icons.Material.Outlined.Add">Bus Stop</MudNavLink>
+                <MudNavLink Href="/User_Pages/TransportConfiguration/MapBusWithRoute" Icon="@Icons.Material.Outlined.Add">Map Bus With Route</MudNavLink>
+            </MudNavGroup>
+
+
+
+
+                   <MudNavGroup Title="Fee" Icon="@Icons.Material.Outlined.SettingsApplications" HideExpandIcon="false" Expanded="false">
+
+                <MudNavLink Href="/User_Pages/FeeConfiguration/FeeHeader" Icon="@Icons.Material.Outlined.Add">Fee Header</MudNavLink>
+                <MudNavLink Href="/User_Pages/FeeConfiguration/FeeConsession" Icon="@Icons.Material.Outlined.Add">Fee Concession </MudNavLink>
+                <MudNavLink Href="/User_Pages/FeeConfiguration/DiscountRemark" Icon="@Icons.Material.Outlined.Add">Discount Remark</MudNavLink>
+                <MudNavLink Href="/User_Pages/FeeConfiguration/PerMonthFee" Icon="@Icons.Material.Outlined.Add">Per Month Fee</MudNavLink>
+                <MudNavLink Href="/User_Pages/FeeConfiguration/SpecificMonthFee" Icon="@Icons.Material.Outlined.Add">Specific Month Fee</MudNavLink>
+            </MudNavGroup>
+
+
+
+
+        </MudNavGroup>
+        // end code
         <MudNavLink Href="/StudentModule/ProfileDetails/ProfilePage"
                 Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.VerifiedUser">Profile</MudNavLink>
 
@@ -179,10 +232,15 @@ else if (UserRole == "Sys Admin")
             <MudNavLink Href="/User_Pages/ItemVendor/ItemVendor" Icon="@Icons.Material.Outlined.Add">Item Vendor</MudNavLink>
             <MudNavLink Href="/User_Pages/ItemOrderGenerate/ItemOrderGenerates" Icon="@Icons.Material.Outlined.Add">Item Order Genreate</MudNavLink>
 
+               <MudNavLink Href="/User_Pages/ItemInvoiceGenerate/ItemInvoiceGenerate" Icon="@Icons.Material.Outlined.List">Invoice Generate</MudNavLink>
+
+
+            <MudNavLink Href="/User_Pages/PaymentDetails/PaymentDetails" Icon="@Icons.Material.Outlined.List">Payment Detsils</MudNavLink>
         </MudNavGroup>
 
         <MudNavGroup Title="Master Data" Icon="@Icons.Material.Outlined.Settings" HideExpandIcon="false" Expanded="false">
             <MudNavLink Href="/User_Pages/MasterData/MasterDataList" Icon="@Icons.Material.Outlined.List">Master Data</MudNavLink>
+
             <MudNavLink Href="/User_Pages/MasterData/RemarksTypeMaster" Icon="@Icons.Material.Outlined.Add">Remarks Type</MudNavLink>
             <MudNavLink Href="/User_Pages/MasterData/RemarksTypeDescription" Icon="@Icons.Material.Outlined.Add">Remarks Description</MudNavLink>
         </MudNavGroup>

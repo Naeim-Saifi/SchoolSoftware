@@ -1,0 +1,149 @@
+﻿@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using AdminDashboard.Server.Models.MasterConfiguration.UnitMaster;
+@using AdminDashboard.Server.Models.MasterConfiguration.SubjectMaster;
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
+@using AIS.Data.RequestResponseModel.ExamMasterSetup;
+@using AIS.Data.RequestResponseModel.Syllabus;
+@using AIS.Data.RequestResponseModel.QuestionSetUp;
+@using AIS.Model.MasterData;
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.DropDowns;
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Popups;
+@using Syncfusion.Blazor.Layouts
+
+
+@page "/User_Pages/ExamConfiguration/MapSubjectWithClass"
+
+
+@inherits MapSubjectWithClassBase;
+
+
+@{
+
+    var InitSearch2 = (new string[] { "subjectName" });
+    var Tool = (new List<string>() { "Search" });
+    var InitialGroupColumnsection = (new string[] { "questionSectionGroup" });
+
+}
+
+
+@* Question List Grid Details.*@
+<MudGrid>
+    <MudItem xs="12" md="8" sm="12">
+        <SfGrid DataSource="@map_classwithsubject_List"
+                @ref="sfMapSubjectWithClass"
+                AllowTextWrap="true"
+                EnableVirtualMaskRow="true"
+                RowHeight="38" Height="510"
+                Width="auto" EnableVirtualization="false"
+                AllowResizing="true" AllowExcelExport="true"
+                EnableAutoFill="true" AllowReordering="true"
+                ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
+                AllowFiltering="false" AllowPaging="true" ShowColumnMenu="false"
+                Toolbar="ToolBarClassWithSubject">
+
+            <GridPageSettings PageCount="100" PageSizes="true"></GridPageSettings>
+
+
+            <GridEvents  OnToolbarClick="ToolBarClickMapSubjectWithClass" TValue=Master_Map_Subject_With_Class_List_Output_Model></GridEvents>
+            <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                IgnoreCase="true"></GridSearchSettings>
+
+           
+            <GridColumns>
+
+
+                <GridColumn Field=@nameof(Master_Map_Subject_With_Class_List_Output_Model.className) HeaderText="ClassName " TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                <GridColumn Field=@nameof(Master_Map_Subject_With_Class_List_Output_Model.subjectName) HeaderText="SubjectName" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
+               
+
+            </GridColumns>
+        </SfGrid>
+
+    </MudItem>
+</MudGrid>
+
+
+
+@*Start Question Bank Dialog*@
+
+
+
+
+
+@code {
+    private string Xvalue = "center";
+    private string Yvalue = "center";
+
+    /*
+    * Gets or sets the name of the animation that should be used when opening and closing the SfDialog.
+    * The following are the list of animation effects available to configure to the dialog:
+       *
+       Fade
+       FadeZoom
+       FlipLeftDown
+       FlipLeftUp
+       FlipRightDown
+       FlipRightUp
+       FlipXDown
+       FlipXUp
+       FlipYLeft
+       FlipYRight
+       SlideBottom
+    SlideLeft
+    SlideRight
+        SlideTop
+       Zoom
+    None.
+    */
+
+}
+
+
+
+
+<style>
+    .e-toolbar-item .e-tbar-btn {
+        background-color: orange;
+    }
+
+    .e-grid .e-rowcell.e-selectionbackground {
+        background-color: darkgrey !important;
+    }
+
+    .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+        z-index: 10005;
+    }
+
+    .e-dialog .e-dlg-header {
+        color: cornflowerblue;
+        font-size: 20px;
+        font-weight: normal;
+    }
+
+
+
+    /*  .e-rowcell.e-attr {
+                                background-color: lightgrey;
+                            }*/
+
+    /* .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
+                                position: fixed;
+                            }*/
+
+    /*
+
+                            .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
+                                transition: none;
+                            }*/
+    /*.e-content .e-item {
+                                font-size: 12px;
+                                padding: 10px;
+                                text-align: justify;
+                            }*/
+</style>
