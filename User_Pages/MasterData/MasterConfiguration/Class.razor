@@ -110,28 +110,13 @@
                                     <DataAnnotationsValidator />
                                     <MudCardContent>
 
+                                       <MudGrid>
 
 
-
-
-
-
-
-
-                                            <MudGrid>
-
-
-                                            <MudItem xs="12" md="12" sm="12">
-                                                <SfDropDownList ID="ClassName"
-                                                                CssClass="e-outline"
-                                                                Placeholder="Select Class Name"
-                                                                FloatLabelType="@FloatLabelType.Never"
-                                                                AllowFiltering="true"
-                                                                @bind-Value="@classViewModel.className"
-                                                                DataSource="@classNamedetails">
-                                                    <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
-                                                           <ValidationMessage For="@(() => classViewModel.className)"></ValidationMessage>
-                                                </SfDropDownList>
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Class Name" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@classViewModel.className"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => classViewModel.className" />
                                             </MudItem>
 
 

@@ -1,9 +1,7 @@
 ﻿
+using AdminDashboard.Server.API_Service.Interface.Exam;
 using AIS.Data.APIReturnModel;
-using AIS.Data.RequestResponseModel.Enquiry;
-using AIS.Data.RequestResponseModel.Inventory.ItemMaster;
-
-using AIS.Model.GeneralConversion;
+using AIS.Data.RequestResponseModel.ExamMasterSetup;
 using AIS.Model.UserLogin;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -12,139 +10,220 @@ using Syncfusion.Blazor.Grids;
 using Syncfusion.Blazor.Popups;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-
 using System.Linq;
+using System.Threading.Tasks;
+using static AIS.Data.GeneralConversion.GeneralConversion;
+
 
 namespace AdminDashboard.Server.User_Pages.MasterData.ExamConfiguration
 {
     public class ExamTypeBase : ComponentBase
     {
-   
-            public List<ItemMasterListMoel> _ItemMasterListMoel = new List<ItemMasterListMoel>();
-            public SfGrid<ItemMasterListMoel> sfItemDetails;
 
-            [Inject]
-            Blazored.SessionStorage.ISessionStorageService session { get; set; }
-            public SessionModel _sessionModel;
+        [Inject]
+        Blazored.SessionStorage.ISessionStorageService session { get; set; }
+        [Inject]
+        public IExamMasterSetupService examMasterSetupService { get; set; }
+        //list Model
+        public List<Exam_Type_List_Output_Model> _examTypeList = new List<Exam_Type_List_Output_Model>();
+        //data binding for blazor page
+        public ExamTypeViewModel examViewModel = new ExamTypeViewModel();
 
-            [Inject]
-            public ISnackbar snackBar { get; set; }
+        public APIReturnModel aPIReturnModel;
 
+        public Exam_Type_Master_Model examtypeAPIModel { get; set; }
 
-            public DialogEffect AnimationEffect = DialogEffect.Zoom;
-            public string HeaderStyles { get; set; } = "e-background e-accent";
-            public SfDialog DialogRef;
+        [Inject]
+        public ISnackbar snackBar { get; set; }
+        public SessionModel sessionModel { get; }
 
-            List<string> IList = new List<string>();
-
-
-            public bool IsVisible { get; set; } = false;
-            public bool IsDeleteVisible { get; set; } = false;
-            public string DialogHeaderName = string.Empty;
-            public bool ddEnable = true;
-            public string btncss = "";
-            public string HeaderText = string.Empty;
-            public string OperationType = "";
-
-            public APIReturnModel aPIReturnModel;
-
-
-            public List<object> MenuItems = new List<object>()
+        public List<object> MenuItems = new List<object>()
             { "AutoFit", "AutoFitAll", "SortAscending", "SortDescending",
                 "Copy", "ExcelExport", "CsvExport", "FirstPage", "PrevPage", "LastPage", "NextPage"
             };
+        public SfGrid<Exam_Type_List_Output_Model> sfExamListGrid;
 
-            public List<string> EnquirytoolBarItems = (new List<string>() { "Add I", "Print", "ExportExcel", "Collapse All", "Expand All", "Search" });
+        public List<string> toolBarItems = (new List<string>() { "Add ExamType", "Print", "Search" });
+        public DialogEffect AnimationEffect = DialogEffect.Zoom;
+        public string HeaderStyles { get; set; } = "e-background e-accent";
+        public SfDialog DialogRef;
+        public bool IsVisible { get; set; } = false;
+        public string DialogHeaderName = string.Empty;
+        public bool ddEnable = true;
+        public string btncss = "";
+        public string HeaderText = string.Empty;
+        //this model use for send data to API ,binding view model with API model
 
+        public SessionModel _sessionModel;
+        public string OperationType = "";
 
+        protected override async Task OnInitializedAsync()
+        {
+            _sessionModel = await session.GetItemAsync<SessionModel>("sessionUser");
 
-
-
-
-
-            protected override async Task OnInitializedAsync()
+            Exam_Type_List_Input_Model exam_Type_List_Input_Model = new Exam_Type_List_Input_Model()
             {
-                //_sessionModel = await session.GetItemAsync<SessionModel>("sessionUser");
-                ////Master_CLass_List_Input_Para_Model master_CLass_List_Input_Para_Model = new Master_CLass_List_Input_Para_Model()
-                ////{
-                ////    classId = 0,
-                ////    userId = _sessionModel.UserId,
-                ////    financialYear = _sessionModel.FinancialYear,
-                ////    schoolCode = _sessionModel.SchoolCode,
-                ////    reportType = ReportType.All
-                ////};
-                ////_classList = (await masterDataSetupService.GET_Master_ClassLIST(master_CLass_List_Input_Para_Model)).ToList();
+                schoolCode = _sessionModel.SchoolCode,
+                examTypeId = 0,
+                financialYear = _sessionModel.FinancialYear,
+                reportType = ReportType.All
+            };
+            _examTypeList = (await examMasterSetupService.GET_Exam_Type_MasterLIST(exam_Type_List_Input_Model)).ToList();
 
-                //ItemMasterParaModel itemMasterParaModel = new ItemMasterParaModel()
-                //{
-                //    financialYear = _sessionModel.FinancialYear,
-                //    schoolCode = _sessionModel.SchoolCode,
-                //    ItemId = 0,
-                //    userRoleId = _sessionModel.RoleId,
-                //    reportType = ReportType.All
-                //};
+        }
 
-                // _ItemVenderListModel = (await enquiryService.GET_EnquiryDetails_List(itemMasterParaModel)).ToList();
-            }
-
-
-
-
-
-
-
-            public void EditItemDetail(CommandClickEventArgs<ItemMasterListMoel> args)
+        public void EditExamTypeMaster(CommandClickEventArgs<Exam_Type_List_Output_Model> args)
+        {
+            // Perform required operations here
+            string buttontext = args.CommandColumn.ButtonOption.Content;
+            //int testId = args.RowData.testID;
+            if (buttontext == "Edit")
             {
-
-
-            }
-
-
-            public void ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
-            {
-                if (args.Item.Text == "Add I")
+                //navigationManager.NavigateTo($"/OnlineExam/ViewResult/{ testId}");
+                //click to open edit dialog
+                IsVisible = true;
+                DialogHeaderName = "Update Chapter Details";
+                HeaderText = "Update Record";
+                OperationType = "Update";
+                btncss = "e-flat e-info e-outline";
+                ddEnable = false;
+                examViewModel = new ExamTypeViewModel()
                 {
-                    //navigationManager.NavigateTo("/OnlineExam/TestList");
-                    //perform your actions here
-                    IsVisible = true;
-                    OperationType = "";
-                    btncss = "e-flat e-primary e-outline";
-                    DialogHeaderName = "Add  Details";
-                    OperationType = "Add";
-                    HeaderText = "Add";
-                    ddEnable = true;
-
-                }
-
+                    displayOrder = args.RowData.displayOrder,
+                    examType = args.RowData.examType,
+                    examTypeId = args.RowData.examTypeId,
+                    examTypeCode = args.RowData.examTypeCode,
+                    examTypeDescription = args.RowData.examTypeDescription,
+                };
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
-            public void ShowDialog()
+            else
             {
                 IsVisible = true;
+                DialogHeaderName = "Delete Chapter Details";
+                OperationType = "Delete";
+                HeaderText = "Delete Record";
+                btncss = "e-flat e-danger e-outline";
+                ddEnable = false;
+                examViewModel = new ExamTypeViewModel()
+                {
+                    displayOrder = args.RowData.displayOrder,
+                    examType = args.RowData.examType,
+                    examTypeId = args.RowData.examTypeId,
+                    examTypeCode = args.RowData.examTypeCode,
+                    examTypeDescription = args.RowData.examTypeDescription,
+                };
             }
-            public void onOpen(Syncfusion.Blazor.Popups.BeforeOpenEventArgs args)
-            {
-                // setting maximum height to the Dialog
-                args.MaxHeight = "750px";
 
-            }
-            public async Task CloseDialog()
+        }
+        public void ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+        {
+            if (args.Item.Text == "Add ExamType")
             {
-                IsVisible = false;
-                await this.DialogRef.HideAsync();
+                //navigationManager.NavigateTo("/OnlineExam/TestList");
+                //perform your actions here
+                IsVisible = true;
+                OperationType = "";
+                btncss = "e-flat e-primary e-outline";
+                DialogHeaderName = "Add ExamType Details";
+                OperationType = "Add";
+                HeaderText = "Add ExamType";
+                ddEnable = true;
+                examViewModel.examTypeId = 0;
+                examViewModel.examType = null;
+                examViewModel.examTypeCode = null;
+                examViewModel.examTypeDescription = null;
             }
         }
+
+        public void onOpen(Syncfusion.Blazor.Popups.BeforeOpenEventArgs args)
+        {
+            // setting maximum height to the Dialog
+            args.MaxHeight = "750px";
+
+        }
+
+        public async void OnValidSubmit(EditContext contex)
+        {
+            bool isValid = contex.Validate();
+            if (isValid)
+            {
+                examtypeAPIModel = new Exam_Type_Master_Model()
+                {
+                    examTypeId = Convert.ToInt16(examViewModel.examTypeId),
+                    examType = examViewModel.examType,
+                    examTypeDescription = examViewModel.examTypeDescription,
+                    examTypeCode = examViewModel.examTypeCode,
+                    displayOrder = examViewModel.displayOrder,
+                    CreatedByUserId = _sessionModel.UserId,
+                    UpdatedByUserId = _sessionModel.UserId,
+                    SchoolCode = _sessionModel.SchoolCode,
+                    FinancialYear = _sessionModel.FinancialYear,
+
+                };
+
+                if (OperationType == "Add")
+                {
+                    examtypeAPIModel.OperationType = OperationAction.Add;
+                }
+                else if (OperationType == "Update")
+                {
+                    examtypeAPIModel.OperationType = OperationAction.Update;
+                }
+                //Delete Operation
+                else
+                {
+                    examtypeAPIModel.OperationType = OperationAction.Delete;
+                }
+                ExamTypeSave(examtypeAPIModel);
+            };
+        }
+
+        private async void ExamTypeSave(Exam_Type_Master_Model examtypeAPIModel)
+        {
+            try
+            {
+                if (examtypeAPIModel.OperationType != "NA")
+                {
+                    aPIReturnModel = await examMasterSetupService.CRUD_ExamTypeMaster(examtypeAPIModel);
+
+                    if (aPIReturnModel.status == false)
+                    {
+                        snackBar.Add(aPIReturnModel.message, Severity.Success);
+
+
+                        Exam_Type_List_Input_Model exam_Type_List_Input_Model = new Exam_Type_List_Input_Model()
+                        {
+                            schoolCode = _sessionModel.SchoolCode,
+                            examTypeId = 0,
+                            financialYear = _sessionModel.FinancialYear,
+                            reportType = ReportType.All
+                        };
+                        _examTypeList = (await examMasterSetupService.GET_Exam_Type_MasterLIST(exam_Type_List_Input_Model)).ToList();
+                        StateHasChanged();
+                        ClearData();
+                    }
+                    else
+                    {
+                        snackBar.Add(aPIReturnModel.message, Severity.Error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        private void ClearData()
+        {
+            //chapterMasterViewModel = new ChapterMasterViewModel();
+
+        }
+        public async Task CloseDialog()
+        {
+            IsVisible = false;
+            await this.DialogRef.HideAsync();
+        }
     }
+
+}
+    

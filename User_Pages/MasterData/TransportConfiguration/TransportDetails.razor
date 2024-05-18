@@ -1,7 +1,4 @@
-﻿@page "/User_Pages/TransportConfiguration/TransportDetails"
-
-
-@using Syncfusion.Blazor.Grids
+﻿@using Syncfusion.Blazor.Grids
 @using AIS.Data.RequestResponseModel.Expense;
 @using Syncfusion.Blazor.Cards
 @using Syncfusion.Blazor.Charts
@@ -14,9 +11,17 @@
 @using Syncfusion.Blazor.LinearGauge
 @using Syncfusion.Blazor.Layouts
 @using Syncfusion.Blazor.Popups
-@using AIS.Data.RequestResponseModel.Inventory.ItemMaster
+
+@using AIS.Data.RequestResponseModel.MasterData.TransportConfiguration.TransportDetails;
+
+
+
 
 @inherits TransportDetailsBase;
+
+
+@page "/User_Pages/TransportConfiguration/TransportDetails"
+
 
 
 
@@ -38,9 +43,9 @@
         <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
             <DashboardLayoutPanels>
                 <DashboardLayoutPanel SizeX=7 SizeY="2">
-                    <HeaderTemplate>Details</HeaderTemplate>
+                    <HeaderTemplate>Tranport Details</HeaderTemplate>
                     <ContentTemplate>
-                        <SfGrid DataSource="@_ItemMasterListMoel"
+                        <SfGrid DataSource="@_TranportDetailsistModel"
                                 EnableVirtualMaskRow="true"
                                 RowHeight="38" Height="710"
                                 Width="auto" EnableVirtualization="false"
@@ -49,8 +54,8 @@
                                 ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
                                 AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
                                 ContextMenuItems="MenuItems"
-                                @ref="sfItemDetails"
-                                Toolbar="EnquirytoolBarItems">
+                                @ref="sfTransporDetails"
+                                Toolbar="ToolBarItems">
                             <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
                             <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
                             <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
@@ -63,17 +68,25 @@
                                 </CaptionTemplate>
                             </GridGroupSettings>
 
-                            <GridEvents CommandClicked="EditItemDetail" OnToolbarClick="ToolbarClickHandler" TValue="ItemMasterListMoel"></GridEvents>
+                            <GridEvents CommandClicked="EditItemDetail" OnToolbarClick="ToolbarClickHandler" TValue="TransportDetailsOutputModel"></GridEvents>
                             <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
                                                 IgnoreCase="true"></GridSearchSettings>
 
 
 
                             <GridColumns>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.itemName) HeaderText="Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.itemCode) HeaderText="Code" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.displayOrder) HeaderText="Display Order" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.itemDescription) HeaderText="item Description" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TransportDetailsOutputModel.transportDetailsId) HeaderText="Transport Details Id" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TransportDetailsOutputModel.busNo) HeaderText="bus No" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                           <GridColumn Field=@nameof(TransportDetailsOutputModel.registrationNo) HeaderText="Registration No" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TransportDetailsOutputModel.busOwnerName) HeaderText="Bus Owner Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TransportDetailsOutputModel.fitsnessUpto) HeaderText="Fitsness Upto" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TransportDetailsOutputModel.ownerAddress) HeaderText="Owner Address" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TransportDetailsOutputModel.purchaseDate) HeaderText="Purchase Date" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TransportDetailsOutputModel.manufactureBy) HeaderText="Manufacture By" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TransportDetailsOutputModel.manufacturYeaer) HeaderText="Manufactur Yeaer" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TransportDetailsOutputModel.fuelType) HeaderText="Fuel Type" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TransportDetailsOutputModel.chasisNo) HeaderText="Chasis No" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TransportDetailsOutputModel.insuranceCompanyBy) HeaderText="Insurance Company By" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
 
                                 <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
                                     <GridCommandColumns>
@@ -81,10 +94,10 @@
                                         <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
                                     </GridCommandColumns>
                                 </GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TransportDetailsOutputModel.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TransportDetailsOutputModel.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TransportDetailsOutputModel.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TransportDetailsOutputModel.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
 
                             </GridColumns>
 
@@ -95,7 +108,6 @@
         </SfDashboardLayout>
     </MudItem>
 </MudGrid>
-
 
 
 <MudGrid>
@@ -110,28 +122,167 @@
                         @*    start *@
 
 
-                       @*  <MudGrid>
+                        <MudGrid>
                             <MudItem xs="12" md="12" sm="12">
-                                <EditForm Model="itemMasterViewModel" OnValidSubmit="OnValidSubmit">
+                                <EditForm Model="transportDetailsViewModel" OnValidSubmit="OnValidSubmit">
                                     <DataAnnotationsValidator />
                                     <MudCardContent>
 
-                                        <MudGrid>
-                                  
+                                       <MudGrid>
 
-                                         
-                                           
 
-                                                 <MudItem xs="12" md="4" sm="6">
-                                                <SfButton cssclass="e-outline" type="submit" isprimary="true">add</SfButton>
-                                                <SfButton type="button" cssclass="e-flat" istoggle="false " isprimary="false" content="cancel" onclick="@closedialog"></SfButton>
+
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfNumericTextBox CssClass="e-outline" Placeholder="Bus No" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.busNo"
+                                                                  FloatLabelType="@FloatLabelType.Never"></SfNumericTextBox>
+                                                <ValidationMessage For="() => transportDetailsViewModel.busNo" />
                                             </MudItem>
-                                   </MudGrid>
+
+
+
+
+                                       @*        <MudItem xs="12" md="6" sm="12">
+                                                <SfDatePicker CssClass="e-outline" Placeholder="Insurance Valid Date" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.insuranceValidDate"
+                                            FloatLabelType="@FloatLabelType.Never"></SfDatePicker>
+                                            <ValidationMessage For="() =>transportDetailsViewModel.insuranceValidDate" />
+                                            </MudItem>
+ *@
+
+
+
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfNumericTextBox CssClass="e-outline" Placeholder="Registration No" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.registrationNo"
+                                                                  FloatLabelType="@FloatLabelType.Never"></SfNumericTextBox>
+                                                <ValidationMessage For="() => transportDetailsViewModel.registrationNo" />
+                                            </MudItem>
+
+
+                                            
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfNumericTextBox CssClass="e-outline" Placeholder="Total No Of Seat" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.totalNoOfSeat"
+                                                                  FloatLabelType="@FloatLabelType.Never"></SfNumericTextBox>
+                                                <ValidationMessage For="() => transportDetailsViewModel.totalNoOfSeat" />
+                                            </MudItem>
+
+
+
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Staff Name" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.busOwnerName"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => transportDetailsViewModel.busOwnerName" />
+                                            </MudItem>
+
+
+                                           
+                                            
+                                     @*              <MudItem xs="12" md="6" sm="12">
+                                                <SfDatePicker CssClass="e-outline" Placeholder="Fitness Upto" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.fitsnessUpto"
+                                            FloatLabelType="@FloatLabelType.Never"></SfDatePicker>
+                                            <ValidationMessage For="() =>transportDetailsViewModel.fitsnessUpto" />
+                                            </MudItem> *@
+
+
+
+                                            
+
+
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Owner Address" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.ownerAddress"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => transportDetailsViewModel.ownerAddress" />
+                                            </MudItem>
+
+
+
+                                            
+                                     @*              <MudItem xs="12" md="6" sm="12">
+                                                <SfDatePicker CssClass="e-outline" Placeholder="Purchase Date" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.purchaseDate"
+                                            FloatLabelType="@FloatLabelType.Never"></SfDatePicker>
+                                            <ValidationMessage For="() =>transportDetailsViewModel.purchaseDate" />
+                                            </MudItem> *@
+
+
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Manufacture By" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.manufactureBy"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => transportDetailsViewModel.manufactureBy" />
+                                            </MudItem>
+
+
+
+
+                                     @*        <MudItem xs="12" md="6" sm="12">
+                                                <SfDatePicker CssClass="e-outline" Placeholder="Manufactur Yeaer" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.manufacturYeaer"
+                                                              FloatLabelType="@FloatLabelType.Never"></SfDatePicker>
+                                                <ValidationMessage For="() =>transportDetailsViewModel.manufacturYeaer" />
+                                            </MudItem> *@
+
+
+
+
+
+                                          
+
+
+
+
+
+                                                         <MudItem xs="3" md="6" sm="4">
+                                                        <SfDropDownList ID="ItemType"
+                                                                        CssClass="e-outline"
+                                                                        Placeholder="Select Fuel Type"
+                                                                        FloatLabelType="@FloatLabelType.Always"
+                                                                        AllowFiltering="true"
+                                                                        @bind-Value="@transportDetailsViewModel.fuelType"
+                                                                        DataSource="@FuelTypeDetails">
+                                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                                            <ValidationMessage For="@(() => transportDetailsViewModel.fuelType)"></ValidationMessage>
+                                                        </SfDropDownList>
+                                                    </MudItem>
+
+
+
+
+
+
+
+                                           <MudItem xs="12" md="6" sm="12">
+                                                <SfNumericTextBox CssClass="e-outline" Placeholder="Chasis No" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.chasisNo"
+                                                                  FloatLabelType="@FloatLabelType.Never"></SfNumericTextBox>
+                                                <ValidationMessage For="() => transportDetailsViewModel.chasisNo" />
+                                            </MudItem>
+
+
+                                              <MudItem xs="12" md="6" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Insurance Company By" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.insuranceCompanyBy"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => transportDetailsViewModel.insuranceCompanyBy" />
+                                            </MudItem>
+
+
+
+
+
+
+
+
+
+
+
+
+                                            <MudItem xs="12" md="4" sm="6">
+                                                <SfButton CssClass="e-outline" type="submit" IsPrimary="true">@HeaderText</SfButton>
+                                                <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>
+                                            </MudItem>
+
+                                        </MudGrid>
                                     </MudCardContent>
                                 </EditForm>
                             </MudItem>
 
-                        </MudGrid>   *@
+                        </MudGrid>
+                        @*   end *@
+
 
                     </Content>
                 </DialogTemplates>
@@ -168,57 +319,57 @@
 
 
     /* html,
-                body,
-                #container {
-                    height: 100%;
-                    overflow: hidden;
-                    width: 100%;
-                    position: relative;
-                    min-height: 400px;
-                }
+                        body,
+                        #container {
+                            height: 100%;
+                            overflow: hidden;
+                            width: 100%;
+                            position: relative;
+                            min-height: 400px;
+                        }
 
-                .text {
-                    text-transform: capitalize;
-                }
+                        .text {
+                            text-transform: capitalize;
+                        }
 
-                #customization {
-                    display: table;
-                    margin: 0 auto;
-                }
+                        #customization {
+                            display: table;
+                            margin: 0 auto;
+                        }
 
-                .animate {
-                    display: table-cell;
-                    padding-left: 20px;
-                }
+                        .animate {
+                            display: table-cell;
+                            padding-left: 20px;
+                        }
 
-                @@media only screen and (max-width: 360px) {
-                    #customization {
-                        display: inline-block;
-                        margin: 0 auto;
-                        text-align: center;
-                    }
+                        @@media only screen and (max-width: 360px) {
+                            #customization {
+                                display: inline-block;
+                                margin: 0 auto;
+                                text-align: center;
+                            }
 
-                    .animate {
-                        display: inline-block;
-                        padding: 10px;
-                    }
-                } */
+                            .animate {
+                                display: inline-block;
+                                padding: 10px;
+                            }
+                        } */
     /*  .e-rowcell.e-attr {
-                                            background-color: lightgrey;
-                                        }*/
+                                                    background-color: lightgrey;
+                                                }*/
 
     /* .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
-                                            position: fixed;
-                                        }*/
+                                                    position: fixed;
+                                                }*/
 
     /*
 
-                                        .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
-                                            transition: none;
-                                        }*/
+                                                .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
+                                                    transition: none;
+                                                }*/
     /*.e-content .e-item {
-                                            font-size: 12px;
-                                            padding: 10px;
-                                            text-align: justify;
-                                        }*/
+                                                    font-size: 12px;
+                                                    padding: 10px;
+                                                    text-align: justify;
+                                                }*/
 </style>

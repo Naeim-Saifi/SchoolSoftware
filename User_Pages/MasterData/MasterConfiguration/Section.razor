@@ -120,18 +120,14 @@
                                         <MudGrid>
 
 
-                                            <MudItem xs="12" md="12" sm="12">
-                                                <SfDropDownList ID="SectionName"
-                                                                CssClass="e-outline"
-                                                                Placeholder="Select Section Name"
-                                                                FloatLabelType="@FloatLabelType.Never"
-                                                                AllowFiltering="true"
-                                                                @bind-Value="@sectionViewModel.sectionName"
-                                                                DataSource="@sectionNamedetails">
-                                                    <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
-                                                    <ValidationMessage For="@(() => sectionViewModel.sectionName)"></ValidationMessage>
-                                                </SfDropDownList>
+
+
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Section Name" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@sectionViewModel.sectionName"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => sectionViewModel.sectionName" />
                                             </MudItem>
+
 
 
                                             <MudItem xs="12" md="6" sm="12">
