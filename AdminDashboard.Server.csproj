@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <Content Remove="Pages\AdminUserRegistration\AdminUserRegistration1.razor" />
+    <Content Remove="User_Pages\MasterData\ExamConfiguration\TermWithMarks.razor" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,6 +41,18 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ais-data\AIS.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="User_Pages\MasterData\ExamConfiguration\TermWithMarks.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="User_Pages\MasterData\ExamConfiguration\TermWithMarks.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="User_Pages\MasterData\ExamConfiguration\TermWithMarks.razor" />
   </ItemGroup>
 
 </Project>
