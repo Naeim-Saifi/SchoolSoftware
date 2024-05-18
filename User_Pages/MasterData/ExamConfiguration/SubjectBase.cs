@@ -85,7 +85,7 @@ namespace AdminDashboard.Server.User_Pages.MasterData.ExamConfiguration
         public List<MarksType> MarksTypeDetails = new List<MarksType>()
         {
             new MarksType{Id=1,Value="Numeric"},
-            new MarksType{Id=2,Value="Grid"},
+            new MarksType{Id=2,Value="Grad"},
         };
 
 
@@ -98,8 +98,8 @@ namespace AdminDashboard.Server.User_Pages.MasterData.ExamConfiguration
 
         public List<SubjectType> SubjectTypeDetails = new List<SubjectType>()
         {
-            new SubjectType{Id=1,Value="General"},
-            new SubjectType{Id=2,Value="Private"},
+            new SubjectType{Id=1,Value="Co-Scholist"},
+            new SubjectType{Id=2,Value="Scholist"},
         };
 
 
