@@ -11,12 +11,13 @@
 @using Syncfusion.Blazor.LinearGauge
 @using Syncfusion.Blazor.Layouts
 @using Syncfusion.Blazor.Popups
-@using AIS.Data.RequestResponseModel.Inventory.ItemMaster
+
+@using AIS.Data.RequestResponseModel.MasterData.FeeConfiguration.FeeConcession
+
 @page "/User_Pages/FeeConfiguration/FeeConsession"
 
 
 @inherits FeeConsessionBase;
-
 
 @{
     var InitSearch2 = (new string[] { "organizationName" });
@@ -35,9 +36,9 @@
         <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
             <DashboardLayoutPanels>
                 <DashboardLayoutPanel SizeX=7 SizeY="2">
-                    <HeaderTemplate>Details</HeaderTemplate>
+                    <HeaderTemplate>Fee Header Details</HeaderTemplate>
                     <ContentTemplate>
-                        <SfGrid DataSource="@_ItemMasterListMoel"
+                        <SfGrid DataSource="@_FeeConcessionListModel"
                                 EnableVirtualMaskRow="true"
                                 RowHeight="38" Height="710"
                                 Width="auto" EnableVirtualization="false"
@@ -46,8 +47,8 @@
                                 ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
                                 AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
                                 ContextMenuItems="MenuItems"
-                                @ref="sfItemDetails"
-                                Toolbar="EnquirytoolBarItems">
+                                @ref="sfFeeConcessionHeaderDetails"
+                                Toolbar="ToolBarItems">
                             <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
                             <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
                             <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
@@ -60,17 +61,15 @@
                                 </CaptionTemplate>
                             </GridGroupSettings>
 
-                            <GridEvents CommandClicked="EditItemDetail" OnToolbarClick="ToolbarClickHandler" TValue="ItemMasterListMoel"></GridEvents>
+                            <GridEvents CommandClicked="EditItemDetail" OnToolbarClick="ToolbarClickHandler" TValue="FeeConcessionOutputModel"></GridEvents>
                             <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
                                                 IgnoreCase="true"></GridSearchSettings>
 
 
 
                             <GridColumns>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.itemName) HeaderText="Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.itemCode) HeaderText="Code" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.displayOrder) HeaderText="Display Order" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.itemDescription) HeaderText="item Description" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(FeeConcessionOutputModel.feeConcessionId) HeaderText="FeemConcession Id" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(FeeConcessionOutputModel.feeConcessionCategory) HeaderText="Fee Concession Category" AutoFit=true></GridColumn>
 
                                 <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
                                     <GridCommandColumns>
@@ -78,10 +77,10 @@
                                         <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
                                     </GridCommandColumns>
                                 </GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(FeeConcessionOutputModel.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(FeeConcessionOutputModel.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(FeeConcessionOutputModel.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(FeeConcessionOutputModel.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
 
                             </GridColumns>
 
@@ -92,7 +91,6 @@
         </SfDashboardLayout>
     </MudItem>
 </MudGrid>
-
 
 
 <MudGrid>
@@ -107,28 +105,37 @@
                         @*    start *@
 
 
-                       @*  <MudGrid>
+                        <MudGrid>
                             <MudItem xs="12" md="12" sm="12">
-                                <EditForm Model="itemMasterViewModel" OnValidSubmit="OnValidSubmit">
+                                <EditForm Model="feeConcessionViewModel" OnValidSubmit="OnValidSubmit">
                                     <DataAnnotationsValidator />
                                     <MudCardContent>
 
                                         <MudGrid>
-                                  
 
-                                         
-                                           
 
-                                                 <MudItem xs="12" md="4" sm="6">
-                                                <SfButton cssclass="e-outline" type="submit" isprimary="true">add</SfButton>
-                                                <SfButton type="button" cssclass="e-flat" istoggle="false " isprimary="false" content="cancel" onclick="@closedialog"></SfButton>
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Fee Concession Category" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@feeConcessionViewModel.feeConcessionCategory"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => feeConcessionViewModel.feeConcessionCategory" />
                                             </MudItem>
-                                   </MudGrid>
+
+
+
+
+                                            <MudItem xs="12" md="4" sm="6">
+                                                <SfButton CssClass="e-outline" type="submit" IsPrimary="true">@HeaderText</SfButton>
+                                                <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>
+                                            </MudItem>
+
+                                        </MudGrid>
                                     </MudCardContent>
                                 </EditForm>
                             </MudItem>
 
-                        </MudGrid>   *@
+                        </MudGrid>
+                        @*   end *@
+
 
                     </Content>
                 </DialogTemplates>
@@ -165,57 +172,57 @@
 
 
     /* html,
-                body,
-                #container {
-                    height: 100%;
-                    overflow: hidden;
-                    width: 100%;
-                    position: relative;
-                    min-height: 400px;
-                }
+                        body,
+                        #container {
+                            height: 100%;
+                            overflow: hidden;
+                            width: 100%;
+                            position: relative;
+                            min-height: 400px;
+                        }
 
-                .text {
-                    text-transform: capitalize;
-                }
+                        .text {
+                            text-transform: capitalize;
+                        }
 
-                #customization {
-                    display: table;
-                    margin: 0 auto;
-                }
+                        #customization {
+                            display: table;
+                            margin: 0 auto;
+                        }
 
-                .animate {
-                    display: table-cell;
-                    padding-left: 20px;
-                }
+                        .animate {
+                            display: table-cell;
+                            padding-left: 20px;
+                        }
 
-                @@media only screen and (max-width: 360px) {
-                    #customization {
-                        display: inline-block;
-                        margin: 0 auto;
-                        text-align: center;
-                    }
+                        @@media only screen and (max-width: 360px) {
+                            #customization {
+                                display: inline-block;
+                                margin: 0 auto;
+                                text-align: center;
+                            }
 
-                    .animate {
-                        display: inline-block;
-                        padding: 10px;
-                    }
-                } */
+                            .animate {
+                                display: inline-block;
+                                padding: 10px;
+                            }
+                        } */
     /*  .e-rowcell.e-attr {
-                                            background-color: lightgrey;
-                                        }*/
+                                                    background-color: lightgrey;
+                                                }*/
 
     /* .e-popup-full-page .e-popup-full-page.e-ddl.e-popup.e-ddl-device-filter {
-                                            position: fixed;
-                                        }*/
+                                                    position: fixed;
+                                                }*/
 
     /*
 
-                                        .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
-                                            transition: none;
-                                        }*/
+                                                .e-tab .e-tab-header:not(.e-vertical) .e-indicator, .e-tab .e-tab-header.e-vertical .e-indicator {
+                                                    transition: none;
+                                                }*/
     /*.e-content .e-item {
-                                            font-size: 12px;
-                                            padding: 10px;
-                                            text-align: justify;
-                                        }*/
+                                                    font-size: 12px;
+                                                    padding: 10px;
+                                                    text-align: justify;
+                                                }*/
 </style>
