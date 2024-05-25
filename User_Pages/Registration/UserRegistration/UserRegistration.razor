@@ -12,6 +12,9 @@
 @using Syncfusion.Blazor.Layouts
 @using Syncfusion.Blazor.Popups
 @using AIS.Data.RequestResponseModel.Registration.UserRegistration
+@using AIS.Data.RequestResponseModel.MasterDataSetUp
+
+
 
 
 @page "/User_Pages/Registration/UserRegistration"
@@ -29,7 +32,7 @@
 
 <MudGrid>
     <MudItem xs="12" sm="12" md="12">
-        <SfDashboardLayout CellSpacing="@(new double[]{20, 20})" Columns="10" CellAspectRatio="2" AllowResizing="true">
+        <SfDashboardLayout CellSpacing="@(new double[]{20, 20})" Columns="10" CellAspectRatio="2">
             <DashboardLayoutPanels>
 
 
@@ -37,43 +40,51 @@
 
 
                 <DashboardLayoutPanel SizeX="3" SizeY="5">
-                    <HeaderTemplate>List</HeaderTemplate>
+                    <HeaderTemplate>
+                        <div class="custom-header">List</div>
+                    </HeaderTemplate>
                     <ContentTemplate>
                         <MudGrid>
                             <MudItem xs="12" md="12" sm="12">
                                 <!-- Add dropdowns and search box -->
                                 <MudGrid>
-                                  
+                            
+
 
 
                                     <MudItem xs="12" md="6" sm="6">
-                                        <SfDropDownList ID="gender"
-                                                        CssClass="e-outline"
-                                                        Placeholder="Choose Class"
+                                        <SfDropDownList ID="ClassId" TValue="string" TItem="Master_CLass_List_Output_Model"
+                                                        CssClass="e-outline" Placeholder="Select a class"
                                                         FloatLabelType="@FloatLabelType.Never"
                                                         AllowFiltering="true"
+                                                        Enabled="ddEnable"
                                                         @bind-Value="@userRegistrationViewMdel.className"
-                                                        DataSource="@ClassOptions">
-                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                                        DataSource="@_classList">
+                                            <DropDownListFieldSettings Text="className" Value="classId" />
+                                            <DropDownListEvents TItem="Master_CLass_List_Output_Model" TValue="string"
+                                                                ValueChange="OnChangeClass" />
                                         </SfDropDownList>
                                     </MudItem>
 
-                               
 
 
-                                    <MudItem xs="12" md="6" sm="6">
-                                        <SfDropDownList ID="gender"
-                                                        CssClass="e-outline"
-                                                        Placeholder="Select a Gender"
-                                                        FloatLabelType="@FloatLabelType.Never"
-                                                        AllowFiltering="true"
+                                      <MudItem xs="12" md="6" sm="6">
+                                                <SfDropDownList ID="monthID" TValue="string" TItem="Master_Section_List_Output_Model"
+                                                                CssClass="e-outline" Placeholder="Select a section"
+                                                            FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                                Enabled="ddEnable"
                                                         @bind-Value="@userRegistrationViewMdel.section"
-                                                        DataSource="@SectionOptions">
-                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
-                                        </SfDropDownList>
-                                    </MudItem>
-                                    @*  <MudItem xs="12" md="12" sm="12">
-                                        <SfTextBox CssClass="e-outline" Placeholder="Search" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="searchQuery" FloatLabelType="@FloatLabelType.Never" Width="100%" />
+                                                                DataSource="@_sectionList">
+                                                <DropDownListEvents TItem="Master_Section_List_Output_Model" TValue="string"
+                                                                    ValueChange="OnChangeSection" />
+                                                    <DropDownListFieldSettings Text="sectionName" Value="sectionId" />
+                                                </SfDropDownList>
+                                            </MudItem>
+
+                                    @* Uncomment and use this if you need a search box *@
+                                    @* <MudItem xs="12" md="12" sm="12">
+                                    <SfTextBox CssClass="custom-searchbox e-outline" Placeholder="Search" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="searchQuery" FloatLabelType="@FloatLabelType.Never" Width="100%" />
                                     </MudItem> *@
                                 </MudGrid>
 
@@ -87,12 +98,11 @@
                                         EnableAutoFill="true" AllowReordering="true"
                                         ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
                                         AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
-                                        ContextMenuItems="MenuItems">
+                                        ContextMenuItems="MenuItems"
+                                        CssClass="custom-grid">
                                     <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
                                     <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
-                                    <GridGroupSettings Columns="@InitialGroupColumnsection"></GridGroupSettings>
-                                    <GridGroupSettings Columns=@InitialGroupColumnsection>
-
+                                    <GridGroupSettings Columns="@InitialGroupColumnsection">
                                         <CaptionTemplate>
                                             @{
                                                 var UnitDetails = (context as CaptionTemplateContext);
@@ -100,12 +110,8 @@
                                             }
                                         </CaptionTemplate>
                                     </GridGroupSettings>
-
-
-
-                                    <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
-                                                        IgnoreCase="true"></GridSearchSettings>            
-                                                        <GridColumns>
+                                    <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key="" IgnoreCase="true"></GridSearchSettings>
+                                    <GridColumns>
                                         <!-- Add your grid columns here -->
                                         <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
                                             <GridCommandColumns>
@@ -127,73 +133,57 @@
 
                 <!-- Left panel for input fields -->
                 <DashboardLayoutPanel SizeX="7" SizeY="5">
-                   
 
-    <ContentTemplate>
-        <MudGrid>
-            <MudItem xs="12" md="12" sm="8">
-                <EditForm Model="userRegistrationViewMdel" OnValidSubmit="OnValidSubmit">
-                    <DataAnnotationsValidator />
-                    <MudGrid>
-                        <!-- Student Information -->
-                       
+                    <ContentTemplate>
+                        <MudGrid>
+                            <MudItem xs="12" md="12" sm="12">
+                                <EditForm Model="userRegistrationViewMdel" OnValidSubmit="OnValidSubmit">
+                                    <DataAnnotationsValidator />
+                                    <MudGrid>
 
-                             <MudItem xs="12">
-                                            <MudCard Style="width: 100%;">
-                                                <MudGrid>
-                                                    <!-- Radio buttons for different admission options -->
-                                                  
-
-                                                        <div style="text-align: center; font-size: 24px; font-weight: bold;">
-                                                            Student Admission Form 2024-25
-                                                        </div>
-
-                                                  
-                                                </MudGrid>
-                                            </MudCard>
-                                        </MudItem>
+                                        <!-- Form Title -->
+                               
 
 
+                                            <MudItem xs="12">
+                                                <MudCard Style="width: 100%;">
+                                                    <MudText class="section-title"></MudText>
+
+                                                    <MudGrid>
+                                                        <!-- Radio buttons for different admission options -->
+
+
+
+
+                                                                <MudItem xs="12" md="4" sm="12">
+                                                <SfDropDownList ID="AdmissionMode"
+                                                                CssClass="e-outline"
+                                                                Placeholder="Select a Admission Mode"
+                                                                FloatLabelType="@FloatLabelType.Never"
+                                                                AllowFiltering="true"
+                                                                @bind-Value="@userRegistrationViewMdel.admissionAction"
+                                                                DataSource="@AdmissionModelDetails">
+                                                    <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
+                                                    <ValidationMessage For="@(() => userRegistrationViewMdel.admissionAction)"></ValidationMessage>
+                                                </SfDropDownList>
+                                            </MudItem>
+
+
+                                                    </MudGrid>
+                                                </MudCard>
+                                            </MudItem>
+                                    
+                                     
+
+                                        <!-- Student Information Section -->
                                         <MudItem xs="12">
-                                            <MudCard Style="width: 100%;">
-                                                <MudGrid>
-                                                    <!-- Radio buttons for different admission options -->
-                                                    <MudItem xs="12" md="4" sm="6">
-                                                     @*    <MudPaper Style="padding: 16px;">
-                                                            <MudRadioGroup T="string" @bind-SelectedOption="userRegistrationViewMdel.admissionAction" Label="Admission Action">
-                                                                <MudRadio T="string" Label="New Admission" Value="New Admission" />
-                                                                <MudRadio T="string" Label="Cancel Admission" Value="Cancel Admission" />
-                                                                <MudRadio T="string" Label="Update Admission" Value="Update Admission" />
-                                                                <MudRadio T="string" Label="Reactive Admission" Value="Reactive Admission" />
-                                                                <MudRadio T="string" Label="Suspend Admission" Value="Suspend Admission" />
-                                                                <MudRadio T="string" Label="TC Issue" Value="TC Issue" />
-                                                            </MudRadioGroup>
-                                                            <ValidationMessage For="() => userRegistrationViewMdel.admissionAction" />
-                                                        </MudPaper> *@
-
-
-                                                      
-
-
-                                                    </MudItem>
-                                                </MudGrid>
-                                            </MudCard>
-                                        </MudItem>
-
-
-
-
-
-                                        <MudItem xs="12">
-                                            <MudCard Style="width: 100%;">
-                                                <MudText Typo="Typo.h6">Student Information</MudText>
+                                            <MudCard class="mud-card">
+                                                <div class="section-title">Student Information</div>
                                                 <MudGrid>
                                                     <MudItem xs="12" md="3" sm="12">
                                                         <SfTextBox CssClass="e-outline" Placeholder="Withdrawal No" @bind-Value="userRegistrationViewMdel.withdrawalNo" FloatLabelType="FloatLabelType.Never" />
                                                         <ValidationMessage For="() => userRegistrationViewMdel.withdrawalNo" />
                                                     </MudItem>
-                                                 
-                                             
                                                     <MudItem xs="12" md="3" sm="12">
                                                         <SfTextBox CssClass="e-outline" Placeholder="Admission No" @bind-Value="userRegistrationViewMdel.admissionNo" FloatLabelType="FloatLabelType.Never" />
                                                         <ValidationMessage For="() => userRegistrationViewMdel.admissionNo" />
@@ -202,251 +192,183 @@
                                                         <SfTextBox CssClass="e-outline" Placeholder="House" @bind-Value="userRegistrationViewMdel.house" FloatLabelType="FloatLabelType.Never" />
                                                         <ValidationMessage For="() => userRegistrationViewMdel.house" />
                                                     </MudItem>
-
-                                                           <MudItem xs="12" md="2" sm="12">
+                                                    <MudItem xs="12" md="3" sm="12">
                                                         <SfDatePicker CssClass="e-outline" Placeholder="Admission Date" @bind-Value="userRegistrationViewMdel.admissionDate" FloatLabelType="FloatLabelType.Never" />
                                                         <ValidationMessage For="() => userRegistrationViewMdel.admissionDate" />
                                                     </MudItem>
-
                                                     <MudItem xs="12" md="3" sm="12">
                                                         <SfTextBox CssClass="e-outline" Placeholder="Student Name" @bind-Value="userRegistrationViewMdel.studentName" FloatLabelType="FloatLabelType.Never" />
                                                         <ValidationMessage For="() => userRegistrationViewMdel.studentName" />
                                                     </MudItem>
-                                                 
+                                               
                                                     <MudItem xs="12" md="3" sm="12">
-                                                        <SfTextBox CssClass="e-outline" Placeholder="Category" @bind-Value="userRegistrationViewMdel.category" FloatLabelType="FloatLabelType.Never" />
-                                                        <ValidationMessage For="() => userRegistrationViewMdel.category" />
-                                                    </MudItem>
-
-
-
-
-
-
-
-
-                                                    <MudItem xs="12" md="3" sm="12">
-                                                        <SfDropDownList ID="gender"
-                                                                        CssClass="e-outline"
-                                                                        Placeholder="Select a Gender"
-                                                                        FloatLabelType="@FloatLabelType.Never"
-                                                                        AllowFiltering="true"
-                                                                        @bind-Value="@userRegistrationViewMdel.gender"
-                                                                        DataSource="@GenderDetails">
+                                                        <SfDropDownList ID="gender" CssClass="e-outline" Placeholder="Select a Gender" FloatLabelType="@FloatLabelType.Never" AllowFiltering="true" @bind-Value="@userRegistrationViewMdel.gender" DataSource="@GenderDetails">
                                                             <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
                                                             <ValidationMessage For="@(() => userRegistrationViewMdel.gender)"></ValidationMessage>
                                                         </SfDropDownList>
                                                     </MudItem>
-
-                                                    <MudItem xs="12" md="2" sm="12">
+                                                    <MudItem xs="12" md="3" sm="12">
                                                         <SfDatePicker CssClass="e-outline" Placeholder="Date of Birth" @bind-Value="userRegistrationViewMdel.dateOfBirth" FloatLabelType="FloatLabelType.Never" />
                                                         <ValidationMessage For="() => userRegistrationViewMdel.dateOfBirth" />
                                                     </MudItem>
-
                                                     <MudItem xs="12" md="3" sm="12">
-                                                        <SfDropDownList ID="category"
-                                                                        CssClass="e-outline"
-                                                                        Placeholder="Select a category"
-                                                                        FloatLabelType="@FloatLabelType.Never"
-                                                                        AllowFiltering="true"
-                                                                        @bind-Value="@userRegistrationViewMdel.category"
-                                                                        DataSource="@CategoryDetails">
+                                                        <SfDropDownList ID="category" CssClass="e-outline" Placeholder="Select a Category" FloatLabelType="@FloatLabelType.Never" AllowFiltering="true" @bind-Value="@userRegistrationViewMdel.category" DataSource="@CategoryDetails">
                                                             <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
                                                             <ValidationMessage For="@(() => userRegistrationViewMdel.category)"></ValidationMessage>
                                                         </SfDropDownList>
                                                     </MudItem>
-
-
-
-
-                                       
-                                                  
-
-
                                                     <MudItem xs="12" md="3" sm="12">
-                                                        <SfDropDownList ID="studentType"
-                                                                        CssClass="e-outline"
-                                                                        Placeholder="Select a Student Type"
-                                                                        FloatLabelType="@FloatLabelType.Never"
-                                                                        AllowFiltering="true"
-                                                                        @bind-Value="@userRegistrationViewMdel.studentType"
-                                                                        DataSource="@StdTypeDetails">
+                                                        <SfDropDownList ID="studentType" CssClass="e-outline" Placeholder="Select a Student Type" FloatLabelType="@FloatLabelType.Never" AllowFiltering="true" @bind-Value="@userRegistrationViewMdel.studentType" DataSource="@StdTypeDetails">
                                                             <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
                                                             <ValidationMessage For="@(() => userRegistrationViewMdel.studentType)"></ValidationMessage>
                                                         </SfDropDownList>
                                                     </MudItem>
+                                          
 
 
 
-                                                    <MudItem xs="12" md="3" sm="12">
-                                                        <SfDropDownList ID="className"
-                                                                        CssClass="e-outline"
-                                                                        Placeholder="Select a Class Name"
+
+
+
+
+
+
+
+                                                    <MudItem xs="12" md="3" sm="6">
+                                                        <SfDropDownList ID="ClassId" TValue="string" TItem="Master_CLass_List_Output_Model"
+                                                                        CssClass="e-outline" Placeholder="Select a class"
                                                                         FloatLabelType="@FloatLabelType.Never"
                                                                         AllowFiltering="true"
+                                                                        Enabled="ddEnable"
                                                                         @bind-Value="@userRegistrationViewMdel.className"
-                                                                        DataSource="@ClassOptions">
-                                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
-                                                            <ValidationMessage For="@(() => userRegistrationViewMdel.className)"></ValidationMessage>
+                                                                        DataSource="@_classList">
+                                                            <DropDownListFieldSettings Text="className" Value="classId" />
+                                                            <DropDownListEvents TItem="Master_CLass_List_Output_Model" TValue="string"
+                                                                                ValueChange="OnChangeClass" />
                                                         </SfDropDownList>
                                                     </MudItem>
 
 
 
-                                                    <MudItem xs="12" md="2" sm="12">
-                                                        <SfDropDownList ID="religion"
-                                                                        CssClass="e-outline"
-                                                                        Placeholder="Select a Religion"
+                                                    <MudItem xs="12" md="3" sm="6">
+                                                        <SfDropDownList ID="monthID" TValue="string" TItem="Master_Section_List_Output_Model"
+                                                                        CssClass="e-outline" Placeholder="Select a section"
                                                                         FloatLabelType="@FloatLabelType.Never"
                                                                         AllowFiltering="true"
-                                                                        @bind-Value="@userRegistrationViewMdel.religion"
-                                                                        DataSource="@ReligionDetails">
+                                                                        Enabled="ddEnable"
+                                                                        @bind-Value="@userRegistrationViewMdel.section"
+                                                                        DataSource="@_sectionList">
+                                                            <DropDownListEvents TItem="Master_Section_List_Output_Model" TValue="string"
+                                                                                ValueChange="OnChangeSection" />
+                                                            <DropDownListFieldSettings Text="sectionName" Value="sectionId" />
+                                                        </SfDropDownList>
+                                                    </MudItem>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                    <MudItem xs="12" md="3" sm="12">
+                                                        <SfDropDownList ID="religion" CssClass="e-outline" Placeholder="Select a Religion" FloatLabelType="@FloatLabelType.Never" AllowFiltering="true" @bind-Value="@userRegistrationViewMdel.religion" DataSource="@ReligionDetails">
                                                             <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
                                                             <ValidationMessage For="@(() => userRegistrationViewMdel.religion)"></ValidationMessage>
                                                         </SfDropDownList>
                                                     </MudItem>
-
-
-
+                                               
                                                     <MudItem xs="12" md="3" sm="12">
-                                                        <SfDropDownList ID="section"
-                                                                        CssClass="e-outline"
-                                                                        Placeholder="Select a Section Name"
-                                                                        FloatLabelType="@FloatLabelType.Never"
-                                                                        AllowFiltering="true"
-                                                                        @bind-Value="@userRegistrationViewMdel.section"
-                                                                        DataSource="@SectionOptions">
-                                                            <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
-                                                            <ValidationMessage For="@(() => userRegistrationViewMdel.section)"></ValidationMessage>
-                                                        </SfDropDownList>
-                                                    </MudItem>
-
-
-
-                                                   
-
-
-
-                                                    <MudItem xs="12" md="3" sm="12">
-                                                        <SfDropDownList ID="feeCategory"
-                                                                        CssClass="e-outline"
-                                                                        Placeholder="Select a Fee Category"
-                                                                        FloatLabelType="@FloatLabelType.Never"
-                                                                        AllowFiltering="true"
-                                                                        @bind-Value="@userRegistrationViewMdel.feeCategory"
-                                                                        DataSource="@FeeCategoryDetails">
+                                                        <SfDropDownList ID="feeCategory" CssClass="e-outline" Placeholder="Select a Fee Category" FloatLabelType="@FloatLabelType.Never" AllowFiltering="true" @bind-Value="@userRegistrationViewMdel.feeCategory" DataSource="@FeeCategoryDetails">
                                                             <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
                                                             <ValidationMessage For="@(() => userRegistrationViewMdel.feeCategory)"></ValidationMessage>
                                                         </SfDropDownList>
                                                     </MudItem>
-
-
-
-
-
-
-
                                                     <MudItem xs="12" md="3" sm="12">
-                                                        <SfDropDownList ID="transportMode"
-                                                                        CssClass="e-outline"
-                                                                        Placeholder="Select a Transport Mode"
-                                                                        FloatLabelType="@FloatLabelType.Never"
-                                                                        AllowFiltering="true"
-                                                                        @bind-Value="@userRegistrationViewMdel.transportMode"
-                                                                        DataSource="@TranportModeDetails">
+                                                        <SfDropDownList ID="transportMode" CssClass="e-outline" Placeholder="Select a Transport Mode" FloatLabelType="@FloatLabelType.Never" AllowFiltering="true" @bind-Value="@userRegistrationViewMdel.transportMode" DataSource="@TranportModeDetails">
                                                             <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
                                                             <ValidationMessage For="@(() => userRegistrationViewMdel.transportMode)"></ValidationMessage>
                                                         </SfDropDownList>
                                                     </MudItem>
-
-                                                    <MudItem xs="12" md="2" sm="12">
+                                                    <MudItem xs="12" md="3" sm="12">
                                                         <SfNumericTextBox CssClass="e-outline" Placeholder="Roll Number" @bind-Value="userRegistrationViewMdel.rollNo" FloatLabelType="FloatLabelType.Never" />
                                                         <ValidationMessage For="() => userRegistrationViewMdel.rollNo" />
                                                     </MudItem>
-
-
-
                                                     <MudItem xs="12" md="3" sm="12">
-                                                        <SfDropDownList ID="busStop"
-                                                                        CssClass="e-outline"
-                                                                        Placeholder="Select a Bus Stop"
-                                                                        FloatLabelType="@FloatLabelType.Never"
-                                                                        AllowFiltering="true"
-                                                                        @bind-Value="@userRegistrationViewMdel.busStop"
-                                                                        DataSource="@SelectBusStopDetails">
+                                                        <SfDropDownList ID="busStop" CssClass="e-outline" Placeholder="Select a Bus Stop" FloatLabelType="@FloatLabelType.Never" AllowFiltering="true" @bind-Value="@userRegistrationViewMdel.busStop" DataSource="@SelectBusStopDetails">
                                                             <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
                                                             <ValidationMessage For="@(() => userRegistrationViewMdel.busStop)"></ValidationMessage>
                                                         </SfDropDownList>
                                                     </MudItem>
+                                                </MudGrid>
+                                            </MudCard>
+                                        </MudItem>
+
+
+
+
+                                        <!-- Parent's Details -->
+                                        <MudItem xs="12">
+                                            <MudCard Style="width: 100%;">
+                                                <MudText class="section-title">Parent's Details</MudText>
+                                                <MudGrid>
+                                                    <MudItem xs="12" md="3" sm="12">
+                                                        <SfTextBox CssClass="e-outline" Placeholder="Father's Name" @bind-Value="userRegistrationViewMdel.fatherName" FloatLabelType="FloatLabelType.Never" />
+                                                        <ValidationMessage For="() => userRegistrationViewMdel.fatherName" />
+                                                    </MudItem>
+
+                                                      <MudItem xs="12" md="3" sm="12">
+                                                        <SfTextBox CssClass="e-outline" Placeholder="Father's Mobile No" @bind-Value="userRegistrationViewMdel.fatherMobileNo" FloatLabelType="FloatLabelType.Never" />
+                                                        <ValidationMessage For="() => userRegistrationViewMdel.fatherMobileNo" />
+                                                    </MudItem>
+
+                                                    <MudItem xs="12" md="3" sm="12">
+                                                        <SfTextBox CssClass="e-outline" Placeholder="Mother's Name" @bind-Value="userRegistrationViewMdel.motherName" FloatLabelType="FloatLabelType.Never" />
+                                                        <ValidationMessage For="() => userRegistrationViewMdel.motherName" />
+                                                    </MudItem>
+
+                                                      <MudItem xs="12" md="3" sm="12">
+                                                        <SfTextBox CssClass="e-outline" Placeholder="Mother's Mobile No" @bind-Value="userRegistrationViewMdel.motherMobileNo" FloatLabelType="FloatLabelType.Never" />
+                                                        <ValidationMessage For="() => userRegistrationViewMdel.motherMobileNo" />
+                                                    </MudItem>
+
+                                           
+                                                  
+
+                                                </MudGrid>
+                                            </MudCard>
+                                        </MudItem>
+
+
+                                        <!-- Health Status -->
+                                        <MudItem xs="12">
+                                            <MudCard Style="width: 100%;">
+                                                <MudText class="section-title">Health Status</MudText>
+                                                <MudGrid>
+                                                    <MudItem xs="12" md="3" sm="12">
+                                                        <SfTextBox CssClass="e-outline" Placeholder="SRN No" @bind-Value="userRegistrationViewMdel.srnNo" FloatLabelType="FloatLabelType.Never" />
+                                                        <ValidationMessage For="() => userRegistrationViewMdel.srnNo" />
+                                                    </MudItem>
+                                                    <MudItem xs="12" md="3" sm="12">
+                                                        <SfTextBox CssClass="e-outline" Placeholder="Aadhar No" @bind-Value="userRegistrationViewMdel.aadhar" FloatLabelType="FloatLabelType.Never" />
+                                                        <ValidationMessage For="() => userRegistrationViewMdel.aadhar" />
+                                                    </MudItem>
+                                                    <MudItem xs="12" md="3" sm="12">
+                                                        <SfTextBox CssClass="e-outline" Placeholder="Whatsapp Number" @bind-Value="userRegistrationViewMdel.wn" FloatLabelType="FloatLabelType.Never" />
+                                                        <ValidationMessage For="() => userRegistrationViewMdel.wn" />
+                                                    </MudItem>
+
+
 
 
 
 
                                                     <MudItem xs="12" md="3" sm="12">
-                                                        <SfTextBox CssClass="e-outline" Placeholder="Bus Route" @bind-Value="userRegistrationViewMdel.busRoute" FloatLabelType="FloatLabelType.Never" />
-                                                        <ValidationMessage For="() => userRegistrationViewMdel.busRoute" />
-                                                    </MudItem>
-
-                                                </MudGrid>
-                                            </MudCard>
-                                        </MudItem>
-
-
-                                         <!-- Parent's Details -->
-                          <MudItem xs="12">
-                                            <MudCard Style="width: 100%;">
-                                                <MudText Typo="Typo.h6">Parent's Details</MudText>
-                                                <MudGrid>
-                                        <MudItem xs="12" md="3" sm="12">
-                                            <SfTextBox CssClass="e-outline" Placeholder="Father's Name" @bind-Value="userRegistrationViewMdel.fatherName" FloatLabelType="FloatLabelType.Never" />
-                                            <ValidationMessage For="() => userRegistrationViewMdel.fatherName" />
-                                        </MudItem>
-                                        <MudItem xs="12" md="3" sm="12">
-                                            <SfTextBox CssClass="e-outline" Placeholder="Mother's Name" @bind-Value="userRegistrationViewMdel.motherName" FloatLabelType="FloatLabelType.Never" />
-                                            <ValidationMessage For="() => userRegistrationViewMdel.motherName" />
-                                        </MudItem>
-                                        <MudItem xs="12" md="3" sm="12">
-                                            <SfTextBox CssClass="e-outline" Placeholder="Grandfather's Name" @bind-Value="userRegistrationViewMdel.grandFatherName" FloatLabelType="FloatLabelType.Never" />
-                                            <ValidationMessage For="() => userRegistrationViewMdel.grandFatherName" />
-                                        </MudItem>
-                                        <MudItem xs="12" md="2" sm="12">
-                                            <SfTextBox CssClass="e-outline" Placeholder="Father's Mobile No" @bind-Value="userRegistrationViewMdel.fatherMobileNo" FloatLabelType="FloatLabelType.Never" />
-                                            <ValidationMessage For="() => userRegistrationViewMdel.fatherMobileNo" />
-                                        </MudItem>
-                                        <MudItem xs="12" md="3" sm="12">
-                                            <SfTextBox CssClass="e-outline" Placeholder="Mother's Mobile No" @bind-Value="userRegistrationViewMdel.motherMobileNo" FloatLabelType="FloatLabelType.Never" />
-                                            <ValidationMessage For="() => userRegistrationViewMdel.motherMobileNo" />
-                                        </MudItem>
-
-                                                </MudGrid>
-                                            </MudCard>
-                                        </MudItem>
-
-
-                                         <!-- Health Status -->
-                      <MudItem xs="12">
-                                            <MudCard Style="width: 100%;">
-                                                <MudText Typo="Typo.h6">Health Status</MudText>
-                                                <MudGrid>
-                                        <MudItem xs="12" md="3" sm="12">
-                                            <SfTextBox CssClass="e-outline" Placeholder="SRN No" @bind-Value="userRegistrationViewMdel.srnNo" FloatLabelType="FloatLabelType.Never" />
-                                            <ValidationMessage For="() => userRegistrationViewMdel.srnNo" />
-                                        </MudItem>
-                                        <MudItem xs="12" md="3" sm="12">
-                                            <SfTextBox CssClass="e-outline" Placeholder="Aadhar No" @bind-Value="userRegistrationViewMdel.aadhar" FloatLabelType="FloatLabelType.Never" />
-                                            <ValidationMessage For="() => userRegistrationViewMdel.aadhar" />
-                                        </MudItem>
-                                        <MudItem xs="12" md="3" sm="12">
-                                            <SfTextBox CssClass="e-outline" Placeholder="WN" @bind-Value="userRegistrationViewMdel.wn" FloatLabelType="FloatLabelType.Never" />
-                                            <ValidationMessage For="() => userRegistrationViewMdel.wn" />
-                                        </MudItem>
-
-
-
-
-
-
-                                                    <MudItem xs="12" md="2" sm="12">
                                                         <SfDropDownList ID="BloodGroup"
                                                                         CssClass="e-outline"
                                                                         Placeholder="Select a BloodGroup"
@@ -460,24 +382,24 @@
                                                     </MudItem>
 
 
-                                        <MudItem xs="12" md="3" sm="12">
-                                            <SfTextBox CssClass="e-outline" Placeholder="Email ID" @bind-Value="userRegistrationViewMdel.emailID" FloatLabelType="FloatLabelType.Never" />
-                                            <ValidationMessage For="() => userRegistrationViewMdel.emailID" />
-                                        </MudItem>
+                                                    <MudItem xs="12" md="3" sm="12">
+                                                        <SfTextBox CssClass="e-outline" Placeholder="Email ID" @bind-Value="userRegistrationViewMdel.emailID" FloatLabelType="FloatLabelType.Never" />
+                                                        <ValidationMessage For="() => userRegistrationViewMdel.emailID" />
+                                                    </MudItem>
                                                 </MudGrid>
                                             </MudCard>
                                         </MudItem>
 
-                                            <!-- Present Address -->
-  <MudItem xs="12">
+                                        <!-- Present Address -->
+                                        <MudItem xs="12">
                                             <MudCard Style="width: 100%;">
-                                                <MudText Typo="Typo.h6">Present Address </MudText>
+                                                <MudText class="section-title"> Present Address</MudText>
                                                 <MudGrid>
 
-                                        <MudItem xs="12" md="3" sm="12">
-                                            <SfTextBox CssClass="e-outline" Placeholder="Address" @bind-Value="userRegistrationViewMdel.address" FloatLabelType="FloatLabelType.Never" />
-                                            <ValidationMessage For="() => userRegistrationViewMdel.address" />
-                                        </MudItem>
+                                                    <MudItem xs="12" md="3" sm="12">
+                                                        <SfTextBox CssClass="e-outline" Placeholder="Address" @bind-Value="userRegistrationViewMdel.address" FloatLabelType="FloatLabelType.Never" />
+                                                        <ValidationMessage For="() => userRegistrationViewMdel.address" />
+                                                    </MudItem>
 
 
 
@@ -510,33 +432,36 @@
                                                         </SfDropDownList>
                                                     </MudItem>
 
-                                     
 
-                                        <MudItem xs="12" md="2" sm="12">
-                                            <SfTextBox CssClass="e-outline" Placeholder="Pin Code" @bind-Value="userRegistrationViewMdel.pinCode" FloatLabelType="FloatLabelType.Never" />
-                                            <ValidationMessage For="() => userRegistrationViewMdel.pinCode" />
-                                        </MudItem>
+
+                                                    <MudItem xs="12" md="3" sm="12">
+                                                        <SfTextBox CssClass="e-outline" Placeholder="Pin Code" @bind-Value="userRegistrationViewMdel.pinCode" FloatLabelType="FloatLabelType.Never" />
+                                                        <ValidationMessage For="() => userRegistrationViewMdel.pinCode" />
+                                                    </MudItem>
+
+                                                    <MudItem xs="12" md="7" sm="6">
+                                                        <SfButton CssClass="e-outline" type="submit" IsPrimary="true">Save</SfButton>
+                                                        <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>
+                                                    </MudItem>
                                                 </MudGrid>
                                             </MudCard>
                                         </MudItem>
 
-                                            <!-- Admit Status -->
+                                        <!-- Admit Status -->
 
 
-                   
 
 
-                                        <MudItem xs="12" md="7" sm="6">
-                                            <SfButton CssClass="e-outline" type="submit" IsPrimary="true">Save</SfButton>
-                                            <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>
-                                        </MudItem>
 
+
+                                  
                                     </MudGrid>
                                 </EditForm>
                             </MudItem>
                         </MudGrid>
                     </ContentTemplate>
                 </DashboardLayoutPanel>
+               
 
                 <!-- Right panel for list and search -->
 
@@ -545,3 +470,67 @@
     </MudItem>
 </MudGrid>
 
+
+
+@* Add your CSS styles here *@
+<style>
+    .custom-dropdown {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .custom-grid {
+        margin-top: 20px;
+    }
+
+    .custom-header {
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: #4A90E2;
+        margin-bottom: 10px;
+    }
+
+    .custom-searchbox {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .e-outline {
+        border-color: #4A90E2;
+    }
+
+        .e-outline:hover {
+            border-color: #357ABD;
+        }
+
+    .e-primary {
+        color: #4A90E2;
+    }
+
+
+    .form-title {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .mud-item {
+        margin-bottom: 10px;
+    }
+
+    .mud-card {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .section-title {
+        margin-bottom: 15px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .form-button {
+        margin-right: 10px;
+    }
+</style>

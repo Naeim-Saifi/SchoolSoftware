@@ -7,9 +7,12 @@ using AIS.Model.UserLogin;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
+using Syncfusion.Blazor.DropDowns;
 using Syncfusion.Blazor.Grids;
 using Syncfusion.Blazor.Popups;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using static AIS.Data.GeneralConversion.GeneralConversion;
 
@@ -48,6 +51,7 @@ namespace AdminDashboard.Server.User_Pages.Registration.UserRegistration
         public ISnackbar snackBar { get; set; }
         public SessionModel sessionModel { get; }
 
+        public bool ddEnable = true;
 
 
         public void onOpen(Syncfusion.Blazor.Popups.BeforeOpenEventArgs args)
@@ -61,6 +65,13 @@ namespace AdminDashboard.Server.User_Pages.Registration.UserRegistration
 
 
         public DialogEffect dialogAnimationEffect = DialogEffect.Zoom;
+
+
+
+
+
+
+
 
 
 
@@ -278,6 +289,82 @@ namespace AdminDashboard.Server.User_Pages.Registration.UserRegistration
 
 
 
+
+        public class AdmissionMode
+        {
+            public int Id;
+            public string Value;
+        }
+        public List<AdmissionMode> AdmissionModelDetails = new List<AdmissionMode>()
+        {
+            new AdmissionMode{Id=1,Value="New Admission" },
+            new AdmissionMode{Id=2,Value="Cancel Admission"},
+            new AdmissionMode{Id=3,Value="Update Admission"},
+            new AdmissionMode{Id=4,Value="Reactive Admission"},
+            new AdmissionMode{Id=5,Value="Suspend Admission"},
+            new AdmissionMode{Id=6,Value="TC Issue"}
+
+        };
+
+
+
+        public List<Master_CLass_List_Output_Model> _classList = new List<Master_CLass_List_Output_Model>();
+
+
+        public List<Master_Map_Subject_With_Class_List_Output_Model> _subjectList = new List<Master_Map_Subject_With_Class_List_Output_Model>();
+
+
+        int _classID = 0;
+        public async Task OnChangeClass(ChangeEventArgs<string, Master_CLass_List_Output_Model> args)
+        {
+            try
+            {
+                if (args.ItemData.classId != 0)
+                {
+                    _classID = args.ItemData.classId;
+
+                    Master_Map_Subject_With_ClassList_Input_Para_Model mapsubjectwithClass = new Master_Map_Subject_With_ClassList_Input_Para_Model()
+                    {
+                        classID = _classID,
+                        schoolCode = _sessionModel.SchoolCode,
+                        financialYear = _sessionModel.FinancialYear,
+                        reportType = AIS.Data.GeneralConversion.GeneralConversion.ReportType.ClassId,
+                        userId = _sessionModel.UserId
+                    };
+
+                    _subjectList = (await masterDataSetupService.GET_Mapp_SubjectwithClassLIST(mapsubjectwithClass)).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+
+
+        public List<Master_Section_List_Output_Model> _sectionList = new List<Master_Section_List_Output_Model>();
+
+        int _sectionID = 0;
+        public async Task OnChangeSection(ChangeEventArgs<string, Master_Section_List_Output_Model> args)
+        {
+            try
+            {
+                if (args.ItemData.sectionId != 0)
+                {
+                    _sectionID = args.ItemData.sectionId;
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+
+
         protected override async Task OnInitializedAsync()
         {
             _sessionModel = await session.GetItemAsync<SessionModel>("sessionUser");
@@ -292,7 +379,27 @@ namespace AdminDashboard.Server.User_Pages.Registration.UserRegistration
             //master_CLass_List = (await masterDataSetupService.GET_Master_ClassLIST(master_CLass_List_Input_Para_Model)).ToList();
 
 
+            Master_CLass_List_Input_Para_Model master_CLass_List_Input_Para_Model = new Master_CLass_List_Input_Para_Model()
+            {
+                classId = 0,
+                userId = _sessionModel.UserId,
+                financialYear = _sessionModel.FinancialYear,
+                schoolCode = _sessionModel.SchoolCode,
+                reportType = AIS.Data.GeneralConversion.GeneralConversion.ReportType.All
+            };
+            _classList = (await masterDataSetupService.GET_Master_ClassLIST(master_CLass_List_Input_Para_Model)).ToList();
 
+
+
+            Master_Section_List_Input_Para_Model master_section_List_Input_Para_Model = new Master_Section_List_Input_Para_Model()
+            {
+                sectionId = 0,
+                userId = _sessionModel.UserId,
+                financialYear = _sessionModel.FinancialYear,
+                schoolCode = _sessionModel.SchoolCode,
+                reportType = AIS.Data.GeneralConversion.GeneralConversion.ReportType.All
+            };
+            _sectionList = (await masterDataSetupService.GET_Master_SectionLIST(master_section_List_Input_Para_Model)).ToList();
 
 
             Master_Map_Subject_With_ClassList_Input_Para_Model master_Map_Subject_With_ClassList_Input_Para_Model = new Master_Map_Subject_With_ClassList_Input_Para_Model()
@@ -305,6 +412,8 @@ namespace AdminDashboard.Server.User_Pages.Registration.UserRegistration
 
                 reportType = ReportType.All
             };
+
+
             //  _UserRegistrationOutputModel = (await masterDataSetupService.GET_Mapp_SubjectwithClassLIST(master_Map_Subject_With_ClassList_Input_Para_Model)).ToList();
 
         }
@@ -322,7 +431,7 @@ namespace AdminDashboard.Server.User_Pages.Registration.UserRegistration
             bool isValid = contex.Validate();
             if (isValid)
             {
-
+   
 
 
 
@@ -346,9 +455,7 @@ namespace AdminDashboard.Server.User_Pages.Registration.UserRegistration
         public APIReturnModel aPIReturnModel;
 
 
-        int _classID = 0;
-        int _subjectID = 0;
-
+ 
 
 
 
