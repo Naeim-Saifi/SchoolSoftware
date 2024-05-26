@@ -1,8 +1,10 @@
 ﻿using AdminDashboard.Server.API_Service.Interface.MasterDataSetUp;
+using AdminDashboard.Server.API_Service.Interface.StudentSetUp;
 using AIS.Data.APIReturnModel;
 using AIS.Data.RequestResponseModel.MasterDataSetUp;
 using AIS.Data.RequestResponseModel.QuestionSetUp;
 using AIS.Data.RequestResponseModel.Registration.UserRegistration;
+using AIS.Data.RequestResponseModel.StudentSetUp;
 using AIS.Model.UserLogin;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -30,14 +32,18 @@ namespace AdminDashboard.Server.User_Pages.Registration.UserRegistration
         public IMasterDataSetupService masterDataSetupService { get; set; }
 
 
+        [Inject]
+        public IStudentSetupService _studentSetupService { get; set; }
+
+
 
         public UserRegistrationViewMdel userRegistrationViewMdel = new UserRegistrationViewMdel();
 
-        public List<UserRegistrationOutputModel> _UserRegistrationOutputModel = new List<UserRegistrationOutputModel>();
+        public List<Student_List_Output_Model> _UserRegistrationOutputModel = new List<Student_List_Output_Model>();
 
         //API Model
 
-        public SfGrid<UserRegistrationOutputModel> sfRegistrationOutputModel;
+        public SfGrid<Student_List_Output_Model> sfRegistrationOutputModel;
 
 
 
@@ -66,8 +72,9 @@ namespace AdminDashboard.Server.User_Pages.Registration.UserRegistration
 
         public DialogEffect dialogAnimationEffect = DialogEffect.Zoom;
 
+        public List<string> toolBarItems = (new List<string>() { "Search" });
 
-
+        public int pageSize = 50;
 
 
 
@@ -314,6 +321,9 @@ namespace AdminDashboard.Server.User_Pages.Registration.UserRegistration
         public List<Master_Map_Subject_With_Class_List_Output_Model> _subjectList = new List<Master_Map_Subject_With_Class_List_Output_Model>();
 
 
+        public List<Student_List_Output_Model> _studentList = new List<Student_List_Output_Model>();
+
+
         int _classID = 0;
         public async Task OnChangeClass(ChangeEventArgs<string, Master_CLass_List_Output_Model> args)
         {
@@ -323,16 +333,17 @@ namespace AdminDashboard.Server.User_Pages.Registration.UserRegistration
                 {
                     _classID = args.ItemData.classId;
 
-                    Master_Map_Subject_With_ClassList_Input_Para_Model mapsubjectwithClass = new Master_Map_Subject_With_ClassList_Input_Para_Model()
+                    Student_List_Input_Para_Model student_List_Input_Para_Model = new Student_List_Input_Para_Model()
                     {
+                        busStopID = 0,
                         classID = _classID,
-                        schoolCode = _sessionModel.SchoolCode,
+                        sectionID = _sectionID,
+                        userId = _sessionModel.UserId,
                         financialYear = _sessionModel.FinancialYear,
-                        reportType = AIS.Data.GeneralConversion.GeneralConversion.ReportType.ClassId,
-                        userId = _sessionModel.UserId
+                        schoolCode = _sessionModel.SchoolCode,
+                        reportType = AIS.Model.GeneralConversion.ReportType.ClassWise
                     };
-
-                    _subjectList = (await masterDataSetupService.GET_Mapp_SubjectwithClassLIST(mapsubjectwithClass)).ToList();
+                    _studentList = (await _studentSetupService.GET_Student_List(student_List_Input_Para_Model)).ToList();
                 }
             }
             catch (Exception ex)
@@ -353,7 +364,20 @@ namespace AdminDashboard.Server.User_Pages.Registration.UserRegistration
                 if (args.ItemData.sectionId != 0)
                 {
                     _sectionID = args.ItemData.sectionId;
-
+                    Student_List_Input_Para_Model student_List_Input_Para_Model = new Student_List_Input_Para_Model()
+                    {
+                        busStopID = 0,
+                        classID = _classID,
+                        sectionID = _sectionID,
+                        userId = _sessionModel.UserId,
+                        financialYear = _sessionModel.FinancialYear,
+                        schoolCode = _sessionModel.SchoolCode,
+                        reportType = AIS.Model.GeneralConversion.ReportType.ClassWise
+                    };
+                    _studentList = (await _studentSetupService.GET_Student_List(student_List_Input_Para_Model)).ToList();
+                    _studentList = _studentList.OrderBy(x => x.rollNo).ToList();
+                    sfRegistrationOutputModel.Refresh();
+                    StateHasChanged();
 
                 }
             }
@@ -362,6 +386,7 @@ namespace AdminDashboard.Server.User_Pages.Registration.UserRegistration
                 Console.WriteLine(ex.Message);
             }
         }
+
 
 
 

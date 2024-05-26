@@ -13,6 +13,8 @@
 @using Syncfusion.Blazor.Popups
 @using AIS.Data.RequestResponseModel.Registration.UserRegistration
 @using AIS.Data.RequestResponseModel.MasterDataSetUp
+@using AIS.Data.RequestResponseModel.StudentSetUp;
+
 
 
 
@@ -22,9 +24,9 @@
 @inherits UserRegistrationBase
 
 @{
-    var InitSearch2 = (new string[] { "subjectName" });
+    var InitSearch2 = (new string[] { "firstName", "middleName", "lastName", "fatherName" });
     var Tool = (new List<string>() { "Search" });
-    var InitialGroupColumnsection = (new string[] { "questionSectionGroup" });
+    var InitialGroupColumn = (new string[] { "monthNameDetails" });
 
     // Sample dropdown data
 
@@ -89,33 +91,43 @@
                                 </MudGrid>
 
                                 <!-- SfGrid component -->
-                                <SfGrid DataSource="@_UserRegistrationOutputModel"
+                          
+
+
+
+
+
+
+
+                                <SfGrid DataSource="@_studentList"
                                         @ref="sfRegistrationOutputModel"
                                         EnableVirtualMaskRow="true"
                                         RowHeight="38" Height="710"
                                         Width="auto" EnableVirtualization="false"
                                         AllowResizing="true" AllowExcelExport="true"
                                         EnableAutoFill="true" AllowReordering="true"
-                                        ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                        ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
                                         AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
                                         ContextMenuItems="MenuItems"
-                                        CssClass="custom-grid">
-                                    <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
-                                    <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
-                                    <GridGroupSettings Columns="@InitialGroupColumnsection">
-                                        <CaptionTemplate>
-                                            @{
-                                                var UnitDetails = (context as CaptionTemplateContext);
-                                                <div>@UnitDetails.Field - @UnitDetails.Key</div>
-                                            }
-                                        </CaptionTemplate>
-                                    </GridGroupSettings>
-                                    <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key="" IgnoreCase="true"></GridSearchSettings>
-                                    <GridColumns>
-                                        <!-- Add your grid columns here -->
+                                        Toolbar="toolBarItems">
+                                    <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                                    <GridPageSettings PageSizes="@(new string[] { "25", "50","100", "150", "200",  "All" })" PageSize="@pageSize"></GridPageSettings>
+                                    <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                                                        IgnoreCase="true"></GridSearchSettings>
+@*                                     <GridEvents CommandClicked="ViewUnitMarksDetails" TValue=Student_List_Output_Model></GridEvents>
+ *@                                    <GridColumns>
+                                        <GridColumn Field=@nameof(Student_List_Output_Model.firstName) HeaderText="First Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(Student_List_Output_Model.middleName) HeaderText="Middle Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(Student_List_Output_Model.fatherName) HeaderText="Father Name" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                        <GridColumn Field=@nameof(Student_List_Output_Model.rollNo) HeaderText="Roll No" AutoFit=true></GridColumn>
                                         <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
                                             <GridCommandColumns>
-                                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete", IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline" })"></GridCommandColumn>
+                                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions()
+                                            { Content="View", IconCss = "e-icons e-eye e-primary e-outline", CssClass = "e-flat e-info e-outline" })">
+                                                </GridCommandColumn>
+                                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions()
+                                            { Content="Print", IconCss = "e-icons e-print e-primary e-outline", CssClass = "e-flat e-info e-outline" })">
+                                                </GridCommandColumn>
                                             </GridCommandColumns>
                                         </GridColumn>
                                     </GridColumns>
@@ -127,6 +139,9 @@
 
 
 
+
+
+               
 
 
 
@@ -243,11 +258,12 @@
                                                                         @bind-Value="@userRegistrationViewMdel.className"
                                                                         DataSource="@_classList">
                                                             <DropDownListFieldSettings Text="className" Value="classId" />
-                                                            <DropDownListEvents TItem="Master_CLass_List_Output_Model" TValue="string"
-                                                                                ValueChange="OnChangeClass" />
+                                                                            
                                                         </SfDropDownList>
                                                     </MudItem>
 
+
+                                                 
 
 
                                                     <MudItem xs="12" md="3" sm="6">
@@ -258,15 +274,13 @@
                                                                         Enabled="ddEnable"
                                                                         @bind-Value="@userRegistrationViewMdel.section"
                                                                         DataSource="@_sectionList">
-                                                            <DropDownListEvents TItem="Master_Section_List_Output_Model" TValue="string"
-                                                                                ValueChange="OnChangeSection" />
+                                                                                
                                                             <DropDownListFieldSettings Text="sectionName" Value="sectionId" />
                                                         </SfDropDownList>
                                                     </MudItem>
 
 
-
-
+                                            
 
 
 
