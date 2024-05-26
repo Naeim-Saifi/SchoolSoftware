@@ -11,32 +11,21 @@
 @using Syncfusion.Blazor.LinearGauge
 @using Syncfusion.Blazor.Layouts
 @using Syncfusion.Blazor.Popups
-
-@using AIS.Data.RequestResponseModel.MasterData.TransportConfiguration.TransportDetails;
-
-
-
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
+ 
 
 @inherits TransportDetailsBase;
 
 
-@page "/User_Pages/TransportConfiguration/TransportDetails"
-
-
-
-
+@page "/User_Pages/TransportConfiguration/TransportDetails" 
 
 @{
-    var InitSearch2 = (new string[] { "organizationName" });
+    var InitSearch2 = (new string[] { "busNo" });
     var Tool = (new List<string>() { "Search" });
 
     var InitialGroupColumn = (new string[] { "previousClass" });
 }
-
-
-
-
-
+ 
 
 <MudGrid>
     <MudItem xs="12" sm="12" md="12">
@@ -51,14 +40,14 @@
                                 Width="auto" EnableVirtualization="false"
                                 AllowResizing="true" AllowExcelExport="true"
                                 EnableAutoFill="true" AllowReordering="true"
-                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
                                 AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
                                 ContextMenuItems="MenuItems"
                                 @ref="sfTransporDetails"
                                 Toolbar="ToolBarItems">
                             <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
                             <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
-                            <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
+                            @* <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
                             <GridGroupSettings Columns=@InitialGroupColumn>
                                 <CaptionTemplate>
                                     @{
@@ -66,7 +55,7 @@
                                         <div>@UnitDetails.Field - @UnitDetails.Key</div>
                                     }
                                 </CaptionTemplate>
-                            </GridGroupSettings>
+                            </GridGroupSettings> *@
 
                             <GridEvents CommandClicked="EditItemDetail" OnToolbarClick="ToolbarClickHandler" TValue="TransportDetailsOutputModel"></GridEvents>
                             <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
@@ -83,7 +72,7 @@
                                 <GridColumn Field=@nameof(TransportDetailsOutputModel.ownerAddress) HeaderText="Owner Address" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
                                 <GridColumn Field=@nameof(TransportDetailsOutputModel.purchaseDate) HeaderText="Purchase Date" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
                                 <GridColumn Field=@nameof(TransportDetailsOutputModel.manufactureBy) HeaderText="Manufacture By" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(TransportDetailsOutputModel.manufacturYeaer) HeaderText="Manufactur Yeaer" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(TransportDetailsOutputModel.manufacturYear) HeaderText="Manufactur Yeaer" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
                                 <GridColumn Field=@nameof(TransportDetailsOutputModel.fuelType) HeaderText="Fuel Type" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
                                 <GridColumn Field=@nameof(TransportDetailsOutputModel.chasisNo) HeaderText="Chasis No" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
                                 <GridColumn Field=@nameof(TransportDetailsOutputModel.insuranceCompanyBy) HeaderText="Insurance Company By" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
@@ -128,37 +117,29 @@
                                     <DataAnnotationsValidator />
                                     <MudCardContent>
 
-                                       <MudGrid>
-
-
-
+                                       <MudGrid> 
                                             <MudItem xs="12" md="6" sm="12">
-                                                <SfNumericTextBox CssClass="e-outline" Placeholder="Bus No" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.busNo"
-                                                                  FloatLabelType="@FloatLabelType.Never"></SfNumericTextBox>
+                                                <SfTextBox CssClass="e-outline" Placeholder="Bus No" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.busNo"
+                                                                  FloatLabelType="@FloatLabelType.Never"></SfTextBox>
                                                 <ValidationMessage For="() => transportDetailsViewModel.busNo" />
-                                            </MudItem>
-
-
-
-
-                                       @*        <MudItem xs="12" md="6" sm="12">
-                                                <SfDatePicker CssClass="e-outline" Placeholder="Insurance Valid Date" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.insuranceValidDate"
-                                            FloatLabelType="@FloatLabelType.Never"></SfDatePicker>
-                                            <ValidationMessage For="() =>transportDetailsViewModel.insuranceValidDate" />
-                                            </MudItem>
- *@
-
-
-
+                                            </MudItem> 
+                                             
                                             <MudItem xs="12" md="6" sm="12">
-                                                <SfNumericTextBox CssClass="e-outline" Placeholder="Registration No" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.registrationNo"
-                                                                  FloatLabelType="@FloatLabelType.Never"></SfNumericTextBox>
+                                            
+                                                <SfDatePicker TValue="DateTime?" Format="yyyy-MM-dd" Placeholder="Insurance Valid Date" @bind-Value="@transportDetailsViewModel.insuranceValidDate"></SfDatePicker>
+                                            <ValidationMessage For="() =>transportDetailsViewModel.insuranceValidDate" />
+                                            </MudItem> 
+                                            
+                                            <MudItem xs="12" md="6" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Registration No" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.registrationNo"
+                                                                  FloatLabelType="@FloatLabelType.Never"></SfTextBox>
                                                 <ValidationMessage For="() => transportDetailsViewModel.registrationNo" />
                                             </MudItem>
 
 
                                             
                                             <MudItem xs="12" md="6" sm="12">
+                                                
                                                 <SfNumericTextBox CssClass="e-outline" Placeholder="Total No Of Seat" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.totalNoOfSeat"
                                                                   FloatLabelType="@FloatLabelType.Never"></SfNumericTextBox>
                                                 <ValidationMessage For="() => transportDetailsViewModel.totalNoOfSeat" />
@@ -172,62 +153,39 @@
                                                 <ValidationMessage For="() => transportDetailsViewModel.busOwnerName" />
                                             </MudItem>
 
-
-                                           
-                                            
-                                     @*              <MudItem xs="12" md="6" sm="12">
+                                            <MudItem xs="12" md="6" sm="12">
                                                 <SfDatePicker CssClass="e-outline" Placeholder="Fitness Upto" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.fitsnessUpto"
                                             FloatLabelType="@FloatLabelType.Never"></SfDatePicker>
                                             <ValidationMessage For="() =>transportDetailsViewModel.fitsnessUpto" />
-                                            </MudItem> *@
-
-
-
+                                            </MudItem>
                                             
-
-
                                             <MudItem xs="12" md="6" sm="12">
                                                 <SfTextBox CssClass="e-outline" Placeholder="Owner Address" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.ownerAddress"
                                                            FloatLabelType="@FloatLabelType.Never"></SfTextBox>
                                                 <ValidationMessage For="() => transportDetailsViewModel.ownerAddress" />
                                             </MudItem>
+                                             <MudItem xs="12" md="6" sm="12">
+                                                    @* <SfDatePicker CssClass="e-outline" Placeholder="Purchase Date" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.purchaseDate"
+                                                FloatLabelType="@FloatLabelType.Never"></SfDatePicker> *@
 
-
-
-                                            
-                                     @*              <MudItem xs="12" md="6" sm="12">
-                                                <SfDatePicker CssClass="e-outline" Placeholder="Purchase Date" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.purchaseDate"
-                                            FloatLabelType="@FloatLabelType.Never"></SfDatePicker>
-                                            <ValidationMessage For="() =>transportDetailsViewModel.purchaseDate" />
-                                            </MudItem> *@
+                                                <SfDatePicker TValue="DateTime?" Format="yyyy-MM-dd" Placeholder="Purchase Date" @bind-Value="@transportDetailsViewModel.purchaseDate"></SfDatePicker>
+                                                <ValidationMessage For="() =>transportDetailsViewModel.purchaseDate" />
+                                             </MudItem>
 
 
                                             <MudItem xs="12" md="6" sm="12">
                                                 <SfTextBox CssClass="e-outline" Placeholder="Manufacture By" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.manufactureBy"
                                                            FloatLabelType="@FloatLabelType.Never"></SfTextBox>
                                                 <ValidationMessage For="() => transportDetailsViewModel.manufactureBy" />
+                                            </MudItem> 
+                                            <MudItem xs="12" md="6" sm="12">
+                                                
+                                                <SfDatePicker TValue="DateTime?" Format="yyyy-MM-dd" Placeholder="Manufactur Year" @bind-Value="@transportDetailsViewModel.manufacturYear"></SfDatePicker>
+
+                                                <ValidationMessage For="() =>transportDetailsViewModel.manufacturYear" />
                                             </MudItem>
 
-
-
-
-                                     @*        <MudItem xs="12" md="6" sm="12">
-                                                <SfDatePicker CssClass="e-outline" Placeholder="Manufactur Yeaer" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.manufacturYeaer"
-                                                              FloatLabelType="@FloatLabelType.Never"></SfDatePicker>
-                                                <ValidationMessage For="() =>transportDetailsViewModel.manufacturYeaer" />
-                                            </MudItem> *@
-
-
-
-
-
-                                          
-
-
-
-
-
-                                                         <MudItem xs="3" md="6" sm="4">
+                                            <MudItem xs="3" md="6" sm="4">
                                                         <SfDropDownList ID="ItemType"
                                                                         CssClass="e-outline"
                                                                         Placeholder="Select Fuel Type"
@@ -238,17 +196,11 @@
                                                             <DropDownListFieldSettings Text="Value" Value="Id"></DropDownListFieldSettings>
                                                             <ValidationMessage For="@(() => transportDetailsViewModel.fuelType)"></ValidationMessage>
                                                         </SfDropDownList>
-                                                    </MudItem>
-
-
-
-
-
-
+                                            </MudItem>
 
                                            <MudItem xs="12" md="6" sm="12">
-                                                <SfNumericTextBox CssClass="e-outline" Placeholder="Chasis No" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.chasisNo"
-                                                                  FloatLabelType="@FloatLabelType.Never"></SfNumericTextBox>
+                                                <SfTextBox CssClass="e-outline" Placeholder="Chasis No" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.chasisNo"
+                                                                  FloatLabelType="@FloatLabelType.Never"></SfTextBox>
                                                 <ValidationMessage For="() => transportDetailsViewModel.chasisNo" />
                                             </MudItem>
 
@@ -257,19 +209,7 @@
                                                 <SfTextBox CssClass="e-outline" Placeholder="Insurance Company By" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@transportDetailsViewModel.insuranceCompanyBy"
                                                            FloatLabelType="@FloatLabelType.Never"></SfTextBox>
                                                 <ValidationMessage For="() => transportDetailsViewModel.insuranceCompanyBy" />
-                                            </MudItem>
-
-
-
-
-
-
-
-
-
-
-
-
+                                            </MudItem> 
                                             <MudItem xs="12" md="4" sm="6">
                                                 <SfButton CssClass="e-outline" type="submit" IsPrimary="true">@HeaderText</SfButton>
                                                 <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>

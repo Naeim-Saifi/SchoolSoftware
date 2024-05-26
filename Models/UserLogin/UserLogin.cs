@@ -9,9 +9,9 @@ namespace AIS.Model.UserLogin
     {
         [Required]
         //public string UserId { get; set; } = "SCRPUBLIC_M004";
-        public string UserId { get; set; } =  "GVALLEY_Sysadmin";
+        public string UserId { get; set; } =  "531444_Sysadmin";
         [Required]
-        public string UserPassword { get; set; }= "GVALLEY@Sysadmin";
+        public string UserPassword { get; set; }= "531444@Sysadmin";
         [Required]
         public string FinancialYear { get; set; } = "2021-23";
         //public string UserPassword { get; set; } = "SCRPUBLIC@M004";

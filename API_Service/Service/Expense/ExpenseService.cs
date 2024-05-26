@@ -20,7 +20,7 @@ namespace AdminDashboard.Server.API_Service.Service.Expense
     {
 
         private readonly HttpClient httpClient;
-        private ILocalStorageService _localStorageService;
+        private readonly ILocalStorageService _localStorageService;
         public ExpenseService(HttpClient httpClient, ILocalStorageService localStorageService)
         {
             this.httpClient = httpClient;

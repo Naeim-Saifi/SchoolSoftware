@@ -18,6 +18,8 @@ using System.Linq;
 using AIS.Data.RequestResponseModel.MasterData.MasterConfiguration.Class;
 using AIS.Data.RequestResponseModel.MasterData.MasterConfiguration.Section;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using AIS.Data.RequestResponseModel.MasterDataSetUp;
+using AdminDashboard.Server.API_Service.Interface.MasterDataSetUp;
 //using AdminDashboard.Server.API_Service.Interface.MasterData;
 
 namespace AdminDashboard.Server.User_Pages.MasterData.MasterConfiguration
@@ -29,12 +31,14 @@ namespace AdminDashboard.Server.User_Pages.MasterData.MasterConfiguration
 
         public ClassViewModel classViewModel = new ClassViewModel();
 
+        [Inject]
+        public IMasterDataSetupService masterDataSetupService { get; set; }
+        public List<Master_CLass_List_Output_Model> _cLass_List = new List<Master_CLass_List_Output_Model>();
 
-        public List<ClassOutputModel> _ClassListModel = new List<ClassOutputModel>();
-        public SfGrid<ClassOutputModel> sfClassDetails;
+        public SfGrid<Master_CLass_List_Output_Model> sfClassDetails;
         public ClassApiModel classApiModel { get; set; }
 
-
+       
 
         [Inject]
         Blazored.SessionStorage.ISessionStorageService session { get; set; }
@@ -74,25 +78,7 @@ namespace AdminDashboard.Server.User_Pages.MasterData.MasterConfiguration
 
 
 
-        public class ClassName
-        {
-            public int Id;
-            public string Value;
-        }
-
-        public List<ClassName> classNamedetails = new List<ClassName>()
-        {
-            new ClassName{Id=1,Value="KG"},
-             new ClassName{Id=1,Value="UKG"},
-        new ClassName{Id=1,Value="I"},
-           new ClassName{Id=1,Value="II"},
-       new ClassName{Id=1,Value="III"},
-         new ClassName{Id=1,Value="IV"},
-     new ClassName{Id=1,Value="V"},
-
-        };
-
-
+        
      
 
 
@@ -101,35 +87,18 @@ namespace AdminDashboard.Server.User_Pages.MasterData.MasterConfiguration
         protected override async Task OnInitializedAsync()
         {
             _sessionModel = await session.GetItemAsync<SessionModel>("sessionUser");
-            //Master_CLass_List_Input_Para_Model master_CLass_List_Input_Para_Model = new Master_CLass_List_Input_Para_Model()
-            //{
-            //    classId = 0,
-            //    userId = _sessionModel.UserId,
-            //    financialYear = _sessionModel.FinancialYear,
-            //    schoolCode = _sessionModel.SchoolCode,
-            //    reportType = ReportType.All
-            //};
-            //_classList = (await masterDataSetupService.GET_Master_ClassLIST(master_CLass_List_Input_Para_Model)).ToList();
-
-            ClassParaModel classParaModel = new ClassParaModel()
+            Master_CLass_List_Input_Para_Model master_CLass_List_Input_Para_Model = new Master_CLass_List_Input_Para_Model()
             {
+                classId = 0,
+                userId = _sessionModel.UserId,
                 financialYear = _sessionModel.FinancialYear,
                 schoolCode = _sessionModel.SchoolCode,
-                ClassId = 0,
-                userRoleId = _sessionModel.RoleId,
                 reportType = ReportType.All
             };
+            _cLass_List = (await masterDataSetupService.GET_Master_ClassLIST(master_CLass_List_Input_Para_Model)).ToList();
 
-            //    _ClassListModel = (await masterDataService.GET_ClassDetails_List(classParaModel)).ToList();
         }
-
-
-
-
-
-
-
-        public void EditItemDetail(CommandClickEventArgs<ClassOutputModel> args)
+        public void EditItemDetail(CommandClickEventArgs<Master_CLass_List_Output_Model> args)
         {
 
             
@@ -180,8 +149,7 @@ namespace AdminDashboard.Server.User_Pages.MasterData.MasterConfiguration
 
             }
 
-
-            public void ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+       public void ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
             {
                 if (args.Item.Text == "Add Class")
                 {
@@ -209,9 +177,6 @@ namespace AdminDashboard.Server.User_Pages.MasterData.MasterConfiguration
                 this.sfClassDetails.ExpandAllGroupAsync();
             }
         }
-
-
-
 
             public async void OnValidSubmit(EditContext contex)
             {
@@ -290,12 +255,6 @@ namespace AdminDashboard.Server.User_Pages.MasterData.MasterConfiguration
 
             }
         }
-
-
-
-
-
-
 
 
             private void ClearData()

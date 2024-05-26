@@ -18,7 +18,7 @@ namespace AdminDashboard.Server.API_Service.Service.MasterDataSetUp
     public class MasterDataSetupService: IMasterDataSetupService
     {
         private readonly HttpClient httpClient;
-        private ILocalStorageService _localStorageService;
+        private readonly ILocalStorageService _localStorageService;
         public MasterDataSetupService(HttpClient httpClient, ILocalStorageService localStorageService)
         {
             this.httpClient = httpClient;
@@ -229,5 +229,281 @@ namespace AdminDashboard.Server.API_Service.Service.MasterDataSetUp
             return response;
         }
 
+        
+        //add 24-05-24 imran
+       
+        
+        public async Task<APIReturnModel> CRUD_Transport_RouteMaster(RouteDetailsApiModel routeDetailsApiModel)
+        {
+
+            APIReturnModel response = await httpClient.PostJsonAsync<APIReturnModel>("/api/MasterDataSetUp/CRUD_Transport_RouteMaster", routeDetailsApiModel);
+            return response;
+        }
+        public async Task<IEnumerable<RouteDetailsOutputModel>> GET_Transport_RouteMaster(RouteDetailsParaModel routeDetailsParaModel)
+        {
+            try
+            {
+                JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                };
+
+                var r = await httpClient.GetJsonAsync<Response>($"/api/MasterDataSetUp/GET_Transport_RouteMaster?SchoolCode={routeDetailsParaModel.schoolCode}" +
+                    $"&FinancialYear={routeDetailsParaModel.financialYear}" +
+                    $"&RouteId={routeDetailsParaModel.RouteDetailsId}" +
+                    $"&reportType={routeDetailsParaModel.reportType}");
+                JsonElement el;
+                var b = System.Text.Json.JsonSerializer.Deserialize<JsonElement>(r.Data.GetRawText()).TryGetProperty("data", out el);
+
+                if (r.IsError == false)
+                {
+                    return System.Text.Json.JsonSerializer.Deserialize<RouteDetailsOutputModel[]>(el.GetRawText());
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
+
+        }
+        public async Task<APIReturnModel> CRUD_Transport_TransportMaster(TransportDetailsApiModel transportDetailsApiModel)
+        {
+
+            APIReturnModel response = await httpClient.PostJsonAsync<APIReturnModel>("/api/MasterDataSetUp/CRUD_Transport_TransportMaster", transportDetailsApiModel);
+            return response;
+        }
+        public async Task<IEnumerable<TransportDetailsOutputModel>> GET_Transport_TransportMaster(TransportDetailsParaModel transportDetailsParaModel)
+        {
+            try
+            {
+                JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                };
+
+                var r = await httpClient.GetJsonAsync<Response>($"/api/MasterDataSetUp/GET_Transport_TransportMaster?SchoolCode={transportDetailsParaModel.schoolCode}" +
+                    $"&FinancialYear={transportDetailsParaModel.financialYear}" +
+                    $"&TransportID={transportDetailsParaModel.TransportDetailsId}" +
+                    $"&reportType={transportDetailsParaModel.reportType}");
+                JsonElement el;
+                var b = System.Text.Json.JsonSerializer.Deserialize<JsonElement>(r.Data.GetRawText()).TryGetProperty("data", out el);
+
+                if (r.IsError == false)
+                {
+                    return System.Text.Json.JsonSerializer.Deserialize<TransportDetailsOutputModel[]>(el.GetRawText());
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
+
+        }
+        public async Task<APIReturnModel> CRUD_Transport_BusStopMaster(BusStopApiModel busStopApiModel)
+        {
+            APIReturnModel response = await httpClient.PostJsonAsync<APIReturnModel>("/api/MasterDataSetUp/CRUD_Transport_BusStopMaster", busStopApiModel);
+            return response;            
+        }
+        public async Task<IEnumerable<BusStopOutputModel>> GET_Transport_BusStopMaster(BusStopParaModel busStopParaModel)
+        {
+            try
+            {
+                JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                };
+
+                var r = await httpClient.GetJsonAsync<Response>($"/api/MasterDataSetUp/GET_Transport_BusStopMaster?SchoolCode={busStopParaModel.schoolCode}" +
+                    $"&FinancialYear={busStopParaModel.financialYear}" +
+                    $"&BusStopID={busStopParaModel.BusStopId}" +
+                    $"&reportType={busStopParaModel.reportType}");
+                JsonElement el;
+                var b = System.Text.Json.JsonSerializer.Deserialize<JsonElement>(r.Data.GetRawText()).TryGetProperty("data", out el);
+
+                if (r.IsError == false)
+                {
+                    return System.Text.Json.JsonSerializer.Deserialize<BusStopOutputModel[]>(el.GetRawText());
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
+
+        }
+        public async Task<APIReturnModel> CRUD_Transport_RouteWithBusStop(MapBusWithRouteApiModel mapBusWithRouteApiModel)
+        {
+
+            APIReturnModel response = await httpClient.PostJsonAsync<APIReturnModel>("/api/MasterDataSetUp/CRUD_Transport_RouteWithBusStop", mapBusWithRouteApiModel);
+            return response;
+        }
+        public async Task<IEnumerable<MapBusWithRouteOutputModel>> GET_Transport_RouteWithBusStop(MapBusWithRouteParaModel mapBusWithRouteParaModel)
+        {
+            try
+            {
+                JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                };
+
+                var r = await httpClient.GetJsonAsync<Response>($"/api/MasterDataSetUp/GET_Transport_RouteWithBusStop?SchoolCode={mapBusWithRouteParaModel.schoolCode}" +
+                    $"&FinancialYear={mapBusWithRouteParaModel.financialYear}" 
+                    +$"&mapRouteId={mapBusWithRouteParaModel.mapRouteID}" +                    
+                    $"&reportType={mapBusWithRouteParaModel.reportType}");
+                JsonElement el;
+                var b = System.Text.Json.JsonSerializer.Deserialize<JsonElement>(r.Data.GetRawText()).TryGetProperty("data", out el);
+
+                if (r.IsError == false)
+                {
+                    return System.Text.Json.JsonSerializer.Deserialize<MapBusWithRouteOutputModel[]>(el.GetRawText());
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
+
+        }
+
+        // add Fee Master.
+
+        public async Task<APIReturnModel> CRUD_Fee_FeeHeaderMaster(FeeHeaderApiModel feeHeaderApiModel)
+        {
+
+            APIReturnModel response = await httpClient.PostJsonAsync<APIReturnModel>("/api/MasterDataSetUp/CRUD_Fee_FeeHeaderMaster", feeHeaderApiModel);
+            return response;
+        }
+
+        public async Task<IEnumerable<FeeHeaderOutputModel>> GET_Fee_FeeHeaderList(FeeHeaderParaModel feeHeaderParaModel)
+        {
+            try
+            {
+                JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                };
+
+                var r = await httpClient.GetJsonAsync<Response>($"/api/MasterDataSetUp/GET_Fee_FeeHeaderList?SchoolCode={feeHeaderParaModel.schoolCode}" +
+                    $"&FinancialYear={feeHeaderParaModel.financialYear}"
+                    + $"&feeHeaderID={feeHeaderParaModel.feeHeaderID}" +
+                    $"&reportType={feeHeaderParaModel.reportType}");
+                JsonElement el;
+                var b = System.Text.Json.JsonSerializer.Deserialize<JsonElement>(r.Data.GetRawText()).TryGetProperty("data", out el);
+
+                if (r.IsError == false)
+                {
+                    return System.Text.Json.JsonSerializer.Deserialize<FeeHeaderOutputModel[]>(el.GetRawText());
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
+
+        }
+         
+        public async Task<APIReturnModel> CRUD_Fee_ConcessionCategory(FeeConcessionCategoryApiModel feeConcessionCategoryApiModel)
+        {
+
+            APIReturnModel response = await httpClient.PostJsonAsync<APIReturnModel>("/api/MasterDataSetUp/CRUD_Fee_ConcessionCategory", feeConcessionCategoryApiModel);
+            return response;
+        }
+        public async Task<IEnumerable<FeeConcessionCategoryOutputModel>> GET_Fee_ConcessionCategoryList(FeeConcessionCategoryParaModel feeConcessionCategoryParaModel)
+        {
+            try
+            {
+                JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                };
+
+                var r = await httpClient.GetJsonAsync<Response>($"/api/MasterDataSetUp/GET_Fee_ConcessionCategoryList?SchoolCode={feeConcessionCategoryParaModel.schoolCode}" +
+                    $"&FinancialYear={feeConcessionCategoryParaModel.financialYear}"
+                    + $"&FeeCategoryID={feeConcessionCategoryParaModel.feeCategoryID}" +
+                    $"&reportType={feeConcessionCategoryParaModel.reportType}");
+                JsonElement el;
+                var b = System.Text.Json.JsonSerializer.Deserialize<JsonElement>(r.Data.GetRawText()).TryGetProperty("data", out el);
+
+                if (r.IsError == false)
+                {
+                    return System.Text.Json.JsonSerializer.Deserialize<FeeConcessionCategoryOutputModel[]>(el.GetRawText());
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
+
+        }
+        public async Task<APIReturnModel> CRUD_Fee_DiscountRemarks(FeeDiscountRemarksApiModel feeDiscountRemarksApiModel)
+        {
+
+            APIReturnModel response = await httpClient.PostJsonAsync<APIReturnModel>("/api/MasterDataSetUp/feeDiscountRemarksApiModel", feeDiscountRemarksApiModel);
+            return response;
+        }
+        public async Task<IEnumerable<FeeDiscountRemarksOutputModel>> GET_Fee_DiscountRemarksList(FeeDiscountRemarksParaModel feeDiscountRemarksParaModel)
+        {
+            try
+            {
+                JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                };
+
+                var r = await httpClient.GetJsonAsync<Response>($"/api/MasterDataSetUp/GET_Fee_DiscountRemarksList?SchoolCode={feeDiscountRemarksParaModel.schoolCode}" +
+                    $"&FinancialYear={feeDiscountRemarksParaModel.financialYear}"
+                    + $"&FeeDiscountID={feeDiscountRemarksParaModel.feeDiscountID}" +
+                    $"&reportType={feeDiscountRemarksParaModel.reportType}");
+                JsonElement el;
+                var b = System.Text.Json.JsonSerializer.Deserialize<JsonElement>(r.Data.GetRawText()).TryGetProperty("data", out el);
+
+                if (r.IsError == false)
+                {
+                    return System.Text.Json.JsonSerializer.Deserialize<FeeDiscountRemarksOutputModel[]>(el.GetRawText());
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
+
+        }
+
+        
     }
 }

@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminDashboard.Server", "AdminDashboard.Server.csproj", "{50767A2F-CD5B-4FE6-9A99-DC71CF35E8C8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AIS.Data", "..\ais-data\AIS.Data.csproj", "{C374C86D-49DF-4DE6-937A-AFCCB94CAFED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{50767A2F-CD5B-4FE6-9A99-DC71CF35E8C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50767A2F-CD5B-4FE6-9A99-DC71CF35E8C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50767A2F-CD5B-4FE6-9A99-DC71CF35E8C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C374C86D-49DF-4DE6-937A-AFCCB94CAFED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C374C86D-49DF-4DE6-937A-AFCCB94CAFED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C374C86D-49DF-4DE6-937A-AFCCB94CAFED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C374C86D-49DF-4DE6-937A-AFCCB94CAFED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

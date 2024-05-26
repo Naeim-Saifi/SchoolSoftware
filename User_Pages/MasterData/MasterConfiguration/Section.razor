@@ -13,7 +13,7 @@
 @using Syncfusion.Blazor.Popups
 @using AIS.Data.RequestResponseModel.Inventory.ItemMaster
 @using AIS.Data.RequestResponseModel.MasterData.MasterConfiguration.Section
- 
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
 
 @page "/User_Pages/MasterConfiguration/Section"
 
@@ -22,10 +22,10 @@
 
 
 @{
-    var InitSearch2 = (new string[] { "organizationName" });
+    var InitSearch2 = (new string[] { "sectionName" });
     var Tool = (new List<string>() { "Search" });
 
-    var InitialGroupColumn = (new string[] { "previousClass" });
+    // var InitialGroupColumn = (new string[] { "previousClass" });
 }
 
 <MudGrid>
@@ -35,20 +35,20 @@
                 <DashboardLayoutPanel SizeX=7 SizeY="2">
                     <HeaderTemplate>Section Details</HeaderTemplate>
                     <ContentTemplate>
-                        <SfGrid DataSource="@_SectionListModel"
+                        <SfGrid DataSource="@_section_List"
                                 EnableVirtualMaskRow="true"
                                 RowHeight="38" Height="710"
                                 Width="auto" EnableVirtualization="false"
                                 AllowResizing="true" AllowExcelExport="true"
                                 EnableAutoFill="true" AllowReordering="true"
-                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
                                 AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
                                 ContextMenuItems="MenuItems"
                                 @ref="sfSectionDetails"
                                 Toolbar="ToolBarItems">
                             <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
-                            <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
-                            <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
+                            <GridPageSettings PageCount="100" PageSizes="true"></GridPageSettings>
+                           @*  <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
                             <GridGroupSettings Columns=@InitialGroupColumn>
                                 <CaptionTemplate>
                                     @{
@@ -56,18 +56,18 @@
                                         <div>@UnitDetails.Field - @UnitDetails.Key</div>
                                     }
                                 </CaptionTemplate>
-                            </GridGroupSettings>
+                            </GridGroupSettings> *@
 
-                            <GridEvents CommandClicked="EditItemDetail" OnToolbarClick="ToolbarClickHandler" TValue="SectionOutputModel"></GridEvents>
+                            <GridEvents CommandClicked="EditItemDetail" OnToolbarClick="ToolbarClickHandler" TValue="Master_Section_List_Output_Model"></GridEvents>
                             <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
                                                 IgnoreCase="true"></GridSearchSettings>
 
 
 
                             <GridColumns>
-                                <GridColumn Field=@nameof(SectionOutputModel.sectionName) HeaderText="Section Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(SectionOutputModel.sectionCode) HeaderText="Section Code" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(SectionOutputModel.displayOrder) HeaderText="Display Order" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Section_List_Output_Model.sectionName) HeaderText="Section Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Section_List_Output_Model.sectionCode) HeaderText="Section Code" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Section_List_Output_Model.displayOrder) HeaderText="Display Order" AutoFit=true></GridColumn>
 
                                 <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
                                     <GridCommandColumns>
@@ -75,10 +75,10 @@
                                         <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
                                     </GridCommandColumns>
                                 </GridColumn>
-                                <GridColumn Field=@nameof(SectionOutputModel.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(SectionOutputModel.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(SectionOutputModel.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(SectionOutputModel.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Section_List_Output_Model.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Section_List_Output_Model.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Section_List_Output_Model.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Section_List_Output_Model.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
 
                             </GridColumns>
 
@@ -108,42 +108,22 @@
                                 <EditForm Model="sectionViewModel" OnValidSubmit="OnValidSubmit">
                                     <DataAnnotationsValidator />
                                     <MudCardContent>
-
-
-
-
-
-
-
-
-
                                         <MudGrid>
-
-
-
-
                                             <MudItem xs="12" md="6" sm="12">
                                                 <SfTextBox CssClass="e-outline" Placeholder="Section Name" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@sectionViewModel.sectionName"
                                                            FloatLabelType="@FloatLabelType.Never"></SfTextBox>
                                                 <ValidationMessage For="() => sectionViewModel.sectionName" />
                                             </MudItem>
-
-
-
                                             <MudItem xs="12" md="6" sm="12">
                                             <SfTextBox CssClass="e-outline" Placeholder="Section Code" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@sectionViewModel.sectionCode"
                                                            FloatLabelType="@FloatLabelType.Never"></SfTextBox>
                                             <ValidationMessage For="() => sectionViewModel.sectionCode" />
                                             </MudItem>
-
                                             <MudItem xs="12" md="6" sm="12">
                                             <SfTextBox CssClass="e-outline" Placeholder="Dsiplay Order" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@sectionViewModel.displayOrder"
                                                            FloatLabelType="@FloatLabelType.Never"></SfTextBox>
                                             <ValidationMessage For="() => sectionViewModel.displayOrder" />
                                             </MudItem>
-
-
-
                                             <MudItem xs="12" md="4" sm="6">
                                                 <SfButton CssClass="e-outline" type="submit" IsPrimary="true">@HeaderText</SfButton>
                                                 <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>

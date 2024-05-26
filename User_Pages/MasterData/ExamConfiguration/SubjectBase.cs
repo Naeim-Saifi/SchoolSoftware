@@ -1,8 +1,9 @@
 ﻿
+using AdminDashboard.Server.API_Service.Interface.MasterDataSetUp;
 using AIS.Data.APIReturnModel;
-//using AdminDashboard.Server.API_Service.Service.Inventory;
-using AIS.Data.RequestResponseModel.Inventory.ItemMaster;
-//using AIS.Data.RequestResponseModel.Inventory.ItemVender;
+
+using AIS.Data.RequestResponseModel.MasterDataSetUp;
+
 using AIS.Model.GeneralConversion;
 using AIS.Model.UserLogin;
 using Microsoft.AspNetCore.Components;
@@ -12,34 +13,26 @@ using Syncfusion.Blazor.Grids;
 using Syncfusion.Blazor.Popups;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-//using AdminDashboard.Server.API_Service.Interface.Inventory;
+
 using System.Linq;
-using AIS.Data.RequestResponseModel.MasterData.MasterConfiguration.Class;
-using AIS.Data.RequestResponseModel.MasterData.MasterConfiguration.Section;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using AIS.Data.RequestResponseModel.MasterData.ExamConfiguration.Subject;
-//using AdminDashboard.Server.API_Service.Interface.MasterData;
+using System.Threading.Tasks;
+
 
 namespace AdminDashboard.Server.User_Pages.MasterData.ExamConfiguration
 {
     public class SubjectBase : ComponentBase
     {
-      
-
-
-            public SubjectViewModel subjectViewModel = new SubjectViewModel();
-
-
-            public List<SubjectOutputModel> _SubejctListModel = new List<SubjectOutputModel>();
-            public SfGrid<SubjectOutputModel> sfSubjectDetails;
-            public SubjectApiModel subjectApiModel { get; set; }
-
-
-
             [Inject]
             Blazored.SessionStorage.ISessionStorageService session { get; set; }
             public SessionModel _sessionModel;
+            [Inject]
+            public IMasterDataSetupService masterDataSetupService { get; set; }
+            public List<Master_Subject_List_Output_Model> _subject_List = new List<Master_Subject_List_Output_Model>();
+
+            public SfGrid<Master_Subject_List_Output_Model> sfSubjectList;
+
+            public SubjectViewModel subjectViewModel = new SubjectViewModel(); 
+            public MasterSubjectAPIModel subjectApiModel { get; set; } 
 
             [Inject]
             public ISnackbar snackBar { get; set; }
@@ -69,74 +62,47 @@ namespace AdminDashboard.Server.User_Pages.MasterData.ExamConfiguration
             { "AutoFit", "AutoFitAll", "SortAscending", "SortDescending",
                 "Copy", "ExcelExport", "CsvExport", "FirstPage", "PrevPage", "LastPage", "NextPage"
             };
-
-            public List<string> ToolBarItems = (new List<string>() { "Add Subject", "Print", "ExportExcel", "Collapse All", "Expand All", "Search" });
-
-
-
-
-
-        public class MarksType
-        {
-            public int Id;
-            public string Value;
-        }
-
-        public List<MarksType> MarksTypeDetails = new List<MarksType>()
-        {
-            new MarksType{Id=1,Value="Numeric"},
-            new MarksType{Id=2,Value="Grad"},
-        };
-
-
-
-        public class SubjectType
-        {
-            public int Id;
-            public string Value;
-        }
-
-        public List<SubjectType> SubjectTypeDetails = new List<SubjectType>()
-        {
-            new SubjectType{Id=1,Value="Co-Scholist"},
-            new SubjectType{Id=2,Value="Scholist"},
-        };
-
-
-
-
-        protected override async Task OnInitializedAsync()
+            public int pageSize = 50;
+            public List<string> toolBarSubjectList = (new List<string>() { "Add Subject", "Print", "ExportExcel", "Collapse All", "Expand All", "Search", "ColumnChooser" });
+         
+            public class MarksType
             {
-                _sessionModel = await session.GetItemAsync<SessionModel>("sessionUser");
-            //Master_CLass_List_Input_Para_Model master_CLass_List_Input_Para_Model = new Master_CLass_List_Input_Para_Model()
-            //{
-            //    classId = 0,
-            //    userId = _sessionModel.UserId,
-            //    financialYear = _sessionModel.FinancialYear,
-            //    schoolCode = _sessionModel.SchoolCode,
-            //    reportType = ReportType.All
-            //};
-            //_SubejctListModel = (await masterDataSetupService.GET_Master_ClassLIST(master_CLass_List_Input_Para_Model)).ToList();
-
-            SubjectParaModel subjectParaModel = new SubjectParaModel()
-                {
-                    financialYear = _sessionModel.FinancialYear,
-                    schoolCode = _sessionModel.SchoolCode,
-                    SubjectId = 0,
-                    userRoleId = _sessionModel.RoleId,
-                    reportType = ReportType.All
-                };
-
-                //    _ClassListModel = (await masterDataService.GET_ClassDetails_List(classParaModel)).ToList();
+                public int Id;
+                public string Value;
             }
 
+            public List<MarksType> MarksTypeDetails = new List<MarksType>()
+            {
+                new MarksType{Id=1,Value="Numeric"},
+                new MarksType{Id=2,Value="Grade"},
+            }; 
+            public class SubjectType
+            {
+                public int Id;
+                public string Value;
+            }
 
+            public List<SubjectType> SubjectTypeDetails = new List<SubjectType>()
+            {
+                new SubjectType{Id=1,Value="Co-Scholist"},
+                new SubjectType{Id=2,Value="Scholist"},
+            }; 
+            protected override async Task OnInitializedAsync()
+            {
+                _sessionModel = await session.GetItemAsync<SessionModel>("sessionUser");
 
+            Master_Subject_List_Input_Para_Model master_Subject_List_Input_Para_Model = new Master_Subject_List_Input_Para_Model()
+            {
+                subjectID = 0,
+                financialYear = _sessionModel.FinancialYear,
+                schoolCode = _sessionModel.SchoolCode,
+                reportType = ReportType.All
+            };
+            _subject_List = (await masterDataSetupService.GET_Master_SubjectLIST(master_Subject_List_Input_Para_Model)).ToList();
 
-
-
-
-            public void EditItemDetail(CommandClickEventArgs<SubjectOutputModel> args)
+            
+            } 
+            public void EditSubjectMaster(CommandClickEventArgs<Master_Subject_List_Output_Model> args)
             {
 
 
@@ -158,7 +124,7 @@ namespace AdminDashboard.Server.User_Pages.MasterData.ExamConfiguration
                         subjectCode = args.RowData.subjectCode,
                         subjectName = args.RowData.subjectName,
                         subjectType = args.RowData.subjectType,
-                    masrksType = args.RowData.masrksType,
+                        //masrksType = args.RowData.masrksType,
 
 
                 };
@@ -177,7 +143,7 @@ namespace AdminDashboard.Server.User_Pages.MasterData.ExamConfiguration
                         subjectCode = args.RowData.subjectCode,
                         subjectName = args.RowData.subjectName,
                         subjectType = args.RowData.subjectType,
-                        masrksType = args.RowData.masrksType,
+                       // masrksType = args.RowData.masrksType,
 
 
                     };
@@ -207,37 +173,29 @@ namespace AdminDashboard.Server.User_Pages.MasterData.ExamConfiguration
                 }
                 else if (args.Item.Text == "ExportExcel")
                 {
-                    this.sfSubjectDetails.ExportToExcelAsync();
+                    this.sfSubjectList.ExportToExcelAsync();
                 }
                 else if (args.Item.Text == "Collapse All")
                 {
-                    this.sfSubjectDetails.CollapseAllGroupAsync();
+                    this.sfSubjectList.CollapseAllGroupAsync();
                 }
                 else if (args.Item.Text == "Expand All")
                 {
-                    this.sfSubjectDetails.ExpandAllGroupAsync();
+                    this.sfSubjectList.ExpandAllGroupAsync();
                 }
             }
-
-
-
-
+         
             public async void OnValidSubmit(EditContext contex)
             {
                 bool isValid = contex.Validate();
                 if (isValid)
                 {
-                subjectApiModel = new SubjectApiModel()
+                    subjectApiModel = new MasterSubjectAPIModel()
                     {
-                        SubjectName = subjectViewModel.subjectName,
-                        SubjectCode = subjectViewModel.subjectCode,
-                        MasrksType = subjectViewModel.masrksType,
-                        SubjectType=subjectViewModel.subjectType,
-
-
-
-
-
+                        subjectName = subjectViewModel.subjectName,
+                        subjectCode = subjectViewModel.subjectCode,
+                        marksType = subjectViewModel.masrksType,
+                        subjectType=subjectViewModel.subjectType,
                     };
                     if (OperationType == "Add")
                     {
@@ -262,8 +220,7 @@ namespace AdminDashboard.Server.User_Pages.MasterData.ExamConfiguration
                 }
 
             }
-
-            private async void SaveItemMasterDetails(SubjectApiModel subjectApiModel)
+            private async void SaveItemMasterDetails(MasterSubjectAPIModel subjectApiModel)
             {
                 try
                 {
@@ -301,21 +258,13 @@ namespace AdminDashboard.Server.User_Pages.MasterData.ExamConfiguration
 
                 }
             }
-
-
-
-
-
-
-
-
+         
             private void ClearData()
             {
             subjectViewModel = new SubjectViewModel();
 
             }
-
-
+         
             public void ShowDialog()
             {
                 IsVisible = true;

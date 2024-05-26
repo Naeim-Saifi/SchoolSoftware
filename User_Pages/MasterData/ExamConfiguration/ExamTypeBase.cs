@@ -43,7 +43,7 @@ namespace AdminDashboard.Server.User_Pages.MasterData.ExamConfiguration
             };
         public SfGrid<Exam_Type_List_Output_Model> sfExamListGrid;
 
-        public List<string> toolBarItems = (new List<string>() { "Add ExamType", "Print", "Search" });
+        public List<string> toolBarItems = (new List<string>() { "Add ExamType", "Print", "Search", "ColumnChooser" });
         public DialogEffect AnimationEffect = DialogEffect.Zoom;
         public string HeaderStyles { get; set; } = "e-background e-accent";
         public SfDialog DialogRef;

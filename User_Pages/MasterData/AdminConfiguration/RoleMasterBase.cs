@@ -1,6 +1,8 @@
-﻿using AdminDashboard.Server.API_Service.Interface.MasterDataSetUp;
-using AIS.Data.APIReturnModel;
-using AIS.Data.RequestResponseModel.MasterDataSetUp;
+﻿using AIS.Data.APIReturnModel;
+using AIS.Data.RequestResponseModel.Enquiry;
+using AIS.Data.RequestResponseModel.Inventory.ItemMaster;
+
+using AIS.Model.GeneralConversion;
 using AIS.Model.UserLogin;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -9,10 +11,11 @@ using Syncfusion.Blazor.Grids;
 using Syncfusion.Blazor.Popups;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using static AIS.Data.GeneralConversion.GeneralConversion;
 
+using System.Linq;
+using AIS.Data.RequestResponseModel.MasterDataSetUp;
+using AdminDashboard.Server.API_Service.Interface.MasterDataSetUp;
 
 namespace AdminDashboard.Server.User_Pages.MasterData.AdminConfiguration
 {
@@ -21,23 +24,17 @@ namespace AdminDashboard.Server.User_Pages.MasterData.AdminConfiguration
 
 
 
-        public List<Master_Role_List_Output_Model> _role_List = new List<Master_Role_List_Output_Model>();
-        public SfGrid<Master_Role_List_Output_Model> sfrole;
+            public List<Master_Role_List_Output_Model> _role_List = new List<Master_Role_List_Output_Model>();
+            public SfGrid<Master_Role_List_Output_Model> sfrole;
 
-        public RoleMasterViewModel roleMasterViewModel = new RoleMasterViewModel();
-        public MasterRoleAPIModel masterRoleAPIModel { get; set; }
-
-
-        [Inject]
+            [Inject]
             Blazored.SessionStorage.ISessionStorageService session { get; set; }
             public SessionModel _sessionModel;
 
-        [Inject]
-        public IMasterDataSetupService masterDataSetupService { get; set; }
-
-        [Inject]
+            [Inject]
             public ISnackbar snackBar { get; set; }
-
+            [Inject]
+            public IMasterDataSetupService masterDataSetupService { get; set; }
 
             public DialogEffect AnimationEffect = DialogEffect.Zoom;
             public string HeaderStyles { get; set; } = "e-background e-accent";
@@ -62,16 +59,12 @@ namespace AdminDashboard.Server.User_Pages.MasterData.AdminConfiguration
                 "Copy", "ExcelExport", "CsvExport", "FirstPage", "PrevPage", "LastPage", "NextPage"
             };
 
-        public List<string> tooluserRoleBarItems = (new List<string>() { "Add Role", "Print", "Search" });
-
-
-
-
-
-
-
-        protected override async Task OnInitializedAsync()
+            public List<string> roleToolBarList = (new List<string>() { "Add Role", "Print", "ExportExcel", "Collapse All", "Expand All", "Search","ColumnChooser" });
+         
+            protected override async Task OnInitializedAsync()
             {
+            _sessionModel = await session.GetItemAsync<SessionModel>("sessionUser");
+
             Master_Role_List_Input_Para_Model master_Role_List_Input_Para_Model = new Master_Role_List_Input_Para_Model()
             {
                 roleID = 0,
@@ -80,17 +73,12 @@ namespace AdminDashboard.Server.User_Pages.MasterData.AdminConfiguration
                 reportType = ReportType.All
             };
             _role_List = (await masterDataSetupService.GET_Master_RoleList(master_Role_List_Input_Para_Model)).ToList();
-
-
-
+            
             }
 
+        /*Master Role Code start*/
 
-
-
-
-
-
+        public RoleMasterViewModel roleMasterViewModel = new RoleMasterViewModel();
         public void EditRoleMaster(CommandClickEventArgs<Master_Role_List_Output_Model> args)
         {
             // Perform required operations here
@@ -153,9 +141,10 @@ namespace AdminDashboard.Server.User_Pages.MasterData.AdminConfiguration
                 roleMasterViewModel.displayOrder = 0;
 
             }
+
         }
-
-
+        //this model use for send data to API ,binding view model with API model
+        public MasterRoleAPIModel masterRoleAPIModel { get; set; }
         public async void OnValidSubmit(EditContext contex)
         {
             bool isValid = contex.Validate();
@@ -190,9 +179,6 @@ namespace AdminDashboard.Server.User_Pages.MasterData.AdminConfiguration
                 RoleSave(masterRoleAPIModel);
             };
         }
-
-
-
 
         private async void RoleSave(MasterRoleAPIModel masterRoleAPIModel)
         {
@@ -238,32 +224,27 @@ namespace AdminDashboard.Server.User_Pages.MasterData.AdminConfiguration
 
             }
         }
-
-
-
-
-
         private void ClearData()
         {
             roleMasterViewModel = new RoleMasterViewModel();
 
         }
-
+         
         public void ShowDialog()
-            {
-                IsVisible = true;
-            }
-            public void onOpen(Syncfusion.Blazor.Popups.BeforeOpenEventArgs args)
-            {
-                // setting maximum height to the Dialog
-                args.MaxHeight = "750px";
-
-            }
-            public async Task CloseDialog()
-            {
-                IsVisible = false;
-                await this.DialogRef.HideAsync();
-            }
+        {
+            IsVisible = true;
         }
+        public void onOpen(Syncfusion.Blazor.Popups.BeforeOpenEventArgs args)
+        {
+            // setting maximum height to the Dialog
+            args.MaxHeight = "750px";
+
+        }
+        public async Task CloseDialog()
+        {
+            IsVisible = false;
+            await this.DialogRef.HideAsync();
+        }
+    }
     }
 

@@ -99,8 +99,17 @@ namespace AdminDashboard.Server.User_Pages.Transaction.Collection
 
             TodayTransactionStatus = await transactionSetUp.GET_TodayTransactionStatus(userWiseFeeCollection_);
 
-               _netCollection = TodayTransactionStatus._todayCollectionAmount.ToString();
-         _netCollectioncurrentMonth = TodayTransactionStatus._currentMonthCollection.ToString();
+              
+            if (TodayTransactionStatus._todayCollectionAmount == null)
+            {
+                _netPendingFee = "Not Fee Collection ";
+            }
+            else
+            {
+                _netCollection = TodayTransactionStatus._todayCollectionAmount.ToString();
+            }
+
+            _netCollectioncurrentMonth = TodayTransactionStatus._currentMonthCollection.ToString();
             
             if(TodayTransactionStatus._todayNetPendingAmount==null)
             {

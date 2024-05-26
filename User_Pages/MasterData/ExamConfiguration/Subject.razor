@@ -11,7 +11,7 @@
 @using Syncfusion.Blazor.LinearGauge
 @using Syncfusion.Blazor.Layouts
 @using Syncfusion.Blazor.Popups
-
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
 @using AIS.Data.RequestResponseModel.MasterData.ExamConfiguration.Subject
 
 @page "/User_Pages/ExamConfiguration/Subject"
@@ -22,7 +22,7 @@
 
 
 @{
-    var InitSearch2 = (new string[] { "organizationName" });
+    var InitSearchsubject = (new string[] { "subjectName", "subjectCode" });
     var Tool = (new List<string>() { "Search" });
 
     var InitialGroupColumn = (new string[] { "previousClass" });
@@ -38,55 +38,55 @@
                 <DashboardLayoutPanel SizeX=7 SizeY="2">
                     <HeaderTemplate>Subject Details</HeaderTemplate>
                     <ContentTemplate>
-                        <SfGrid DataSource="@_SubejctListModel"
+                        <SfGrid DataSource="@_subject_List"
                                 EnableVirtualMaskRow="true"
                                 RowHeight="38" Height="710"
                                 Width="auto" EnableVirtualization="false"
                                 AllowResizing="true" AllowExcelExport="true"
                                 EnableAutoFill="true" AllowReordering="true"
-                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
                                 AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
                                 ContextMenuItems="MenuItems"
-                                @ref="sfSubjectDetails"
-                                Toolbar="ToolBarItems">
-                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
-                            <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
-                            <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
-                            <GridGroupSettings Columns=@InitialGroupColumn>
-                                <CaptionTemplate>
-                                    @{
-                                        var UnitDetails = (context as CaptionTemplateContext);
-                                        <div>@UnitDetails.Field - @UnitDetails.Key</div>
-                                    }
-                                </CaptionTemplate>
-                            </GridGroupSettings>
+                        @ref="sfSubjectList"
+                                Toolbar="toolBarSubjectList">
+                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
+                            <GridPageSettings PageSizes="@(new string[] { "25", "50","100", "150", "200",  "All" })" PageSize="@pageSize"></GridPageSettings>
+                            @* <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>*@
+                            @*<GridGroupSettings Columns=@InitialGroupColumn>
+                            <CaptionTemplate>
+                            @{
+                            var UnitDetails = (context as CaptionTemplateContext);
+                            <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                            }
+                            </CaptionTemplate>
+                            </GridGroupSettings>*@
 
-                            <GridEvents CommandClicked="EditItemDetail" OnToolbarClick="ToolbarClickHandler" TValue="SubjectOutputModel"></GridEvents>
-                            <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                            <GridEvents CommandClicked="EditSubjectMaster" OnToolbarClick="ToolbarClickHandler" TValue=Master_Subject_List_Output_Model></GridEvents>
+                            <GridSearchSettings Fields=@InitSearchsubject Operator=Syncfusion.Blazor.Operator.Contains Key=""
                                                 IgnoreCase="true"></GridSearchSettings>
-
-
-
                             <GridColumns>
-                     <GridColumn Field=@nameof(SubjectOutputModel.subjectId) HeaderText="Subejct Id" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(SubjectOutputModel.subjectName) HeaderText="Subejct Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(SubjectOutputModel.subjectCode) HeaderText="Subejct Code" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(SubjectOutputModel.subjectType) HeaderText="Subejct Type" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(SubjectOutputModel.masrksType) HeaderText="Marks Type" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.subjectId) HeaderText="Id" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.subjectName) HeaderText="Subject Name" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.subjectCode) HeaderText="Subject Code" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.marksType) HeaderText="Marks Type" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.marksDescription) HeaderText="Marks Description" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
 
+                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.subjectType) HeaderText="Subject Type" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.subjectDescription) HeaderText="Subject Description" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.displayOrder) HeaderText="Display Order" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                
                                 <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
-                                    <GridCommandColumns>
-                                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
-                                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
-                                    </GridCommandColumns>
+                                <GridCommandColumns>
+                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
+                                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
+                                </GridCommandColumns>
                                 </GridColumn>
-                                <GridColumn Field=@nameof(SubjectOutputModel.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(SubjectOutputModel.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(SubjectOutputModel.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(SubjectOutputModel.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
 
+                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.createdByUser) HeaderText="CreatedBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Subject_List_Output_Model.updatedByUser) HeaderText="UpdateBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
                             </GridColumns>
-
                         </SfGrid>
                     </ContentTemplate>
                 </DashboardLayoutPanel>

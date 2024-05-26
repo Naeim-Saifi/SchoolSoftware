@@ -1,4 +1,9 @@
 ﻿@using Syncfusion.Blazor.Grids
+@using AIS.Data.RequestResponseModel.Expense;
+@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
 @using Syncfusion.Blazor.Inputs;
 @using Syncfusion.Blazor.DropDowns;
 @using Syncfusion.Blazor.Buttons
@@ -6,36 +11,27 @@
 @using Syncfusion.Blazor.LinearGauge
 @using Syncfusion.Blazor.Layouts
 @using Syncfusion.Blazor.Popups
-@using Syncfusion.Blazor.Charts
-@using Syncfusion.Blazor.Navigations
-@using Syncfusion.Blazor
+@using AIS.Data.RequestResponseModel.Inventory.ItemMaster
 @using AIS.Data.RequestResponseModel.MasterDataSetUp;
-
 @page "/User_Pages/AdminConfiguration/RoleMaster"
 
 
 @inherits  RoleMasterBase;
 
 @{
-
-    var InitSearchclass = (new string[] { "className", "classCode" });
+    var InitSearch2 = (new string[] { "roleName" });
     var Tool = (new List<string>() { "Search" });
-    var InitialGroupColumn = (new string[] { "className" });
-    var InitSearchSection = (new string[] { "sectionName", "sectionCode" });
-    var InitSearchsubject = (new string[] { "subjectName", "subjectCode" });
-    var InitSearchmapsubject = (new string[] { "subjectName", "className" });
+
+    var InitialGroupColumn = (new string[] { "previousClass" });
 }
-
-
-
-
+ 
 
 <MudGrid>
     <MudItem xs="12" sm="12" md="12">
         <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
             <DashboardLayoutPanels>
                 <DashboardLayoutPanel SizeX=7 SizeY="2">
-                    <HeaderTemplate>Details</HeaderTemplate>
+                    <HeaderTemplate>Master User Role List</HeaderTemplate>
                     <ContentTemplate>
                         <SfGrid DataSource="@_role_List"
                                 EnableVirtualMaskRow="true"
@@ -43,26 +39,15 @@
                                 Width="auto" EnableVirtualization="false"
                                 AllowResizing="true" AllowExcelExport="true"
                                 EnableAutoFill="true" AllowReordering="true"
-                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
                                 AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
                                 ContextMenuItems="MenuItems"
                                 @ref="sfrole"
-                                Toolbar="tooluserRoleBarItems">
+                                Toolbar="roleToolBarList">
                             <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
                             <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
-                            @* <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>*@
-                            @*<GridGroupSettings Columns=@InitialGroupColumn>
-                            <CaptionTemplate>
-                            @{
-                            var UnitDetails = (context as CaptionTemplateContext);
-                            <div>@UnitDetails.Field - @UnitDetails.Key</div>
-                            }
-                            </CaptionTemplate>
-                            </GridGroupSettings>*@
-
                             <GridEvents CommandClicked="EditRoleMaster" OnToolbarClick="ToolbarClickHandler" TValue=Master_Role_List_Output_Model></GridEvents>
-                            <GridSearchSettings Fields=@InitSearchmapsubject Operator=Syncfusion.Blazor.Operator.Contains Key=""
-                                                IgnoreCase="true"></GridSearchSettings>
+                            <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key="" IgnoreCase="true"></GridSearchSettings>
                             <GridColumns>
                                 <GridColumn Field=@nameof(Master_Role_List_Output_Model.masterRoleId) HeaderText="Id" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
                                 <GridColumn Field=@nameof(Master_Role_List_Output_Model.roleName) HeaderText="Role Name" AutoFit=true></GridColumn>
@@ -89,12 +74,10 @@
     </MudItem>
 </MudGrid>
 
-
-
 <MudGrid>
-    <MudItem xs="12" sm="12" md="12">
-        <MudItem xs="12" sm="12" md="12">
-            <SfDialog @ref="@DialogRef" Width="750px" AllowDragging="true" IsModal="true" ShowCloseIcon="true" @bind-Visible="@IsVisible">
+    <MudItem xs="12" sm="3" md="12">
+        <MudItem xs="12" sm="3" md="12">
+            <SfDialog @ref="@DialogRef" Width="750px" AllowDragging="true" IsModal="false" ShowCloseIcon="true" @bind-Visible="@IsVisible">
                 <DialogEvents OnOpen="onOpen"></DialogEvents>
                 <DialogTemplates>
                     <Header>@DialogHeaderName </Header>
@@ -108,7 +91,7 @@
                                         <MudGrid>
                                             <MudItem xs="12" md="6" sm="6">
                                                 <SfTextBox CssClass="e-outline" Placeholder="Role Name" Type="Syncfusion.Blazor.Inputs.InputType.Text"
-                                                           @bind-Value="@roleMasterViewModel.roleName"
+                                                @bind-Value="@roleMasterViewModel.roleName"
                                                            FloatLabelType="@FloatLabelType.Never"></SfTextBox>
                                                 <ValidationMessage For="() => roleMasterViewModel.roleName" />
                                             </MudItem>
@@ -116,13 +99,13 @@
 
                                             <MudItem xs="12" md="6" sm="6">
                                                 <SfTextBox CssClass="e-outline" Placeholder="Role Description" Type="Syncfusion.Blazor.Inputs.InputType.Text"
-                                                           @bind-Value="@roleMasterViewModel.roleDescription"
+                                                @bind-Value="@roleMasterViewModel.roleDescription"
                                                            FloatLabelType="@FloatLabelType.Never"></SfTextBox>
                                                 <ValidationMessage For="() => roleMasterViewModel.roleDescription" />
                                             </MudItem>
                                             <MudItem xs="12" md="6" sm="6">
                                                 <SfNumericTextBox CssClass="e-outline" Placeholder="Display Order"
-                                                                  @bind-Value="@roleMasterViewModel.displayOrder"
+                                                @bind-Value="@roleMasterViewModel.displayOrder"
                                                                   FloatLabelType="@FloatLabelType.Never"></SfNumericTextBox>
 
                                                 <ValidationMessage For="() => roleMasterViewModel.displayOrder" />
@@ -139,14 +122,11 @@
                         </MudGrid>
                     </Content>
                 </DialogTemplates>
-                <DialogAnimationSettings Delay="400" Effect="DialogEffect.FlipLeftUp">
-                </DialogAnimationSettings>
-                <DialogPositionData X="@Xvalue" Y="@Yvalue"></DialogPositionData>
+                <DialogAnimationSettings Effect="@AnimationEffect" Duration=400 />
             </SfDialog>
         </MudItem>
     </MudItem>
 </MudGrid>
-
 
 
 @code {

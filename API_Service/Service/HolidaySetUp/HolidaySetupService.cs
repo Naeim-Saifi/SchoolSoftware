@@ -17,7 +17,7 @@ namespace AdminDashboard.Server.API_Service.Service.HolidaySetUp
     public class HolidaySetupService:IHolidaySetUpService
     {
         private readonly HttpClient httpClient;
-        private ILocalStorageService _localStorageService;
+        private readonly ILocalStorageService _localStorageService;
         public HolidaySetupService(HttpClient httpClient, ILocalStorageService localStorageService)
         {
             this.httpClient = httpClient;

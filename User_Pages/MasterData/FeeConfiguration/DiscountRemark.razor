@@ -12,7 +12,7 @@
 @using Syncfusion.Blazor.LinearGauge
 @using Syncfusion.Blazor.Layouts
 @using Syncfusion.Blazor.Popups
-@using AIS.Data.RequestResponseModel.Inventory.ItemMaster
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
 
 
 @inherits DiscountRemarkBase;
@@ -21,38 +21,32 @@
 
 
 @{
-    var InitSearch2 = (new string[] { "organizationName" });
+    var InitSearch2 = (new string[] { "feeDiscountRemarks" });
     var Tool = (new List<string>() { "Search" });
 
     var InitialGroupColumn = (new string[] { "previousClass" });
-}
-
-
-
-
-
-
+} 
 <MudGrid>
     <MudItem xs="12" sm="12" md="12">
         <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
             <DashboardLayoutPanels>
                 <DashboardLayoutPanel SizeX=7 SizeY="2">
-                    <HeaderTemplate>Details</HeaderTemplate>
+                    <HeaderTemplate>Discount Remarks List</HeaderTemplate>
                     <ContentTemplate>
-                        <SfGrid DataSource="@_ItemMasterListMoel"
+                        <SfGrid DataSource="@_feeDiscountRemarksList"
                                 EnableVirtualMaskRow="true"
                                 RowHeight="38" Height="710"
                                 Width="auto" EnableVirtualization="false"
                                 AllowResizing="true" AllowExcelExport="true"
                                 EnableAutoFill="true" AllowReordering="true"
-                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
                                 AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
                                 ContextMenuItems="MenuItems"
                                 @ref="sfItemDetails"
                                 Toolbar="EnquirytoolBarItems">
                             <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
-                            <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
-                            <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
+                            <GridPageSettings PageCount="20" PageSizes="100"></GridPageSettings>
+                           @*  <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
                             <GridGroupSettings Columns=@InitialGroupColumn>
                                 <CaptionTemplate>
                                     @{
@@ -60,19 +54,19 @@
                                         <div>@UnitDetails.Field - @UnitDetails.Key</div>
                                     }
                                 </CaptionTemplate>
-                            </GridGroupSettings>
+                            </GridGroupSettings> *@
 
-                            <GridEvents CommandClicked="EditItemDetail" OnToolbarClick="ToolbarClickHandler" TValue="ItemMasterListMoel"></GridEvents>
+                            <GridEvents CommandClicked="EditItemDetail" OnToolbarClick="ToolbarClickHandler" TValue="FeeDiscountRemarksOutputModel"></GridEvents>
                             <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
                                                 IgnoreCase="true"></GridSearchSettings>
 
 
 
                             <GridColumns>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.itemName) HeaderText="Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.itemCode) HeaderText="Code" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.displayOrder) HeaderText="Display Order" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.itemDescription) HeaderText="item Description" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(FeeDiscountRemarksOutputModel.feeDiscountId) HeaderText="ID" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(FeeDiscountRemarksOutputModel.feeDiscountRemarks) HeaderText="Discount Remarks" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(FeeDiscountRemarksOutputModel.feeDiscountDescription) HeaderText="Discount Description" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(FeeDiscountRemarksOutputModel.displayOrder) HeaderText="Display Order" AutoFit=true></GridColumn>
 
                                 <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
                                     <GridCommandColumns>
@@ -80,10 +74,10 @@
                                         <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
                                     </GridCommandColumns>
                                 </GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(FeeDiscountRemarksOutputModel.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(FeeDiscountRemarksOutputModel.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(FeeDiscountRemarksOutputModel.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(FeeDiscountRemarksOutputModel.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
 
                             </GridColumns>
 

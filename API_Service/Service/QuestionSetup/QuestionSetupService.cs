@@ -18,7 +18,7 @@ namespace AdminDashboard.Server.API_Service.Service.QuestionSetup
     public class QuestionSetupService : IQuestionsetup
     {
         private readonly HttpClient httpClient;
-        private ILocalStorageService _localStorageService;
+        private readonly ILocalStorageService _localStorageService;
         public QuestionSetupService(HttpClient httpClient, ILocalStorageService localStorageService)
         {
             this.httpClient = httpClient;

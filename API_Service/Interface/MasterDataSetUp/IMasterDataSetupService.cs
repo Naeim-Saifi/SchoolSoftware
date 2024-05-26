@@ -18,5 +18,35 @@ namespace AdminDashboard.Server.API_Service.Interface.MasterDataSetUp
         Task<IEnumerable<Master_School_List_Output_Model>> GET_School_List(Master_School_List_Input_Para_Model master_School_List_Input_Para_Model);
         Task<IEnumerable<Master_Role_List_Output_Model>> GET_Master_RoleList(Master_Role_List_Input_Para_Model master_Role_List_Input_Para_Model);
         Task<APIReturnModel> CRUD_MasterRole(MasterRoleAPIModel masterRoleSetUpModel);
+
+
+
+        //add 24-05-24
+
+        Task<APIReturnModel> CRUD_Transport_RouteMaster(RouteDetailsApiModel routeDetailsApiModel);
+        Task<IEnumerable<RouteDetailsOutputModel>> GET_Transport_RouteMaster(RouteDetailsParaModel routeDetailsParaModel);
+
+        Task<APIReturnModel> CRUD_Transport_TransportMaster(TransportDetailsApiModel transportDetailsApiModel);
+        Task<IEnumerable<TransportDetailsOutputModel>> GET_Transport_TransportMaster(TransportDetailsParaModel transportDetailsParaModel);
+
+        Task<APIReturnModel> CRUD_Transport_BusStopMaster(BusStopApiModel busStopApiModel);
+        Task<IEnumerable<BusStopOutputModel>> GET_Transport_BusStopMaster(BusStopParaModel busStopParaModel);
+
+        Task<APIReturnModel> CRUD_Transport_RouteWithBusStop(MapBusWithRouteApiModel mapBusWithRouteApiModel);
+        Task<IEnumerable<MapBusWithRouteOutputModel>> GET_Transport_RouteWithBusStop(MapBusWithRouteParaModel mapBusWithRouteParaModel);
+
+
+        //Fee Master.
+
+        Task<APIReturnModel> CRUD_Fee_FeeHeaderMaster(FeeHeaderApiModel feeHeaderApiModel);
+        Task<IEnumerable<FeeHeaderOutputModel>> GET_Fee_FeeHeaderList(FeeHeaderParaModel feeHeaderParaModel);
+
+        Task<APIReturnModel> CRUD_Fee_ConcessionCategory(FeeConcessionCategoryApiModel feeConcessionCategoryApiModel);
+        Task<IEnumerable<FeeConcessionCategoryOutputModel>> GET_Fee_ConcessionCategoryList(FeeConcessionCategoryParaModel feeConcessionCategoryParaModel);
+
+        Task<APIReturnModel> CRUD_Fee_DiscountRemarks(FeeDiscountRemarksApiModel feeDiscountRemarksApiModel);
+        Task<IEnumerable<FeeDiscountRemarksOutputModel>> GET_Fee_DiscountRemarksList(FeeDiscountRemarksParaModel feeDiscountRemarksParaModel);
+
+         
     }
 }

@@ -12,29 +12,21 @@
 @using Syncfusion.Blazor.Layouts
 @using Syncfusion.Blazor.Popups
 
-@using AIS.Data.RequestResponseModel.MasterData.TransportConfiguration.RouteDetails;
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
 
 
 
 @page "/User_Pages/TransportConfiguration/RouteDetails"
 @inherits RouteDetailsBase;
-
-
-
+ 
 
 @{
-    var InitSearch2 = (new string[] { "organizationName" });
+    var InitSearch2 = (new string[] { "routeName", "description" });
     var Tool = (new List<string>() { "Search" });
 
     var InitialGroupColumn = (new string[] { "previousClass" });
 }
-
-
-
-
-
-
-<MudGrid>
+ <MudGrid>
     <MudItem xs="12" sm="12" md="12">
         <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
             <DashboardLayoutPanels>
@@ -47,14 +39,14 @@
                                 Width="auto" EnableVirtualization="false"
                                 AllowResizing="true" AllowExcelExport="true"
                                 EnableAutoFill="true" AllowReordering="true"
-                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
                                 AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
                                 ContextMenuItems="MenuItems"
                                 @ref="sfRouteDetails"
                                 Toolbar="ToolBarItems">
                             <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
                             <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
-                            <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
+                            @* <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
                             <GridGroupSettings Columns=@InitialGroupColumn>
                                 <CaptionTemplate>
                                     @{
@@ -62,18 +54,15 @@
                                         <div>@UnitDetails.Field - @UnitDetails.Key</div>
                                     }
                                 </CaptionTemplate>
-                            </GridGroupSettings>
+                            </GridGroupSettings> *@
 
-                            <GridEvents CommandClicked="EditItemDetail" OnToolbarClick="ToolbarClickHandler" TValue="RouteDetailsOutputModel"></GridEvents>
+                            <GridEvents   OnToolbarClick="ToolbarClickHandler" TValue="RouteDetailsOutputModel"></GridEvents>
                             <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
-                                                IgnoreCase="true"></GridSearchSettings>
-
-
-
+                                                IgnoreCase="true"></GridSearchSettings> 
                             <GridColumns>
-                                <GridColumn Field=@nameof(RouteDetailsOutputModel.routeName) HeaderText="RouteName" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
-                          
-
+                                <GridColumn Field=@nameof(RouteDetailsOutputModel.routeName) HeaderText="Route Name" TextAlign="TextAlign.Right"   AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(RouteDetailsOutputModel.description) HeaderText="Description" TextAlign="TextAlign.Right"   AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(RouteDetailsOutputModel.displayOrder) HeaderText="Display Order" TextAlign="TextAlign.Right"   AutoFit=true></GridColumn> 
                                 <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
                                     <GridCommandColumns>
                                         <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
@@ -95,7 +84,6 @@
     </MudItem>
 </MudGrid>
 
-
 <MudGrid>
     <MudItem xs="12" sm="12" md="12">
         <MudItem xs="12" sm="12" md="12">
@@ -104,34 +92,30 @@
                 <DialogTemplates>
                     <Header>@DialogHeaderName </Header>
                     <Content>
-
-                        @*    start *@
-
-
-                        <MudGrid>
+                          <MudGrid>
                             <MudItem xs="12" md="12" sm="12">
                                 <EditForm Model="routeDetailsViewModel" OnValidSubmit="OnValidSubmit">
                                     <DataAnnotationsValidator />
-                                    <MudCardContent>
-
-                                        <MudGrid>
-
-
+                                    <MudCardContent> 
+                                        <MudGrid> 
                                             <MudItem xs="12" md="5" sm="12">
                                                 <SfTextBox CssClass="e-outline" Placeholder="Route Name" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@routeDetailsViewModel.routeName"
                                                            FloatLabelType="@FloatLabelType.Never"></SfTextBox>
                                                 <ValidationMessage For="() => routeDetailsViewModel.routeName" />
                                             </MudItem>
-
-
-
-
-
-
-
+                                            <MudItem xs="12" md="5" sm="12">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Description" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@routeDetailsViewModel.description"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => routeDetailsViewModel.description" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="5" sm="12">
+                                                <SfNumericTextBox CssClass="e-outline" Placeholder="Display Order" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@routeDetailsViewModel.displayOrder"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfNumericTextBox>
+                                                <ValidationMessage For="() => routeDetailsViewModel.displayOrder" />
+                                            </MudItem>
 
                                             <MudItem xs="12" md="4" sm="6">
-                                                <SfButton CssClass="e-outline" type="submit" IsPrimary="true">@HeaderText</SfButton>
+                                                <SfButton CssClass="e-outline" type="Submit" IsPrimary="true">@HeaderText</SfButton>
                                                 <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>
                                             </MudItem>
 
@@ -140,10 +124,7 @@
                                 </EditForm>
                             </MudItem>
 
-                        </MudGrid>
-                        @*   end *@
-
-
+                        </MudGrid> 
                     </Content>
                 </DialogTemplates>
                 <DialogAnimationSettings Delay="400" Effect="DialogEffect.FlipLeftUp">
@@ -153,6 +134,12 @@
         </MudItem>
     </MudItem>
 </MudGrid>
+
+
+
+
+
+
 @code {
     private string Xvalue = "center";
     private string Yvalue = "center";

@@ -16,7 +16,7 @@ namespace AdminDashboard.Server.API_Service.Service.StudentSetUp
     public class StudentSetupService: IStudentSetupService
     {
         private readonly HttpClient httpClient;
-        private ILocalStorageService _localStorageService;
+        private readonly ILocalStorageService _localStorageService;
         public StudentSetupService(HttpClient httpClient, ILocalStorageService localStorageService)
         {
             this.httpClient = httpClient;

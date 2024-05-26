@@ -18,7 +18,7 @@ namespace AdminDashboard.Server.API_Service.Service.FlowUpSchool
     {
 
         private readonly HttpClient httpClient;
-        private ILocalStorageService _localStorageService;
+        private readonly ILocalStorageService _localStorageService;
         public FlowUpSchoolService(HttpClient httpClient, ILocalStorageService localStorageService)
         {
             this.httpClient = httpClient;

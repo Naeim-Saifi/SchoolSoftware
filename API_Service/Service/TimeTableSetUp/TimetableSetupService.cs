@@ -22,7 +22,7 @@ namespace AdminDashboard.Server.API_Service.Service.TimeTableSetUp
     public class TimeTableSetupService : ITimeTableSetUpService
     {
         private readonly HttpClient httpClient;
-        private ILocalStorageService _localStorageService;
+        private readonly ILocalStorageService _localStorageService;
         public TimeTableSetupService(HttpClient httpClient, ILocalStorageService localStorageService)
         {
             this.httpClient = httpClient;
