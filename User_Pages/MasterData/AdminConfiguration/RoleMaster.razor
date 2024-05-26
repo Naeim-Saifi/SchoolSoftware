@@ -1,9 +1,4 @@
 ﻿@using Syncfusion.Blazor.Grids
-@using AIS.Data.RequestResponseModel.Expense;
-@using Syncfusion.Blazor.Cards
-@using Syncfusion.Blazor.Charts
-@using Syncfusion.Blazor.Navigations
-@using Syncfusion.Blazor
 @using Syncfusion.Blazor.Inputs;
 @using Syncfusion.Blazor.DropDowns;
 @using Syncfusion.Blazor.Buttons
@@ -11,7 +6,10 @@
 @using Syncfusion.Blazor.LinearGauge
 @using Syncfusion.Blazor.Layouts
 @using Syncfusion.Blazor.Popups
-@using AIS.Data.RequestResponseModel.Inventory.ItemMaster
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
 
 @page "/User_Pages/AdminConfiguration/RoleMaster"
 
@@ -19,12 +17,14 @@
 @inherits  RoleMasterBase;
 
 @{
-    var InitSearch2 = (new string[] { "organizationName" });
+
+    var InitSearchclass = (new string[] { "className", "classCode" });
     var Tool = (new List<string>() { "Search" });
-
-    var InitialGroupColumn = (new string[] { "previousClass" });
+    var InitialGroupColumn = (new string[] { "className" });
+    var InitSearchSection = (new string[] { "sectionName", "sectionCode" });
+    var InitSearchsubject = (new string[] { "subjectName", "subjectCode" });
+    var InitSearchmapsubject = (new string[] { "subjectName", "className" });
 }
-
 
 
 
@@ -37,7 +37,7 @@
                 <DashboardLayoutPanel SizeX=7 SizeY="2">
                     <HeaderTemplate>Details</HeaderTemplate>
                     <ContentTemplate>
-                        <SfGrid DataSource="@_ItemMasterListMoel"
+                        <SfGrid DataSource="@_role_List"
                                 EnableVirtualMaskRow="true"
                                 RowHeight="38" Height="710"
                                 Width="auto" EnableVirtualization="false"
@@ -46,31 +46,29 @@
                                 ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
                                 AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
                                 ContextMenuItems="MenuItems"
-                                @ref="sfItemDetails"
-                                Toolbar="EnquirytoolBarItems">
-                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+                                @ref="sfrole"
+                                Toolbar="tooluserRoleBarItems">
+                            <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.CheckBox"></GridFilterSettings>
                             <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
-                            <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
-                            <GridGroupSettings Columns=@InitialGroupColumn>
-                                <CaptionTemplate>
-                                    @{
-                                        var UnitDetails = (context as CaptionTemplateContext);
-                                        <div>@UnitDetails.Field - @UnitDetails.Key</div>
-                                    }
-                                </CaptionTemplate>
-                            </GridGroupSettings>
+                            @* <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>*@
+                            @*<GridGroupSettings Columns=@InitialGroupColumn>
+                            <CaptionTemplate>
+                            @{
+                            var UnitDetails = (context as CaptionTemplateContext);
+                            <div>@UnitDetails.Field - @UnitDetails.Key</div>
+                            }
+                            </CaptionTemplate>
+                            </GridGroupSettings>*@
 
-                            <GridEvents CommandClicked="EditItemDetail" OnToolbarClick="ToolbarClickHandler" TValue="ItemMasterListMoel"></GridEvents>
-                            <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
+                            <GridEvents CommandClicked="EditRoleMaster" OnToolbarClick="ToolbarClickHandler" TValue=Master_Role_List_Output_Model></GridEvents>
+                            <GridSearchSettings Fields=@InitSearchmapsubject Operator=Syncfusion.Blazor.Operator.Contains Key=""
                                                 IgnoreCase="true"></GridSearchSettings>
-
-
-
                             <GridColumns>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.itemName) HeaderText="Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.itemCode) HeaderText="Code" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.displayOrder) HeaderText="Display Order" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.itemDescription) HeaderText="item Description" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Role_List_Output_Model.masterRoleId) HeaderText="Id" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Role_List_Output_Model.roleName) HeaderText="Role Name" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Role_List_Output_Model.roleDescription) HeaderText="Role Description" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Role_List_Output_Model.displayOrder) HeaderText="Display Order" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+
 
                                 <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
                                     <GridCommandColumns>
@@ -78,13 +76,11 @@
                                         <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
                                     </GridCommandColumns>
                                 </GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ItemMasterListMoel.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-
+                                <GridColumn Field=@nameof(Master_Role_List_Output_Model.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Role_List_Output_Model.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Role_List_Output_Model.createdByUser) HeaderText="CreatedBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_Role_List_Output_Model.updatedByUser) HeaderText="UpdateBy User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
                             </GridColumns>
-
                         </SfGrid>
                     </ContentTemplate>
                 </DashboardLayoutPanel>
@@ -103,33 +99,44 @@
                 <DialogTemplates>
                     <Header>@DialogHeaderName </Header>
                     <Content>
-
-                        @*    start *@
-
-
-                       @*  <MudGrid>
-                            <MudItem xs="12" md="12" sm="12">
-                                <EditForm Model="itemMasterViewModel" OnValidSubmit="OnValidSubmit">
+                        <MudGrid>
+                            <MudItem xs="12" md="12" sm="3">
+                                <EditForm Model="roleMasterViewModel" OnValidSubmit="OnValidSubmit">
                                     <DataAnnotationsValidator />
                                     <MudCardContent>
 
                                         <MudGrid>
-                                  
-
-                                         
-                                           
-
-                                                 <MudItem xs="12" md="4" sm="6">
-                                                <SfButton cssclass="e-outline" type="submit" isprimary="true">add</SfButton>
-                                                <SfButton type="button" cssclass="e-flat" istoggle="false " isprimary="false" content="cancel" onclick="@closedialog"></SfButton>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Role Name" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@roleMasterViewModel.roleName"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => roleMasterViewModel.roleName" />
                                             </MudItem>
-                                   </MudGrid>
+
+
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfTextBox CssClass="e-outline" Placeholder="Role Description" Type="Syncfusion.Blazor.Inputs.InputType.Text"
+                                                           @bind-Value="@roleMasterViewModel.roleDescription"
+                                                           FloatLabelType="@FloatLabelType.Never"></SfTextBox>
+                                                <ValidationMessage For="() => roleMasterViewModel.roleDescription" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfNumericTextBox CssClass="e-outline" Placeholder="Display Order"
+                                                                  @bind-Value="@roleMasterViewModel.displayOrder"
+                                                                  FloatLabelType="@FloatLabelType.Never"></SfNumericTextBox>
+
+                                                <ValidationMessage For="() => roleMasterViewModel.displayOrder" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6" sm="6">
+                                                <SfButton CssClass=@btncss type="submit" IsPrimary="true">@HeaderText</SfButton>
+                                                @*  <SfButton CssClass="e-outline" OnClick="@CloseDialog">Cancel</SfButton>*@
+                                                <SfButton Type="button" CssClass="e-flat" IsToggle="false " IsPrimary="false" Content="Cancel" OnClick="@CloseDialog"></SfButton>
+                                            </MudItem>
+                                        </MudGrid>
                                     </MudCardContent>
                                 </EditForm>
                             </MudItem>
-
-                        </MudGrid>   *@
-
+                        </MudGrid>
                     </Content>
                 </DialogTemplates>
                 <DialogAnimationSettings Delay="400" Effect="DialogEffect.FlipLeftUp">
@@ -139,6 +146,9 @@
         </MudItem>
     </MudItem>
 </MudGrid>
+
+
+
 @code {
     private string Xvalue = "center";
     private string Yvalue = "center";
