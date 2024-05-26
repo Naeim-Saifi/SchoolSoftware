@@ -17,7 +17,7 @@ namespace AdminDashboard.Server.API_Service.Service.Exam
     public class  ExamMasterSetupService : IExamMasterSetupService
     {
         private readonly HttpClient httpClient;
-        private ILocalStorageService _localStorageService;
+        private readonly ILocalStorageService _localStorageService;
         public ExamMasterSetupService(HttpClient httpClient, ILocalStorageService localStorageService)
         {
             this.httpClient = httpClient;

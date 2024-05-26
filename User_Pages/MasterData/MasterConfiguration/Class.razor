@@ -13,22 +13,16 @@
 @using Syncfusion.Blazor.Popups
 @using AIS.Data.RequestResponseModel.Inventory.ItemMaster
 @using AIS.Data.RequestResponseModel.MasterData.MasterConfiguration.Class
-
+@using AIS.Data.RequestResponseModel.MasterDataSetUp;
 @page "/User_Pages/MasterConfiguration/Class"
 
 @inherits ClassBase
 @{
-    var InitSearch2 = (new string[] { "organizationName" });
+    var InitSearch2 = (new string[] { "className" });
     var Tool = (new List<string>() { "Search" });
 
-    var InitialGroupColumn = (new string[] { "previousClass" });
+    // var InitialGroupColumn = (new string[] { "previousClass" });
 }
-
-
-
-
-
-
 <MudGrid>
     <MudItem xs="12" sm="12" md="12">
         <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
@@ -36,39 +30,31 @@
                 <DashboardLayoutPanel SizeX=7 SizeY="2">
                     <HeaderTemplate>Class Details</HeaderTemplate>
                     <ContentTemplate>
-                        <SfGrid DataSource="@_ClassListModel"
+                        <SfGrid DataSource="@_cLass_List"
                                 EnableVirtualMaskRow="true"
                                 RowHeight="38" Height="710"
                                 Width="auto" EnableVirtualization="false"
                                 AllowResizing="true" AllowExcelExport="true"
                                 EnableAutoFill="true" AllowReordering="true"
-                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
                                 AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
                                 ContextMenuItems="MenuItems"
                                 @ref="sfClassDetails"
                                 Toolbar="ToolBarItems">
                             <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
-                            <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
-                            <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
-                            <GridGroupSettings Columns=@InitialGroupColumn>
-                                <CaptionTemplate>
-                                    @{
-                                        var UnitDetails = (context as CaptionTemplateContext);
-                                        <div>@UnitDetails.Field - @UnitDetails.Key</div>
-                                    }
-                                </CaptionTemplate>
-                            </GridGroupSettings>
+                            <GridPageSettings PageCount="100" PageSizes="true"></GridPageSettings>
+                         
 
-                            <GridEvents CommandClicked="EditItemDetail" OnToolbarClick="ToolbarClickHandler" TValue="ClassOutputModel"></GridEvents>
+                            <GridEvents CommandClicked="EditItemDetail" OnToolbarClick="ToolbarClickHandler" TValue="Master_CLass_List_Output_Model"></GridEvents>
                             <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
                                                 IgnoreCase="true"></GridSearchSettings>
 
 
 
                             <GridColumns>
-                                <GridColumn Field=@nameof(ClassOutputModel.className) HeaderText="Class Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ClassOutputModel.classCode) HeaderText="Class Code" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ClassOutputModel.displayOrder) HeaderText="Display Order" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_CLass_List_Output_Model.className) HeaderText="Class Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_CLass_List_Output_Model.classCode) HeaderText="Class Code" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_CLass_List_Output_Model.displayOrder) HeaderText="Display Order" AutoFit=true></GridColumn>
 
                                 <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
                                     <GridCommandColumns>
@@ -76,10 +62,10 @@
                                         <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
                                     </GridCommandColumns>
                                 </GridColumn>
-                                <GridColumn Field=@nameof(ClassOutputModel.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ClassOutputModel.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ClassOutputModel.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(ClassOutputModel.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_CLass_List_Output_Model.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_CLass_List_Output_Model.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_CLass_List_Output_Model.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(Master_CLass_List_Output_Model.updatedDate) HeaderText="Updated Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
 
                             </GridColumns>
 

@@ -15,7 +15,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using System.Linq;
-
+using AIS.Data.RequestResponseModel.MasterDataSetUp;
+using AdminDashboard.Server.API_Service.Interface.MasterDataSetUp;
 
 namespace AdminDashboard.Server.User_Pages.MasterData.FeeConfiguration
 {
@@ -23,8 +24,8 @@ namespace AdminDashboard.Server.User_Pages.MasterData.FeeConfiguration
     {
     
 
-            public List<ItemMasterListMoel> _ItemMasterListMoel = new List<ItemMasterListMoel>();
-            public SfGrid<ItemMasterListMoel> sfItemDetails;
+            public List<FeeDiscountRemarksOutputModel> _feeDiscountRemarksList = new List<FeeDiscountRemarksOutputModel>();
+            public SfGrid<FeeDiscountRemarksOutputModel> sfItemDetails;
 
             [Inject]
             Blazored.SessionStorage.ISessionStorageService session { get; set; }
@@ -38,8 +39,9 @@ namespace AdminDashboard.Server.User_Pages.MasterData.FeeConfiguration
             public string HeaderStyles { get; set; } = "e-background e-accent";
             public SfDialog DialogRef;
 
-            List<string> IList = new List<string>();
-
+             
+            [Inject]
+            public IMasterDataSetupService masterDataSetupService { get; set; }
 
             public bool IsVisible { get; set; } = false;
             public bool IsDeleteVisible { get; set; } = false;
@@ -58,45 +60,26 @@ namespace AdminDashboard.Server.User_Pages.MasterData.FeeConfiguration
             };
 
             public List<string> EnquirytoolBarItems = (new List<string>() { "Add I", "Print", "ExportExcel", "Collapse All", "Expand All", "Search" });
-
-
-
-
-
-
+         
 
             protected override async Task OnInitializedAsync()
             {
-                //_sessionModel = await session.GetItemAsync<SessionModel>("sessionUser");
-                ////Master_CLass_List_Input_Para_Model master_CLass_List_Input_Para_Model = new Master_CLass_List_Input_Para_Model()
-                ////{
-                ////    classId = 0,
-                ////    userId = _sessionModel.UserId,
-                ////    financialYear = _sessionModel.FinancialYear,
-                ////    schoolCode = _sessionModel.SchoolCode,
-                ////    reportType = ReportType.All
-                ////};
-                ////_classList = (await masterDataSetupService.GET_Master_ClassLIST(master_CLass_List_Input_Para_Model)).ToList();
-
-                //ItemMasterParaModel itemMasterParaModel = new ItemMasterParaModel()
-                //{
-                //    financialYear = _sessionModel.FinancialYear,
-                //    schoolCode = _sessionModel.SchoolCode,
-                //    ItemId = 0,
-                //    userRoleId = _sessionModel.RoleId,
-                //    reportType = ReportType.All
-                //};
-
-                // _ItemVenderListModel = (await enquiryService.GET_EnquiryDetails_List(itemMasterParaModel)).ToList();
-            }
+                 _sessionModel = await session.GetItemAsync<SessionModel>("sessionUser");
 
 
+            FeeDiscountRemarksParaModel feeDiscountRemarksParaModel = new FeeDiscountRemarksParaModel()
+            {
+                financialYear = _sessionModel.FinancialYear,
+                schoolCode = _sessionModel.SchoolCode,
+                 feeDiscountID = 0,
+                userRoleId = _sessionModel.RoleId,
+                reportType = ReportType.All
+            };
 
+            _feeDiscountRemarksList = (await masterDataSetupService.GET_Fee_DiscountRemarksList(feeDiscountRemarksParaModel)).ToList();
+            } 
 
-
-
-
-            public void EditItemDetail(CommandClickEventArgs<ItemMasterListMoel> args)
+            public void EditItemDetail(CommandClickEventArgs<FeeDiscountRemarksOutputModel> args)
             {
 
 

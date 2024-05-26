@@ -19,7 +19,7 @@ namespace AdminDashboard.Server.API_Service.Service.Syllabus
     public class SyllabusService: ISyllabusService
     {
         private readonly HttpClient httpClient;
-        private ILocalStorageService _localStorageService;
+        private readonly ILocalStorageService _localStorageService;
         public SyllabusService(HttpClient httpClient, ILocalStorageService localStorageService)
         {
             this.httpClient = httpClient;

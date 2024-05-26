@@ -18,7 +18,7 @@ namespace AdminDashboard.Server.API_Service.Service.RemarksTypeMaster
     public class RemarksTypeMasterService: IRemarksTypeMasterService
     {
         private readonly HttpClient httpClient;
-        private ILocalStorageService _localStorageService;
+        private readonly ILocalStorageService _localStorageService;
         public RemarksTypeMasterService(HttpClient httpClient, ILocalStorageService localStorageService)
         {
             this.httpClient = httpClient;

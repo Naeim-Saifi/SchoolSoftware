@@ -32,38 +32,37 @@ namespace AdminDashboard.Server.User_Pages.MasterData.ExamConfiguration
 {
     public class MapSubjectWithClassBase : ComponentBase
     {
-      
-            public Boolean ddEnable = true;
+
+        [Inject]
+        Blazored.SessionStorage.ISessionStorageService session { get; set; }
+        [Inject]
+        public IMasterDataSetupService masterDataSetupService { get; set; }
+
+        public Boolean ddEnable = true;
             /*Start Dialog */
-            public List<string> ToolBarClassWithSubject = (new List<string>() { "Map Class With Subject", "Edit", "Print", "Search" });
+            public List<string> ToolBarClassWithSubject = (new List<string>() { "Map Class With Subject", "Print", "ExportExcel", "Collapse All", "Expand All", "Search", "ColumnChooser" });
             public List<object> MenuItems = new List<object>()
             { "AutoFit", "AutoFitAll", "SortAscending", "SortDescending",
                 "Copy", "ExcelExport", "CsvExport", "FirstPage", "PrevPage", "LastPage", "NextPage"
             };
             public List<string> _ToolBarSubjectList = (new List<string>() { "Save", "Print", "Search" });
 
-        public List<string> ToolBarAlreadySubject= (new List<string>() { "Add", "ExcelExport", "Print", "Search" });
-
-
-
-
-        public SfDialog DialogRef;
+            public List<string> ToolBarAlreadySubject= (new List<string>() { "Add", "ExcelExport", "Print", "Search" }); 
+            public SfDialog DialogRef;
             public bool IsVisible { get; set; } = false;
 
-            [Inject]
-            Blazored.SessionStorage.ISessionStorageService session { get; set; }
-            [Inject]
-            public IMasterDataSetupService masterDataSetupService { get; set; }
+            
          
 
            
-            public List<Master_CLass_List_Output_Model> master_CLass_List = new List<Master_CLass_List_Output_Model>(); 
+        public List<Master_CLass_List_Output_Model> master_CLass_List = new List<Master_CLass_List_Output_Model>(); 
         public List<Master_Subject_List_Output_Model> _subject_List = new List<Master_Subject_List_Output_Model>();
         public List<Master_Map_Subject_With_Class_List_Output_Model> map_classwithsubject_List = new List<Master_Map_Subject_With_Class_List_Output_Model>();
         //API Model
 
         public SfGrid<Master_Map_Subject_With_Class_List_Output_Model> sfMapSubjectWithClass;
 
+        public SfGrid<Master_Subject_List_Output_Model> sfsubjectList;
 
 
 
@@ -80,7 +79,7 @@ namespace AdminDashboard.Server.User_Pages.MasterData.ExamConfiguration
             public void onOpen(Syncfusion.Blazor.Popups.BeforeOpenEventArgs args)
             {
                 // setting maximum height to the Dialog
-                args.MaxHeight = "750px";
+                args.MaxHeight = "850px";
 
             }
             public string DialogHeaderName = "Question Bank";// string.Empty;
@@ -95,38 +94,25 @@ namespace AdminDashboard.Server.User_Pages.MasterData.ExamConfiguration
             protected override async Task OnInitializedAsync()
             {
                 _sessionModel = await session.GetItemAsync<SessionModel>("sessionUser");
-                //Master_CLass_List_Input_Para_Model master_CLass_List_Input_Para_Model = new Master_CLass_List_Input_Para_Model()
-                //{
-                //    classId = 0,
-                //    userId = _sessionModel.UserId,
-                //    financialYear = _sessionModel.FinancialYear,
-                //    schoolCode = _sessionModel.SchoolCode,
-                //    reportType = ReportType.All
-                //};
-                //master_CLass_List = (await masterDataSetupService.GET_Master_ClassLIST(master_CLass_List_Input_Para_Model)).ToList();
 
+            Master_CLass_List_Input_Para_Model master_CLass_List_Input_Para_Model = new Master_CLass_List_Input_Para_Model()
+            {
+                classId = 0,
+                userId = _sessionModel.UserId,
+                financialYear = _sessionModel.FinancialYear,
+                schoolCode = _sessionModel.SchoolCode,
+                reportType = ReportType.GetTeacherClass
+            };
+            master_CLass_List = (await masterDataSetupService.GET_Master_ClassLIST(master_CLass_List_Input_Para_Model)).ToList();
 
-                //Master_CLass_List_Input_Para_Model master_CLass_List_Input_Para_Model = new Master_CLass_List_Input_Para_Model()
-                //{
-                //    classId = 0,
-                //    userId = _sessionModel.UserId,
-                //    financialYear = _sessionModel.FinancialYear,
-                //    schoolCode = _sessionModel.SchoolCode,
-                //    reportType = ReportType.GetTeacherClass
-                //};
-                //master_CLass_List = (await masterDataSetupService.GET_Master_ClassLIST(master_CLass_List_Input_Para_Model)).ToList();
-
-
-
-
-            //Master_Subject_List_Input_Para_Model master_Subject_List_Input_Para_Model = new Master_Subject_List_Input_Para_Model()
-            //{
-            //    subjectID = 0,
-            //    financialYear = _sessionModel.FinancialYear,
-            //    schoolCode = _sessionModel.SchoolCode,
-            //    reportType = ReportType.All
-            //};
-            //_subject_List = (await masterDataSetupService.GET_Master_SubjectLIST(master_Subject_List_Input_Para_Model)).ToList();
+            Master_Subject_List_Input_Para_Model master_Subject_List_Input_Para_Model = new Master_Subject_List_Input_Para_Model()
+            {
+                subjectID = 0,
+                financialYear = _sessionModel.FinancialYear,
+                schoolCode = _sessionModel.SchoolCode,
+                reportType = ReportType.All
+            };
+            _subject_List = (await masterDataSetupService.GET_Master_SubjectLIST(master_Subject_List_Input_Para_Model)).ToList();
 
 
 
@@ -142,46 +128,59 @@ namespace AdminDashboard.Server.User_Pages.MasterData.ExamConfiguration
             };
             map_classwithsubject_List = (await masterDataSetupService.GET_Mapp_SubjectwithClassLIST(master_Map_Subject_With_ClassList_Input_Para_Model)).ToList();
 
+            }
+        public int classid = 0;
+        public async Task OnChangeClass(ChangeEventArgs<string, Master_CLass_List_Output_Model> args)
+        {
+            try
+            {
+                if (args.ItemData.classId != 0)
+                {
+                    classid = args.ItemData.classId;
+
+                    Master_Map_Subject_With_ClassList_Input_Para_Model mapsubjectwithClass = new Master_Map_Subject_With_ClassList_Input_Para_Model()
+                    {
+                        classID = classid,
+                        schoolCode = _sessionModel.SchoolCode,
+                        financialYear = _sessionModel.FinancialYear,
+                        reportType = ReportType.ClassId,
+                        userId = _sessionModel.UserId
+                    };
+
+                    map_classwithsubject_List = (await masterDataSetupService.GET_Mapp_SubjectwithClassLIST(mapsubjectwithClass)).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+
         }
-
-
-
-
-
-     public void ToolBarClickMapSubjectWithClass (Syncfusion.Blazor.Navigations.ClickEventArgs args)
+        public void ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
         {
             if (args.Item.Text == "Map Class With Subject")
             {
 
                 IsVisible = true;
-              
-               // btncss = "e-flat e-primary e-outline";
-                DialogHeaderName = "Add Map Subject With Class Details";
-               // OperationType = "Add";
-               // HeaderText = "Add Role";
+                //  OperationType = "";
+                //btncss = "e-flat e-primary e-outline";
+                //DialogHeaderName = "Add ExamType Details";
+                //OperationType = "Add";
+                //HeaderText = "Add ExamType";
+                //ddEnable = true;
 
             }
-        }
+        } 
 
-        public async void OnValidSubmit(EditContext contex)
+         
+
+            public async void OnValidSubmit(EditContext contex)
             {
                 bool isValid = contex.Validate();
                 if (isValid)
                 {
         
-
-
-
-
-
-
-
-                
-
-
-
-
-
                 }
                 else
                 {
@@ -196,20 +195,12 @@ namespace AdminDashboard.Server.User_Pages.MasterData.ExamConfiguration
             int _subjectID = 0;
              
 
-  
-
-       
-  
-
             public async Task CloseDialog()
             {
                 IsVisible = false;
                 await this.DialogRef.HideAsync();
             }
            
-
-
-
 
         }
     }

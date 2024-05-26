@@ -10,9 +10,8 @@
 @using Syncfusion.Blazor.Data
 @using Syncfusion.Blazor.LinearGauge
 @using Syncfusion.Blazor.Layouts
-@using Syncfusion.Blazor.Popups
-
-@using AIS.Data.RequestResponseModel.MasterData.TransportConfiguration.BusStop;
+@using Syncfusion.Blazor.Popups 
+@using   AIS.Data.RequestResponseModel.MasterDataSetUp; 
 
 @page "/User_Pages/TransportConfiguration/BusStop"
 
@@ -23,17 +22,12 @@
 
 
 @{
-    var InitSearch2 = (new string[] { "organizationName" });
+    var InitSearch2 = (new string[] { "busStopName" });
     var Tool = (new List<string>() { "Search" });
 
     var InitialGroupColumn = (new string[] { "previousClass" });
 }
-
-
-
-
-
-
+ 
 <MudGrid>
     <MudItem xs="12" sm="12" md="12">
         <SfDashboardLayout CellSpacing="@(new double[]{20 ,20 })" Columns="7" CellAspectRatio="2" AllowResizing="true">
@@ -47,14 +41,14 @@
                                 Width="auto" EnableVirtualization="false"
                                 AllowResizing="true" AllowExcelExport="true"
                                 EnableAutoFill="true" AllowReordering="true"
-                                ShowColumnChooser="true" AllowGrouping="true" AllowSorting="true"
+                                ShowColumnChooser="true" AllowGrouping="false" AllowSorting="true"
                                 AllowFiltering="true" AllowPaging="true" ShowColumnMenu="true"
                                 ContextMenuItems="MenuItems"
                                 @ref="sfBusStopDetails"
                                 Toolbar="ToolBarItems">
                             <GridFilterSettings Type="@Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
-                            <GridPageSettings PageCount="20" PageSizes="true"></GridPageSettings>
-                            <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
+                            <GridPageSettings PageCount="20" PageSizes="true" PageSize="100"></GridPageSettings>
+                            @* <GridGroupSettings Columns="@InitialGroupColumn"></GridGroupSettings>
                             <GridGroupSettings Columns=@InitialGroupColumn>
                                 <CaptionTemplate>
                                     @{
@@ -62,32 +56,30 @@
                                         <div>@UnitDetails.Field - @UnitDetails.Key</div>
                                     }
                                 </CaptionTemplate>
-                            </GridGroupSettings>
+                            </GridGroupSettings> *@
 
-                            <GridEvents CommandClicked="EditItemDetail" OnToolbarClick="ToolbarClickHandler" TValue="BusStopOutputModel"></GridEvents>
+                            <GridEvents  OnToolbarClick="ToolbarClickHandler" TValue="BusStopOutputModel"></GridEvents>
                             <GridSearchSettings Fields=@InitSearch2 Operator=Syncfusion.Blazor.Operator.Contains Key=""
                                                 IgnoreCase="true"></GridSearchSettings>
 
 
 
                             <GridColumns>
+                               
                                 <GridColumn Field=@nameof(BusStopOutputModel.busStopId) HeaderText="Buss Stop Id" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
                                 <GridColumn Field=@nameof(BusStopOutputModel.busStopName) HeaderText="Buss Stop Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
-                                <GridColumn Field=@nameof(BusStopOutputModel.kM) HeaderText="Buss Rout Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
-                   <GridColumn Field=@nameof(BusStopOutputModel.distanceCharge) HeaderText="Buss Rout Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
-
-                                        <GridColumn Field=@nameof(BusStopOutputModel.pickupTime) HeaderText="Buss Rout Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
-                <GridColumn Field=@nameof(BusStopOutputModel.dropTIme) HeaderText="Buss Rout Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
-
-                                <GridColumn Field=@nameof(BusStopOutputModel.kM) HeaderText="Buss Rout Name" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
-
-
+                                <GridColumn Field=@nameof(BusStopOutputModel.kM) HeaderText="KM" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(BusStopOutputModel.distanceCharge) HeaderText="Distance Charge" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn> 
+                                <GridColumn Field=@nameof(BusStopOutputModel.pickupTime) HeaderText="Pickup Time" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn>
+                                <GridColumn Field=@nameof(BusStopOutputModel.dropTIme) HeaderText="Drop TIme" TextAlign="TextAlign.Right" AllowGrouping=true AutoFit=true></GridColumn> 
+                                
                                 <GridColumn HeaderText="Action" Width="20" AutoFit="true" TextAlign="TextAlign.Center">
                                     <GridCommandColumns>
                                         <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content="Edit", IconCss = "e-icons e-edit e-primary e-outline", CssClass = "e-flat e-info e-outline" })"></GridCommandColumn>
                                         <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { Content = "Delete",IconCss = "e-icons e-delete e-primary e-outline", CssClass = "e-flat e-danger e-outline"  })"></GridCommandColumn>
                                     </GridCommandColumns>
                                 </GridColumn>
+                               
                                 <GridColumn Field=@nameof(BusStopOutputModel.createdByUser) HeaderText="Created User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
                                 <GridColumn Field=@nameof(BusStopOutputModel.createdDate) HeaderText="Created Date" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
                                 <GridColumn Field=@nameof(BusStopOutputModel.updatedByUser) HeaderText="Updated User" TextAlign="TextAlign.Right" AutoFit=true></GridColumn>
@@ -112,10 +104,7 @@
                 <DialogTemplates>
                     <Header>@DialogHeaderName </Header>
                     <Content>
-
-                        @*    start *@
-
-
+ 
                         <MudGrid>
                             <MudItem xs="12" md="12" sm="12">
                                 <EditForm Model="busStopViewModel" OnValidSubmit="OnValidSubmit">
@@ -129,66 +118,31 @@
                                                 <SfTextBox CssClass="e-outline" Placeholder="Buss Stop Name" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@busStopViewModel.busStopName"
                                                            FloatLabelType="@FloatLabelType.Never"></SfTextBox>
                                                 <ValidationMessage For="() => busStopViewModel.busStopName" />
-                                            </MudItem>
-
-
-
-
-                                          
-
-
+                                            </MudItem> 
                                             <MudItem xs="12" md="3" sm="12">
                                                 <SfNumericTextBox CssClass="e-outline" Placeholder="KM" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@busStopViewModel.kM"
                                                                   FloatLabelType="@FloatLabelType.Never"></SfNumericTextBox>
                                                 <ValidationMessage For="() => busStopViewModel.kM"/>
-                                            </MudItem>
-
-                                            
-
+                                            </MudItem> 
                                             <MudItem xs="12" md="3" sm="12">
                                                 <SfNumericTextBox CssClass="e-outline" Placeholder="Distance Chargee" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@busStopViewModel.distanceCharge"
                                                                   FloatLabelType="@FloatLabelType.Never"></SfNumericTextBox>
                                                 <ValidationMessage For="() => busStopViewModel.distanceCharge" />
                                             </MudItem>
-
-
-
-
-                                            <MudItem xs="12" md="6" sm="6">
-                                                <SfTimePicker TValue="DateTime" Placeholder="Pickup Time" Min="@MinVal"
+                                            
+                                            @* <MudItem xs="12" md="4" sm="6">
+                                                <SfTimePicker TValue="DateTime" Placeholder="Select a End Time" Min="@MinVal"
                                                               Max="@MaxVal" @bind-Value="@busStopViewModel.pickupTime">
-                                                    <ValidationMessage For="@(() =>busStopViewModel.pickupTime)"></ValidationMessage>
+                                                    <ValidationMessage For="@(() => busStopViewModel.pickupTime)"></ValidationMessage>
                                                 </SfTimePicker>
                                             </MudItem>
-
-                                           @*  <MudItem xs="12" md="6" sm="12">
-                                                <SfDatePicker CssClass="e-outline" Placeholder="Pickup Time" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@busStopViewModel.pickupTime"
-                                                              FloatLabelType="@FloatLabelType.Never"></SfDatePicker>
-                                                <ValidationMessage For="() =>busStopViewModel.pickupTime" />
-                                            </MudItem> *@
-
-
-
-
-                                            <MudItem xs="12" md="6" sm="6">
-                                                <SfTimePicker TValue="DateTime" Placeholder="Drop Time" Min="@MinVal"
+                                            <MudItem xs="12" md="4" sm="6">
+                                                <SfTimePicker TValue="DateTime" Placeholder="Select a End Time" Min="@MinVal"
                                                               Max="@MaxVal" @bind-Value="@busStopViewModel.dropTIme">
-                                                    <ValidationMessage For="@(() =>busStopViewModel.dropTIme)"></ValidationMessage>
+                                                    <ValidationMessage For="@(() => busStopViewModel.dropTIme)"></ValidationMessage>
                                                 </SfTimePicker>
-                                            </MudItem>
-
-
-                                          @*   <MudItem xs="12" md="6" sm="12">
-                                                <SfDatePicker CssClass="e-outline" Placeholder="Deilevry Date" Type="Syncfusion.Blazor.Inputs.InputType.Text" @bind-Value="@busStopViewModel.dropTIme"
-                                                              FloatLabelType="@FloatLabelType.Never"></SfDatePicker>
-                                                <ValidationMessage For="() =>busStopViewModel.dropTIme" />
                                             </MudItem> *@
-
-
-
-
-
-
+                                            
 
                                             <MudItem xs="12" md="4" sm="6">
                                                 <SfButton CssClass="e-outline" type="submit" IsPrimary="true">@HeaderText</SfButton>

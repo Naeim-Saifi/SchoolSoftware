@@ -17,7 +17,7 @@ namespace AdminDashboard.Server.API_Service.Service.HomeWork
     public class HomeWorkSetupService: IHomeWorkSetupService
     {
         private readonly HttpClient httpClient;
-        private ILocalStorageService _localStorageService;
+        private readonly ILocalStorageService _localStorageService;
         public HomeWorkSetupService(HttpClient httpClient, ILocalStorageService localStorageService)
         {
             this.httpClient = httpClient;

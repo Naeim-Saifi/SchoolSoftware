@@ -17,6 +17,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using AIS.Data.RequestResponseModel.MasterData.MasterConfiguration.Class;
 using AIS.Data.RequestResponseModel.MasterData.MasterConfiguration.Section;
+using AIS.Data.RequestResponseModel.MasterDataSetUp;
+using AdminDashboard.Server.API_Service.Interface.MasterDataSetUp;
 //using AdminDashboard.Server.API_Service.Interface.MasterData;
 
 
@@ -29,11 +31,10 @@ namespace AdminDashboard.Server.User_Pages.MasterData.MasterConfiguration
 
 
             public SectionViewModel sectionViewModel = new SectionViewModel();
+            public SfGrid<Master_Section_List_Output_Model> sfSectionDetails;
 
-
-            public List<SectionOutputModel> _SectionListModel = new List<SectionOutputModel>();
-            public SfGrid<SectionOutputModel> sfSectionDetails;
-            public SectionApiModel sectionApiModel { get; set; }
+        public List<Master_Section_List_Output_Model> _section_List = new List<Master_Section_List_Output_Model>();
+        public SectionApiModel sectionApiModel { get; set; }
 
 
 
@@ -44,8 +45,8 @@ namespace AdminDashboard.Server.User_Pages.MasterData.MasterConfiguration
             [Inject]
             public ISnackbar snackBar { get; set; }
 
-           //[Inject]
-           //  public IMasterDataService masterDataService { get; set; }
+            [Inject]
+            public IMasterDataSetupService masterDataSetupService { get; set; }
 
             public DialogEffect AnimationEffect = DialogEffect.Zoom;
             public string HeaderStyles { get; set; } = "e-background e-accent";
@@ -71,64 +72,23 @@ namespace AdminDashboard.Server.User_Pages.MasterData.MasterConfiguration
             };
 
             public List<string> ToolBarItems = (new List<string>() { "Add Section", "Print", "ExportExcel", "Collapse All", "Expand All", "Search" });
-
-
-
-
-            public class SectionName
-            {
-                public int Id;
-                public string Value;
-            }
-
-            public List<SectionName> sectionNamedetails = new List<SectionName>()
-        {
-            new SectionName{Id=1,Value="A"},
-             new SectionName{Id=2,Value="B"},
-        new SectionName{Id=3,Value="C"},
-           new SectionName{Id=4,Value="D"}
-   
-
-        };
-
-
-
-
-
-
+         
             protected override async Task OnInitializedAsync()
             {
                 _sessionModel = await session.GetItemAsync<SessionModel>("sessionUser");
-                //Master_CLass_List_Input_Para_Model master_CLass_List_Input_Para_Model = new Master_CLass_List_Input_Para_Model()
-                //{
-                //    classId = 0,
-                //    userId = _sessionModel.UserId,
-                //    financialYear = _sessionModel.FinancialYear,
-                //    schoolCode = _sessionModel.SchoolCode,
-                //    reportType = ReportType.All
-                //};
-                //_classList = (await masterDataSetupService.GET_Master_ClassLIST(master_CLass_List_Input_Para_Model)).ToList();
+            Master_Section_List_Input_Para_Model master_section_List_Input_Para_Model = new Master_Section_List_Input_Para_Model()
+            {
+                sectionId = 0,
+                userId = _sessionModel.UserId,
+                financialYear = _sessionModel.FinancialYear,
+                schoolCode = _sessionModel.SchoolCode,
+                reportType = ReportType.All
+            };
+                _section_List = (await masterDataSetupService.GET_Master_SectionLIST(master_section_List_Input_Para_Model)).ToList();
 
-                SectionParaModel sectionParaModel = new SectionParaModel()
-                {
-                    financialYear = _sessionModel.FinancialYear,
-                    schoolCode = _sessionModel.SchoolCode,
-                    SectionId = 0,
-                    userRoleId = _sessionModel.RoleId,
-                    reportType = ReportType.All
-                };
-
-                 //   _SectionListModel = (await masterDataService.GET_SectionDetails_List(sectionParaModel)).ToList();
             }
-
-
-
-
-
-
-
-            public void EditItemDetail(CommandClickEventArgs<SectionOutputModel> args)
-        {
+            public void EditItemDetail(CommandClickEventArgs<Master_Section_List_Output_Model> args)
+            {
 
 
             // Perform required operations here
@@ -210,9 +170,6 @@ namespace AdminDashboard.Server.User_Pages.MasterData.MasterConfiguration
             }
         }
 
-
-
-
             public async void OnValidSubmit(EditContext contex)
             {
                 bool isValid = contex.Validate();
@@ -291,19 +248,11 @@ namespace AdminDashboard.Server.User_Pages.MasterData.MasterConfiguration
             }
         }
 
-
-
-
-
-
-
-
             private void ClearData()
             {
             sectionViewModel = new SectionViewModel();
 
             }
-
 
             public void ShowDialog()
             {

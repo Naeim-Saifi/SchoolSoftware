@@ -123,12 +123,12 @@ namespace AdminDashboard.Server
                 config.SnackbarConfiguration.ShowTransitionDuration = 500;
                 config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
             });
-            string baseAddress = "http://103.165.79.137:8003";
+            //string baseAddress = "http://103.165.79.137:8003";
             //string baseAddress = "http://10.10.11.137:8003";
 
             //string baseAddress = Configuration.GetValue<string>("API");
             //string baseAddress = Configuration.GetValue<string>("API:APIUrl");
-            //string baseAddress = "http://localhost:57736/";
+            string baseAddress = "http://localhost:57736/";
 
             services.AddScoped<ILocalStorageService, LocalStorageService>();
             services.AddHttpClient<IMasterBatchService, MasterBatchService>(client =>

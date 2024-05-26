@@ -19,7 +19,7 @@ namespace AdminDashboard.Server.API_Service.Service.TransactionSetUp
     public class TransactionSetupService : ITransactionSetUpService
     {
         private readonly HttpClient httpClient;
-        private ILocalStorageService _localStorageService;
+        private readonly ILocalStorageService _localStorageService;
         public TransactionSetupService(HttpClient httpClient, ILocalStorageService localStorageService)
         {
             this.httpClient = httpClient;
